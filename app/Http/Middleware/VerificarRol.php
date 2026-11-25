@@ -19,10 +19,12 @@ class VerificarRol
         /** @var Usuario|null $usuario */
         $usuario = Auth::user();
 
+        // 1. Si no hay sesión activa, redirige al login administrativo
         if (! $usuario) {
             return redirect()->route('login');
         }
 
+        // 2. Revocación inmediata: si el Admin desactivó esta cuenta mientras navegaba, cierra sesión al instante
         if (! $usuario->activo) {
             Auth::logout();
             $request->session()->invalidate();
@@ -33,11 +35,12 @@ class VerificarRol
             ]);
         }
 
-        // El ADMINISTRADOR siempre tiene control completo del sistema
+        // 3. El ADMINISTRADOR siempre tiene control completo del sistema
         if ($usuario->esAdministrador()) {
             return $next($request);
         }
 
+        // 4. Si el rol del usuario (ej. MARKETING) no está permitido en esta ruta, bloquea con HTTP 403
         if (! empty($rolesPermitidos) && ! in_array($usuario->rol, $rolesPermitidos, true)) {
             abort(403, 'No tienes permisos para acceder a este módulo.');
         }

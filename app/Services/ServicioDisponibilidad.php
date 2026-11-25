@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
+/**
+ * Servicio de monitoreo de salud consumido por GET /salud (EstadoSistemaController).
+ * Verifica modo mantenimiento, conectividad MySQL (SELECT 1) y permisos de escritura en storage/,
+ * respondiendo HTTP 200 (operativo) o 503 (degradado) sin exponer credenciales ni trazas internas.
+ */
 class ServicioDisponibilidad
 {
     /**

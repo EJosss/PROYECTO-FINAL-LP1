@@ -38,6 +38,7 @@ class IniciarSesion extends Component
             'password.required' => 'Ingresa tu contraseña.',
         ]);
 
+        // 1. Protección contra fuerza bruta: máximo 5 intentos cada 60 segundos por correo + IP
         $claveIntento = Str::lower($this->correo) . '|' . request()->ip();
 
         if (RateLimiter::tooManyAttempts($claveIntento, 5)) {
@@ -49,6 +50,7 @@ class IniciarSesion extends Component
         /** @var Usuario|null $usuario */
         $usuario = Usuario::where('correo', $this->correo)->first();
 
+        // 2. Mensaje genérico anti-enumeración: no revela si el correo existe o si falló la contraseña
         if (! $usuario || ! Hash::check($this->password, $usuario->password)) {
             RateLimiter::hit($claveIntento, 60);
             $this->addError('correo', 'Las credenciales ingresadas no son válidas.');
@@ -60,9 +62,10 @@ class IniciarSesion extends Component
             return;
         }
 
+        // Credenciales válidas: limpia el contador de intentos fallidos
         RateLimiter::clear($claveIntento);
 
-        // Si el usuario tiene 2FA confirmado y activo, solicitar el segundo factor antes de iniciar sesión
+        // 3. Si el usuario tiene 2FA confirmado y activo, solicita el segundo factor antes de iniciar sesión
         if ($usuario->hasEnabledTwoFactorAuthentication()) {
             $this->requiereDesafio2FA = true;
             $this->usuarioDesafioId = $usuario->id;

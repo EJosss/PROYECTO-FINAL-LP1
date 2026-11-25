@@ -2,6 +2,10 @@
 
 namespace App\Support;
 
+/**
+ * Helper DRY (Don't Repeat Yourself) para centralizar el formato telefónico de Perú (+51).
+ * Evita duplicar '+51 +51' al editar formularios y normaliza números para enlaces wa.me/.
+ */
 class TelefonoPeru
 {
     /**

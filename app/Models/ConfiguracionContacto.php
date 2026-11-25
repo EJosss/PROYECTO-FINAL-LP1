@@ -5,10 +5,15 @@ namespace App\Models;
 use DomainException;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Patrón Singleton en base de datos: garantiza que solo exista 1 registro (id = 1)
+ * con los datos globales de contacto de la empresa (respaldado por CHECK (id = 1) en MySQL).
+ */
 class ConfiguracionContacto extends Model
 {
     protected $table = 'configuracion_contacto';
 
+    // Desactiva autoincremento porque la llave primaria siempre es fija (id = 1)
     public $incrementing = false;
 
     protected $fillable = [
@@ -23,6 +28,7 @@ class ConfiguracionContacto extends Model
         'whatsapp_postulacion',
     ];
 
+    // Hooks de protección: impiden crear un segundo registro o borrar el registro único
     protected static function booted(): void
     {
         static::creating(function (ConfiguracionContacto $config) {
@@ -41,6 +47,7 @@ class ConfiguracionContacto extends Model
         });
     }
 
+    // Punto de acceso único: obtiene la fila id = 1 o la crea con valores iniciales si no existe
     public static function obtenerUnica(): self
     {
         return static::firstOrCreate(

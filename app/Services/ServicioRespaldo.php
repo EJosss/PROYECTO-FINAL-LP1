@@ -9,6 +9,11 @@ use RecursiveIteratorIterator;
 use RuntimeException;
 use ZipArchive;
 
+/**
+ * Gestiona respaldos completos en almacenamiento privado (storage/app/private/respaldos/) sin sobrescribir copias.
+ * Ejecuta mysqldump pasando la clave por variable efímera MYSQL_PWD, empaqueta multimedia.zip
+ * y genera manifiesto.json verificable mediante hashes SHA-256 comparados en tiempo constante (hash_equals).
+ */
 class ServicioRespaldo
 {
     /**

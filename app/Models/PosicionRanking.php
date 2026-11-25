@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * Cada uno de los 3 puestos fijos (1, 2, 3) de un RankingMensual.
+ * Guarda campos *_snapshot para congelar nombre, celular y foto del ganador de forma inmutable.
+ * Protegido por booted() en Eloquent + Triggers BEFORE e índice único por celular en MySQL (migraciones 0005 y 0013).
+ */
 class PosicionRanking extends Model
 {
     protected $table = 'posiciones_ranking';

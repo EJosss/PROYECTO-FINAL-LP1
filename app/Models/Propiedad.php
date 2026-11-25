@@ -6,13 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Modelo de propiedades inmobiliarias del catálogo público y panel administrativo.
+ * La regla de integridad precio/moneda se refuerza además con CHECK en MySQL (migración 0002).
+ */
 class Propiedad extends Model
 {
     protected $table = 'propiedades';
 
+    // Monedas válidas en el catálogo (Soles y Dólares)
     public const MONEDA_SOLES = 'PEN';
     public const MONEDA_DOLARES = 'USD';
 
+    // Códigos oficiales de las 4 sedes (deben coincidir con la tabla 'oficinas')
     public const OFICINA_AREQUIPA = 'AREQUIPA';
     public const OFICINA_LIMA = 'LIMA';
     public const OFICINA_MOQUEGUA = 'MOQUEGUA';
@@ -25,6 +31,7 @@ class Propiedad extends Model
         self::OFICINA_PUNO => 'Puno',
     ];
 
+    // Mapeo entre slug de URL (/oficinas/{slug}) y código de oficina en BD (usado también en sitemap.xml)
     public const SLUGS_OFICINAS = [
         'arequipa' => self::OFICINA_AREQUIPA,
         'lima' => self::OFICINA_LIMA,
@@ -53,6 +60,7 @@ class Propiedad extends Model
         ];
     }
 
+    // Accessor ($propiedad->simbolo_moneda): devuelve 'S/' o '$' solo si tiene precio y moneda
     public function getSimboloMonedaAttribute(): ?string
     {
         if ($this->precio === null || $this->moneda === null) {
@@ -62,6 +70,7 @@ class Propiedad extends Model
         return $this->moneda === self::MONEDA_SOLES ? 'S/' : '$';
     }
 
+    // Accessor ($propiedad->precio_formateado): devuelve por ejemplo "$ 150,000.00"
     public function getPrecioFormateadoAttribute(): ?string
     {
         if ($this->precio === null || $this->moneda === null) {
@@ -71,6 +80,7 @@ class Propiedad extends Model
         return $this->simbolo_moneda . ' ' . number_format((float) $this->precio, 2, '.', ',');
     }
 
+    // Accessor ($propiedad->url_imagen): resuelve URL pública desde storage/app/public o enlace externo
     public function getUrlImagenAttribute(): string
     {
         if (str_starts_with($this->imagen, 'http://') || str_starts_with($this->imagen, 'https://')) {
@@ -80,6 +90,7 @@ class Propiedad extends Model
         return Storage::disk('public')->url($this->imagen);
     }
 
+    // Relación N:1 con la tabla 'oficinas' usando la columna 'oficina' -> 'codigo'
     public function oficinaResponsable(): BelongsTo
     {
         return $this->belongsTo(Oficina::class, 'oficina', 'codigo');

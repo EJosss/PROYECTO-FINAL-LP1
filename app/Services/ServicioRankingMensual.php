@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
 
+/**
+ * Motor de negocio del Ranking Mensual ("Vendedores Estrella del Mes").
+ * Centraliza concurrencia (DB::transaction + lockForUpdate), unicidad de celulares (hash_equals),
+ * advertencia no bloqueante de homónimos, publicación atómica de los 3 puestos y limpieza post-commit de fotos.
+ */
 class ServicioRankingMensual
 {
     /**

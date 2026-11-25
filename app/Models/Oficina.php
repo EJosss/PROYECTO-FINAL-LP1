@@ -35,8 +35,10 @@ class Oficina extends Model
         'imagen',
     ];
 
+    // Reglas de dominio: las 4 sedes oficiales son fijas porque sus slugs son rutas SEO (/oficinas/{slug})
     protected static function booted(): void
     {
+        // Impide crear oficinas fuera de las 4 oficiales o duplicarlas
         static::creating(function (Oficina $oficina) {
             if (
                 ! isset(self::CODIGOS_SLUGS[$oficina->codigo])
@@ -50,12 +52,14 @@ class Oficina extends Model
             }
         });
 
+        // Permite editar datos de contacto/imagen, pero prohíbe cambiar código o slug
         static::updating(function (Oficina $oficina) {
             if ($oficina->isDirty('codigo') || $oficina->isDirty('slug')) {
                 throw new DomainException('El código y el slug de la oficina no pueden modificarse.');
             }
         });
 
+        // Prohíbe eliminar cualquiera de las 4 oficinas oficiales
         static::deleting(function () {
             throw new DomainException('Las cuatro oficinas oficiales del sistema no pueden eliminarse.');
         });

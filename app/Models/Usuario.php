@@ -9,6 +9,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
+/**
+ * Modelo de usuarios del panel administrativo (ADMINISTRADOR y MARKETING).
+ * Incluye autenticación en dos pasos (2FA) mediante el trait TwoFactorAuthenticatable de Fortify.
+ */
 class Usuario extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -16,12 +20,15 @@ class Usuario extends Authenticatable
 
     protected $table = 'usuarios';
 
+    // Roles permitidos en el sistema (validados en el middleware VerificarRol)
     public const ROL_ADMINISTRADOR = 'ADMINISTRADOR';
     public const ROL_MARKETING = 'MARKETING';
 
+    // Preferencias de apariencia visual del panel administrativo
     public const TEMA_CLARO = 'claro';
     public const TEMA_OSCURO = 'oscuro';
 
+    // Campos que se permiten asignar masivamente (protección contra Mass Assignment)
     protected $fillable = [
         'nombre',
         'correo',
@@ -31,6 +38,7 @@ class Usuario extends Authenticatable
         'tema',
     ];
 
+    // Campos sensibles ocultos al serializar a JSON/arrays (nunca se exponen secretos ni contraseñas)
     protected $hidden = [
         'password',
         'remember_token',
@@ -38,6 +46,7 @@ class Usuario extends Authenticatable
         'two_factor_recovery_codes',
     ];
 
+    // Conversiones automáticas: 'hashed' encripta la contraseña con bcrypt automáticamente
     protected function casts(): array
     {
         return [

@@ -10,6 +10,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
+// Componente Full-Page de Livewire 4: atiende directamente la ruta '/' sin Controller intermedio
 #[Layout('components.layouts.publico')]
 #[Title('RE/MAX Zona | Inmobiliaria')]
 class PaginaInicio extends Component
@@ -18,7 +19,7 @@ class PaginaInicio extends Component
     {
         $ahoraLima = now('America/Lima');
 
-        // Consulta 100% de solo lectura (SELECT): obtiene el ranking del mes de publicación actual si ya fue publicado
+        // Consulta 100% de solo lectura (SELECT): nunca ejecuta sincronizaciones ni escrituras desde el sitio público
         $rankingPublicado = RankingMensual::with('posiciones')
             ->where('anio_publicacion', (int) $ahoraLima->year)
             ->where('mes_publicacion', (int) $ahoraLima->month)
@@ -29,14 +30,17 @@ class PaginaInicio extends Component
             ->whereNotNull('fecha_publicacion')
             ->first();
 
+        // Carga solo las propiedades activas marcadas como 'destacada' desde el panel admin
         $propiedadesDestacadas = Propiedad::where('activo', true)
             ->where('destacada', true)
             ->orderBy('id')
             ->get();
 
+        // Obtiene los registros Singleton (id = 1) de contacto global y portada principal
         $contacto = ConfiguracionContacto::obtenerUnica();
         $portada = ConfiguracionPortada::obtenerUnica();
 
+        // layoutData() inyecta metadatos SEO (meta description y og:image) al layout publico.blade.php
         return view('livewire.publico.pagina-inicio', [
             'rankingPublicado' => $rankingPublicado,
             'propiedadesDestacadas' => $propiedadesDestacadas,

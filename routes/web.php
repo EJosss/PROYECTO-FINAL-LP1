@@ -21,15 +21,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Sitio Público
+// ============================================================================
+// ZONA 1: SITIO PÚBLICO (Componentes Full-Page de Livewire 4, sin Controllers)
+// ============================================================================
 Route::get('/', PaginaInicio::class)->name('inicio');
 Route::get('/empresa', PaginaEmpresa::class)->name('empresa');
 Route::get('/propiedades', PaginaPropiedades::class)->name('propiedades');
 Route::get('/oficinas', PaginaOficinas::class)->name('oficinas');
 Route::get('/oficinas/{oficina}', PaginaPropiedadesOficina::class)->name('oficinas.propiedades');
 Route::get('/contacto', PaginaContacto::class)->name('contacto');
+
+// Único controlador tradicional (__invoke): responde JSON sin estado para monitoreo de salud (200 / 503)
 Route::get('/salud', EstadoSistemaController::class)->name('sistema.salud');
 
+// ============================================================================
+// ZONA 2: SEO TÉCNICO — Sitemap XML dinámico (rutas públicas + 4 sedes fijas)
+// ============================================================================
 Route::get('/sitemap.xml', function () {
     $urls = [
         ['loc' => route('inicio'), 'changefreq' => 'daily', 'priority' => '1.0'],
@@ -39,6 +46,7 @@ Route::get('/sitemap.xml', function () {
         ['loc' => route('contacto'), 'changefreq' => 'monthly', 'priority' => '0.7'],
     ];
 
+    // Agrega dinámicamente cada oficina oficial (arequipa, lima, moquegua, puno)
     foreach (array_keys(Propiedad::SLUGS_OFICINAS) as $slugOficina) {
         $urls[] = [
             'loc' => route('oficinas.propiedades', $slugOficina),
@@ -61,20 +69,25 @@ Route::get('/sitemap.xml', function () {
     return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
 })->name('sitemap');
 
-// Autenticación
+// ============================================================================
+// ZONA 3: AUTENTICACIÓN (Login solo para invitados y Logout protegido por POST)
+// ============================================================================
 Route::middleware('guest')->group(function () {
     Route::get('/admin/login', IniciarSesion::class)->name('login');
 });
 
+// Se usa POST (con token CSRF) para evitar cierres de sesión forzados desde enlaces externos
 Route::post('/admin/logout', function (Request $request) {
     Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+    $request->session()->invalidate();      // Destruye los datos de la sesión actual
+    $request->session()->regenerateToken(); // Emite un nuevo token CSRF limpio
 
     return redirect()->route('login');
 })->middleware('auth')->name('logout');
 
-// Panel Administrativo
+// ============================================================================
+// ZONA 4: PANEL ADMINISTRATIVO (/admin/*) — Protegido por sesión y roles
+// ============================================================================
 Route::prefix('admin')->middleware(['auth', 'rol:ADMINISTRADOR,MARKETING'])->group(function () {
     Route::redirect('/', '/admin/propiedades');
 
@@ -83,7 +96,7 @@ Route::prefix('admin')->middleware(['auth', 'rol:ADMINISTRADOR,MARKETING'])->gro
     Route::get('/agentes', GestionAgentes::class)->name('admin.agentes');
     Route::get('/ranking-actual', GestionRankingActual::class)->name('admin.ranking.actual');
 
-    // Módulos exclusivos del ADMINISTRADOR
+    // Módulos exclusivos del ADMINISTRADOR (MARKETING recibe error 403 en VerificarRol)
     Route::middleware('rol:ADMINISTRADOR')->group(function () {
         Route::get('/portada', GestionPortada::class)->name('admin.portada');
         Route::get('/oficinas', GestionOficinas::class)->name('admin.oficinas');
@@ -93,4 +106,5 @@ Route::prefix('admin')->middleware(['auth', 'rol:ADMINISTRADOR,MARKETING'])->gro
     });
 });
 
+// Carga las rutas de configuración personal de cuenta (perfil, apariencia/modo oscuro y seguridad 2FA)
 require __DIR__.'/settings.php';

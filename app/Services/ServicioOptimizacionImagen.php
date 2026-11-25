@@ -5,6 +5,11 @@ namespace App\Services;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
+/**
+ * Optimiza imágenes locales a formato WebP usando PHP GD nativo (sin paquetes externos).
+ * Redimensiona proporcionalmente (máx. 1200 px), preserva transparencia PNG, usa caché por filemtime()
+ * y conserva siempre la imagen original como respaldo para navegadores sin soporte WebP.
+ */
 class ServicioOptimizacionImagen
 {
     private const ANCHO_MAXIMO_DEFECTO = 1200;

@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Cabecera del Ranking Mensual ("Vendedores Estrella del Mes").
+ * Ciclo de vida: BORRADOR -> PUBLICADO -> CERRADO (o BORRADOR -> VENCIDO si pasa el día 3 sin publicar).
+ * Protegido en doble capa: hooks booted() en Eloquent + Triggers BEFORE en MySQL (migración 0004).
+ */
 class RankingMensual extends Model
 {
     protected $table = 'rankings_mensuales';
 
+    // Estados oficiales del ciclo de vida de cada período mensual
     public const ESTADO_BORRADOR = 'BORRADOR';
     public const ESTADO_PUBLICADO = 'PUBLICADO';
     public const ESTADO_CERRADO = 'CERRADO';
