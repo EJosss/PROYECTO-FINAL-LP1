@@ -39,6 +39,7 @@ class GestionPropiedades extends Component
     public ?string $mensajeExito = null;
     public ?string $mensajeError = null;
 
+    // Limpia el formulario y abre el panel lateral en modo creación ("Nueva propiedad")
     public function nuevaPropiedad(): void
     {
         $this->mensajeExito = null;
@@ -47,6 +48,7 @@ class GestionPropiedades extends Component
         $this->mostrarFormulario = true;
     }
 
+    // Busca la propiedad por ID en MySQL, carga sus datos en el formulario y abre el panel lateral
     public function editarPropiedad(int $id): void
     {
         $propiedad = Propiedad::findOrFail($id);
@@ -69,12 +71,14 @@ class GestionPropiedades extends Component
         $this->mostrarFormulario = true;
     }
 
+    // Descarta la imagen temporal elegida antes de guardar y limpia errores de validación de archivo
     public function limpiarImagenSeleccionada(): void
     {
         $this->imagenArchivo = null;
         $this->resetErrorBag('imagenArchivo');
     }
 
+    // Valida campos (precio+moneda acoplados), guarda imagen+WebP, inserta/actualiza en BD y evita fotos huérfanas con try/catch
     public function guardarPropiedad(): void
     {
         $this->mensajeExito = null;
@@ -165,6 +169,7 @@ class GestionPropiedades extends Component
         $this->limpiarFormulario();
     }
 
+    // Invierte el booleano 'destacada' (estrella ★) para mostrar u ocultar la propiedad en la Portada pública
     public function alternarDestacada(int $id): void
     {
         $propiedad = Propiedad::findOrFail($id);
@@ -174,6 +179,7 @@ class GestionPropiedades extends Component
         ]);
     }
 
+    // Elimina la propiedad de MySQL y borra su imagen original + versión .webp del disco 'public'
     public function eliminarPropiedad(int $id): void
     {
         $propiedad = Propiedad::findOrFail($id);
@@ -196,6 +202,7 @@ class GestionPropiedades extends Component
         $this->mensajeExito = 'Propiedad eliminada correctamente.';
     }
 
+    // Restablece todas las propiedades del componente a sus valores iniciales y cierra el panel lateral
     public function limpiarFormulario(): void
     {
         $this->resetValidation();
@@ -213,6 +220,7 @@ class GestionPropiedades extends Component
         $this->mostrarFormulario = false;
     }
 
+    // Consulta propiedades filtradas por búsqueda (LIKE parametrizado), ordenadas de la más nueva a la más antigua
     public function render()
     {
         $propiedades = Propiedad::query()

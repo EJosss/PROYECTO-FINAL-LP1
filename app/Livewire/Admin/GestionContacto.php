@@ -28,6 +28,7 @@ class GestionContacto extends Component
 
     public ?string $mensajeExito = null;
 
+    // Verifica rol ADMINISTRADOR y carga el registro Singleton (id = 1) quitando el prefijo +51 para editar sin duplicarlo
     public function mount(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -46,6 +47,7 @@ class GestionContacto extends Component
         $this->whatsapp_postulacion = TelefonoPeru::quitarPrefijo($config->whatsapp_postulacion);
     }
 
+    // Valida todos los canales globales, formatea teléfonos con TelefonoPeru y actualiza el registro único id = 1
     public function guardarConfiguracion(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -83,6 +85,7 @@ class GestionContacto extends Component
         $this->mensajeExito = 'Información global de contacto actualizada correctamente.';
     }
 
+    // Renderiza el formulario de configuración global de contacto
     public function render()
     {
         return view('livewire.admin.gestion-contacto');

@@ -28,6 +28,7 @@ class GestionPortada extends Component
     public ?string $mensajeExito = null;
     public ?string $mensajeError = null;
 
+    // Verifica rol ADMINISTRADOR y carga el registro Singleton (id = 1) de portada
     public function mount(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -38,6 +39,7 @@ class GestionPortada extends Component
         $this->cargarDatosPortada($portada);
     }
 
+    // Descarta la imagen temporal elegida antes de guardar la portada
     public function limpiarImagenSeleccionada(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -48,6 +50,7 @@ class GestionPortada extends Component
         $this->resetErrorBag('imagenArchivo');
     }
 
+    // Valida la nueva imagen, genera versión WebP, actualiza el Singleton id = 1 y limpia la foto anterior si cambió
     public function guardarPortada(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -103,6 +106,7 @@ class GestionPortada extends Component
         $this->mensajeExito = 'Fotografía de la portada principal actualizada correctamente.';
     }
 
+    // Sincroniza la ruta y URL actual de la portada en las propiedades del componente
     private function cargarDatosPortada(ConfiguracionPortada $portada): void
     {
         $this->imagenActual = $portada->imagen;
@@ -110,6 +114,7 @@ class GestionPortada extends Component
         $this->imagenArchivo = null;
     }
 
+    // Renderiza la vista de configuración de portada principal
     public function render()
     {
         return view('livewire.admin.gestion-portada');

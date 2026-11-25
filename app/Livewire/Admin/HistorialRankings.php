@@ -20,6 +20,7 @@ class HistorialRankings extends Component
     public ?int $anioFiltro = null;
     public ?int $mesFiltro = null;
 
+    // Verifica rol Admin, sincroniza estados vencidos y preselecciona el último ranking cerrado o publicado
     public function mount(ServicioRankingMensual $servicio): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -46,6 +47,7 @@ class HistorialRankings extends Component
         }
     }
 
+    // Consulta en modo solo lectura los snapshots inmutables del año y mes filtrados por el Administrador
     public function render()
     {
         if (! Auth::user()?->esAdministrador()) {

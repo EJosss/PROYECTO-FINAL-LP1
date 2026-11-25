@@ -41,11 +41,13 @@ class GestionAgentes extends Component
     public ?string $mensajeExito = null;
     public ?string $mensajeError = null;
 
+    // Verifica que el usuario autenticado esté activo y tenga rol ADMINISTRADOR o MARKETING
     public function mount(): void
     {
         $this->verificarAutorizacion();
     }
 
+    // Limpia el formulario y abre el panel lateral en modo registro de nuevo agente
     public function nuevoAgente(): void
     {
         $this->verificarAutorizacion();
@@ -53,6 +55,7 @@ class GestionAgentes extends Component
         $this->mostrarFormulario = true;
     }
 
+    // Carga los datos del agente (quitando el prefijo +51 para editar limpio) y abre el panel lateral
     public function editarAgente(int $id): void
     {
         $this->verificarAutorizacion();
@@ -77,6 +80,7 @@ class GestionAgentes extends Component
         $this->mostrarFormulario = true;
     }
 
+    // Descarta la foto temporal seleccionada antes de guardar y limpia errores de carga
     public function limpiarFotografiaSeleccionada(): void
     {
         $this->verificarAutorizacion();
@@ -85,6 +89,7 @@ class GestionAgentes extends Component
         $this->resetErrorBag('fotografiaArchivo');
     }
 
+    // Valida datos, normaliza teléfonos (+51), guarda foto+WebP, crea/actualiza en BD y limpia fotos huérfanas con try/catch
     public function guardarAgente(): void
     {
         $this->verificarAutorizacion();
@@ -178,6 +183,7 @@ class GestionAgentes extends Component
         $this->limpiarFormulario();
     }
 
+    // Activa o inactiva al agente para mostrarlo u ocultarlo en la página pública /empresa
     public function alternarEstado(int $id): void
     {
         $this->verificarAutorizacion();
@@ -198,6 +204,7 @@ class GestionAgentes extends Component
             : "El agente {$agente->nombre_completo} fue inactivado y ocultado del sitio público.";
     }
 
+    // Elimina el agente de MySQL y borra su fotografía del disco 'public' si existía
     public function eliminarAgente(int $id): void
     {
         $this->verificarAutorizacion();
@@ -222,6 +229,7 @@ class GestionAgentes extends Component
         $this->mensajeExito = 'Agente eliminado correctamente del directorio.';
     }
 
+    // Reinicia las propiedades del formulario y cierra el panel lateral
     public function limpiarFormulario(): void
     {
         $this->resetValidation();
@@ -239,6 +247,7 @@ class GestionAgentes extends Component
         $this->mostrarFormulario = false;
     }
 
+    // Valida internamente que el usuario siga activo y autorizado (defensa adicional al middleware)
     private function verificarAutorizacion(): void
     {
         /** @var Usuario|null $usuario */
@@ -249,6 +258,7 @@ class GestionAgentes extends Component
         }
     }
 
+    // Filtra agentes por búsqueda (nombre, apellido, celular o correo) y renderiza el listado
     public function render()
     {
         $agentes = Agente::query()

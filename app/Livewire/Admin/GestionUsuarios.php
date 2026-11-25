@@ -28,6 +28,7 @@ class GestionUsuarios extends Component
     public ?string $mensajeError = null;
     public bool $mostrarFormulario = false;
 
+    // Doble verificación de seguridad: solo permite entrar al rol ADMINISTRADOR (abort 403)
     public function mount(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -35,12 +36,14 @@ class GestionUsuarios extends Component
         }
     }
 
+    // Limpia el formulario y abre el panel lateral para crear una nueva cuenta
     public function nuevoUsuario(): void
     {
         $this->limpiarFormulario();
         $this->mostrarFormulario = true;
     }
 
+    // Carga los datos del usuario seleccionado (dejando password vacío para no sobrescribir bcrypt) y abre el editor
     public function editarUsuario(int $id): void
     {
         $usuario = Usuario::findOrFail($id);
@@ -58,6 +61,7 @@ class GestionUsuarios extends Component
         $this->mostrarFormulario = true;
     }
 
+    // Impide auto-suspenderse/quitarse Admin, valida correo único y crea o actualiza el usuario en MySQL
     public function guardarUsuario(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -120,6 +124,7 @@ class GestionUsuarios extends Component
         $this->limpiarFormulario();
     }
 
+    // Reinicia el formulario de usuario y cierra el panel lateral
     public function limpiarFormulario(): void
     {
         $this->resetValidation();
@@ -132,6 +137,7 @@ class GestionUsuarios extends Component
         $this->mostrarFormulario = false;
     }
 
+    // Lista todos los usuarios ordenados por ID y renderiza la tabla administrativa
     public function render()
     {
         $usuarios = Usuario::orderBy('id')->get();

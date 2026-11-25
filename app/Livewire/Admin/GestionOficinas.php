@@ -40,6 +40,7 @@ class GestionOficinas extends Component
     public ?string $mensajeError = null;
     public bool $mostrarFormulario = false;
 
+    // Verifica rol ADMINISTRADOR y precarga en memoria la primera de las 4 sedes oficiales
     public function mount(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -52,6 +53,7 @@ class GestionOficinas extends Component
         }
     }
 
+    // Carga los datos de la sede elegida (Arequipa, Lima, Moquegua o Puno) y abre el panel lateral
     public function seleccionarOficina(int $id): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -68,12 +70,14 @@ class GestionOficinas extends Component
         $this->mostrarFormulario = true;
     }
 
+    // Limpia errores de validación y cierra el panel lateral de edición
     public function cerrarEditor(): void
     {
         $this->resetValidation();
         $this->mostrarFormulario = false;
     }
 
+    // Valida contacto/foto, genera WebP, actualiza la sede sin alterar código/slug y borra la foto anterior post-guardado
     public function guardarOficina(): void
     {
         if (! Auth::user()?->esAdministrador()) {
@@ -160,6 +164,7 @@ class GestionOficinas extends Component
         $this->mensajeExito = "Información de la oficina {$oficina->nombre} actualizada correctamente.";
     }
 
+    // Copia los atributos del modelo Oficina al estado del formulario quitando el prefijo +51
     private function cargarDatosOficina(Oficina $oficina): void
     {
         $this->oficinaId = $oficina->id;
@@ -177,6 +182,7 @@ class GestionOficinas extends Component
         $this->imagenArchivo = null;
     }
 
+    // Convierte cadenas vacías o solo espacios en null para guardar datos opcionales limpios en MySQL
     private function normalizarTextoOpcional(?string $valor): ?string
     {
         if ($valor === null) {
@@ -188,6 +194,7 @@ class GestionOficinas extends Component
         return $limpio !== '' ? $limpio : null;
     }
 
+    // Obtiene las 4 oficinas en orden institucional fijo (Oficina::obtenerTodas) y renderiza la tabla
     public function render()
     {
         $oficinas = Oficina::obtenerTodas();

@@ -42,6 +42,7 @@ class GestionRankingActual extends Component
 
     public ?string $mensajeError = null;
 
+    // Verifica permisos, sincroniza rankings vencidos (día 4+) y carga los 3 puestos del período vigente
     public function mount(ServicioRankingMensual $servicio): void
     {
         $usuario = Auth::user();
@@ -53,6 +54,7 @@ class GestionRankingActual extends Component
         $this->cargarDatosDelPeriodoActual();
     }
 
+    // Consulta el ranking del mes de desempeño actual y precarga los 3 puestos fijos (1, 2 y 3) en pantalla
     private function cargarDatosDelPeriodoActual(): void
     {
         $periodo = RankingMensual::periodoActual();
@@ -77,6 +79,7 @@ class GestionRankingActual extends Component
         }
     }
 
+    // Quita la fotografía temporal seleccionada para uno de los 3 puestos antes de guardar
     public function limpiarFotoPuesto(int $puesto): void
     {
         if (! in_array($puesto, [1, 2, 3], true)) {
@@ -88,6 +91,7 @@ class GestionRankingActual extends Component
         $this->resetErrorBag($campoFoto);
     }
 
+    // Valida plazo (días 1-3) y datos del puesto, y delega el guardado transaccional (lockForUpdate) a ServicioRankingMensual
     public function guardarPuesto(int $puesto, ServicioRankingMensual $servicio): void
     {
         if (! in_array($puesto, [1, 2, 3], true)) {
@@ -155,6 +159,7 @@ class GestionRankingActual extends Component
         }
     }
 
+    // Publica definitivamente el ranking (solo si los 3 puestos están completos y sin celulares duplicados)
     public function publicarRanking(ServicioRankingMensual $servicio): void
     {
         $this->mensajeExito = null;
@@ -173,6 +178,7 @@ class GestionRankingActual extends Component
         }
     }
 
+    // Evalúa en tiempo real si hoy está dentro de los días 1-3 (America/Lima) y renderiza la vista del podio
     public function render()
     {
         $periodo = RankingMensual::periodoActual();
