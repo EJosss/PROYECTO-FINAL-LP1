@@ -9,6 +9,10 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
+/**
+ * Gestión de cuentas y roles ADMINISTRADOR / MARKETING (exclusivo para ADMINISTRADOR).
+ * Impide auto-desactivarse o quitarse el rol Admin; al editar, la contraseña es opcional para no sobrescribir bcrypt.
+ */
 #[Layout('components.layouts.admin')]
 #[Title('Gestión de Usuarios y Roles | RE/MAX Zona')]
 class GestionUsuarios extends Component

@@ -11,6 +11,10 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
+/**
+ * Edición de la imagen principal de la portada pública (exclusivo para ADMINISTRADOR).
+ * Trabaja sobre el registro Singleton (id = 1) de ConfiguracionPortada y genera versión WebP automáticamente.
+ */
 #[Layout('components.layouts.admin')]
 #[Title('Portada Principal | RE/MAX Zona')]
 class GestionPortada extends Component

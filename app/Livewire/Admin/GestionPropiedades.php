@@ -10,6 +10,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
+/**
+ * CRUD administrativo de Propiedades (accesible para ADMINISTRADOR y MARKETING).
+ * Incluye validación condicional precio/moneda (respaldada por CHECK en MySQL),
+ * generación automática WebP al subir imagen y limpieza segura para evitar archivos huérfanos.
+ */
 #[Layout('components.layouts.admin')]
 #[Title('Gestión de Propiedades | RE/MAX Zona')]
 class GestionPropiedades extends Component
@@ -218,7 +223,7 @@ class GestionPropiedades extends Component
                         ->orWhere('ubicacion', 'like', $termino);
                 });
             })
-            ->orderByDesc('id')
+            ->orderBy('id')
             ->get();
 
         return view('livewire.admin.gestion-propiedades', [

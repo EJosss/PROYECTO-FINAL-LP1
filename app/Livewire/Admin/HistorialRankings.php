@@ -9,6 +9,10 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
+/**
+ * Consulta histórica de solo lectura de Rankings Mensuales (exclusivo para ADMINISTRADOR).
+ * Permite filtrar por año y mes mostrando los snapshots inmutables de cada período cerrado o publicado.
+ */
 #[Layout('components.layouts.admin')]
 #[Title('Historial de Rankings | RE/MAX Zona')]
 class HistorialRankings extends Component

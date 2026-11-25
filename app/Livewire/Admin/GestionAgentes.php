@@ -13,6 +13,10 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
+/**
+ * CRUD administrativo del directorio de Agentes (accesible para ADMINISTRADOR y MARKETING).
+ * Gestiona fotografía (con conversión WebP), biografía y canales de contacto normalizados con TelefonoPeru.
+ */
 #[Layout('components.layouts.admin')]
 #[Title('Gestión de Agentes | RE/MAX Zona')]
 class GestionAgentes extends Component

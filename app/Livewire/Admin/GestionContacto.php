@@ -9,6 +9,10 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
+/**
+ * Edición de datos globales de contacto y WhatsApp de la empresa (exclusivo para ADMINISTRADOR).
+ * Opera sobre el registro Singleton (id = 1) de ConfiguracionContacto y normaliza teléfonos con TelefonoPeru.
+ */
 #[Layout('components.layouts.admin')]
 #[Title('Configuración de Contacto | RE/MAX Zona')]
 class GestionContacto extends Component

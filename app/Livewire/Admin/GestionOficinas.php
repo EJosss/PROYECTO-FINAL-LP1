@@ -12,6 +12,10 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
+/**
+ * Edición de las 4 oficinas oficiales fijas (exclusivo para ADMINISTRADOR).
+ * Solo permite actualizar datos de contacto y fotografía; el modelo Oficina prohíbe crear, borrar o cambiar slugs.
+ */
 #[Layout('components.layouts.admin')]
 #[Title('Gestión de Oficinas | RE/MAX Zona')]
 class GestionOficinas extends Component

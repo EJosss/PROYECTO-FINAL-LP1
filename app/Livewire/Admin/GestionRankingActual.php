@@ -13,6 +13,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
+/**
+ * Gestión del Ranking Mensual vigente ("Vendedores Estrella del Mes").
+ * Solo editable durante los 3 primeros días del mes (America/Lima); delega transacciones,
+ * bloqueos pesimistas (lockForUpdate), duplicados y publicación atómica a ServicioRankingMensual.
+ */
 #[Layout('components.layouts.admin')]
 #[Title('Ranking Mensual | RE/MAX Zona')]
 class GestionRankingActual extends Component
