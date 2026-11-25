@@ -1,0 +1,1852 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual de Usuario — RE/MAX Zona Inmobiliaria (v1.0)</title>
+  <style>
+    :root {
+      --blue: #003da5;
+      --blue-mid: #1768d5;
+      --navy: #071d49;
+      --navy-deep: #04122e;
+      --red: #dc1c2e;
+      --yellow: #ffd000;
+      --ink: #182238;
+      --muted: #525e75;
+      --line: #dce5f0;
+      --soft: #f4f7fb;
+      --surface: #ffffff;
+      --green: #0c8a4b;
+      --green-bg: #ecfdf3;
+      --amber: #b45309;
+      --amber-bg: #fffbeb;
+      --danger: #b91c1c;
+      --danger-bg: #fef2f2;
+      --info-bg: #eff6ff;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #e9eff7;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.58;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ===== SCREEN NAVIGATION SIDEBAR ===== */
+    .screen-nav {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 280px;
+      background: var(--navy);
+      color: #dbe7fb;
+      padding: 1.25rem 1rem 2rem;
+      overflow-y: auto;
+      z-index: 50;
+      box-shadow: 4px 0 24px rgba(7, 29, 73, 0.2);
+    }
+    .screen-nav__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 0.75rem;
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    .screen-nav__brand img { height: 34px; width: auto; display: block; }
+    .screen-nav__meta {
+      font-size: 0.76rem;
+      color: #9fb7e0;
+      margin: 0 0 0.85rem;
+      padding: 0 0.25rem;
+    }
+    .screen-nav__print {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 0;
+      border-radius: 8px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-bottom: 1.15rem;
+    }
+    .screen-nav__print:hover { filter: brightness(0.95); }
+    .screen-nav ul { list-style: none; margin: 0; padding: 0; }
+    .screen-nav li { margin: 0.15rem 0; }
+    .screen-nav a {
+      display: block;
+      padding: 0.42rem 0.65rem;
+      border-radius: 6px;
+      color: #dbe7fb;
+      text-decoration: none;
+      font-size: 0.84rem;
+      transition: background 0.15s;
+    }
+    .screen-nav a:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .screen-nav .nav-sub { padding-left: 1.35rem; font-size: 0.78rem; color: #adc4ea; }
+
+    /* ===== DOCUMENT CONTAINER ===== */
+    .doc-shell {
+      margin-left: 280px;
+      padding: 2rem;
+    }
+    .doc-paper {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--surface);
+      box-shadow: 0 18px 50px rgba(7, 29, 73, 0.12);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* ===== COVER PAGE ===== */
+    .cover-page {
+      position: relative;
+      min-height: 296mm;
+      background: linear-gradient(155deg, var(--navy-deep) 0%, var(--navy) 48%, var(--blue) 100%);
+      color: #fff;
+      padding: 26mm 20mm 22mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+    .cover-page::before {
+      content: "";
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 208, 0, 0.16) 0%, rgba(255, 208, 0, 0) 70%);
+      pointer-events: none;
+    }
+    .cover-page::after {
+      content: "";
+      position: absolute;
+      bottom: 85px; left: -120px;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+    }
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .cover-logo-box {
+      background: #fff;
+      padding: 12px 22px;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+    .cover-logo-box img { height: 46px; width: auto; display: block; }
+    .cover-code-pill {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 9pt;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .cover-hero {
+      position: relative;
+      z-index: 2;
+      margin: 26mm 0 18mm;
+    }
+    .cover-accent-bars {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .cover-accent-bars span:nth-child(1) { width: 58px; height: 6px; border-radius: 3px; background: var(--yellow); }
+    .cover-accent-bars span:nth-child(2) { width: 28px; height: 6px; border-radius: 3px; background: var(--red); }
+    .cover-accent-bars span:nth-child(3) { width: 14px; height: 6px; border-radius: 3px; background: #60a5fa; }
+    .cover-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: var(--yellow);
+      margin: 0 0 10px;
+    }
+    .cover-title {
+      font-size: 34pt;
+      line-height: 1.1;
+      font-weight: 800;
+      margin: 0 0 14px;
+      letter-spacing: -0.02em;
+    }
+    .cover-subtitle {
+      font-size: 13.5pt;
+      line-height: 1.48;
+      color: #d6e4ff;
+      max-width: 580px;
+      margin: 0 0 24px;
+      font-weight: 400;
+    }
+    .cover-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .cover-badge {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 9pt;
+      font-weight: 600;
+      color: #f0f6ff;
+    }
+    .cover-preview {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 14mm;
+    }
+    .cover-preview img {
+      width: 100%;
+      height: 185px;
+      object-fit: cover;
+      object-position: top;
+      border-radius: 8px;
+      display: block;
+    }
+    .cover-meta-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      padding-top: 14px;
+    }
+    .cover-meta-item span {
+      display: block;
+      font-size: 7.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a9c4f5;
+      margin-bottom: 3px;
+    }
+    .cover-meta-item strong {
+      font-size: 9.5pt;
+      color: #fff;
+    }
+
+    /* ===== MAIN BODY SECTIONS ===== */
+    .doc-body {
+      padding: 18mm 18mm 20mm;
+    }
+    .section-break {
+      page-break-before: always;
+      break-before: page;
+    }
+    .chapter-header {
+      border-bottom: 2.5px solid var(--blue);
+      padding-bottom: 10px;
+      margin: 0 0 18px;
+    }
+    .chapter-eyebrow {
+      font-size: 8.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--blue-mid);
+      margin: 0 0 4px;
+    }
+    h1.chapter-title {
+      font-size: 20pt;
+      line-height: 1.2;
+      color: var(--navy);
+      margin: 0;
+      font-weight: 800;
+    }
+    h2 {
+      font-size: 13.5pt;
+      color: var(--navy);
+      margin: 22px 0 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--line);
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    h3 {
+      font-size: 11.2pt;
+      color: var(--blue);
+      margin: 16px 0 6px;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    p { margin: 0 0 10px; }
+    ul, ol { margin: 0 0 12px; padding-left: 1.4rem; }
+    li { margin-bottom: 5px; }
+    code {
+      font-family: Consolas, "Cascadia Code", monospace;
+      font-size: 0.88em;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--navy);
+    }
+    kbd {
+      font-family: Consolas, monospace;
+      font-size: 0.84em;
+      background: #fff;
+      border: 1px solid #b8c7dc;
+      border-bottom-width: 2px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .ui-btn {
+      display: inline-block;
+      background: var(--blue-mid);
+      color: #fff;
+      font-size: 0.85em;
+      font-weight: 700;
+      padding: 1px 8px;
+      border-radius: 5px;
+      vertical-align: baseline;
+    }
+    .ui-btn--soft {
+      background: #e8f0fe;
+      color: var(--blue);
+      border: 1px solid #c5dafc;
+    }
+    .ui-btn--danger {
+      background: #fee2e2;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+    }
+    .route-pill {
+      display: inline-block;
+      font-family: Consolas, monospace;
+      font-size: 0.82em;
+      background: var(--navy);
+      color: var(--yellow);
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-weight: 700;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .role-tag {
+      display: inline-block;
+      font-size: 7.8pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      vertical-align: middle;
+    }
+    .role-tag--admin { background: #e0ecff; color: var(--blue); border: 1px solid #b8d2ff; }
+    .role-tag--mkt { background: #ecfdf3; color: var(--green); border: 1px solid #a7f3d0; }
+    .role-tag--all { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+
+    /* ===== TABLES ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px;
+      font-size: 9.4pt;
+      break-inside: auto;
+    }
+    thead { display: table-header-group; }
+    tr { break-inside: avoid; page-break-inside: avoid; }
+    th {
+      background: var(--navy);
+      color: #fff;
+      text-align: left;
+      padding: 8px 10px;
+      font-weight: 700;
+      font-size: 8.8pt;
+      letter-spacing: 0.02em;
+    }
+    td {
+      padding: 7.5px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    tbody tr:nth-child(even) td { background: #f9fbfe; }
+    .badge-yes {
+      display: inline-block;
+      background: var(--green-bg);
+      color: var(--green);
+      font-weight: 800;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 8.3pt;
+    }
+    .badge-no {
+      display: inline-block;
+      background: var(--danger-bg);
+      color: var(--danger);
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 8.3pt;
+    }
+    .req-yes { color: var(--danger); font-weight: 700; }
+    .req-opt { color: var(--muted); font-weight: 600; }
+
+    /* ===== CALLOUTS ===== */
+    .callout {
+      border-left: 4px solid var(--blue);
+      background: var(--info-bg);
+      border-radius: 0 8px 8px 0;
+      padding: 11px 14px;
+      margin: 12px 0 16px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      font-size: 9.6pt;
+    }
+    .callout strong.callout-title {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 9.4pt;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--blue);
+    }
+    .callout--tip { border-left-color: var(--green); background: var(--green-bg); }
+    .callout--tip strong.callout-title { color: var(--green); }
+    .callout--warn { border-left-color: var(--amber); background: var(--amber-bg); }
+    .callout--warn strong.callout-title { color: var(--amber); }
+    .callout--danger { border-left-color: var(--danger); background: var(--danger-bg); }
+    .callout--danger strong.callout-title { color: var(--danger); }
+
+    /* ===== STEP CARDS ===== */
+    .steps-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 16px;
+      counter-reset: step-counter;
+    }
+    .steps-list li {
+      position: relative;
+      padding-left: 34px;
+      margin-bottom: 9px;
+      break-inside: avoid;
+    }
+    .steps-list li::before {
+      counter-increment: step-counter;
+      content: counter(step-counter);
+      position: absolute;
+      left: 0; top: 1px;
+      width: 23px; height: 23px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 800;
+      font-size: 8.5pt;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== FIGURES & SCREENSHOTS ===== */
+    .figure-card {
+      margin: 14px 0 18px;
+      padding: 10px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .figure-frame {
+      background: #fff;
+      border: 1px solid #cbd7e6;
+      border-radius: 7px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(7, 29, 73, 0.08);
+    }
+    .figure-frame img {
+      width: 100%;
+      height: auto;
+      max-height: 142mm;
+      object-fit: contain;
+      object-position: top center;
+      display: block;
+      background: #fff;
+    }
+    figcaption {
+      margin-top: 8px;
+      font-size: 8.9pt;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+    figcaption strong { color: var(--navy); }
+    .fig-note { display: inline; color: var(--muted); }
+
+    /* ===== DIAGRAMS ===== */
+    .diagram-box {
+      margin: 14px 0 18px;
+      padding: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+    .diagram-box svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .diagram-caption {
+      margin-top: 8px;
+      font-size: 8.8pt;
+      color: var(--muted);
+    }
+    .diagram-caption strong { color: var(--navy); }
+
+    /* ===== TOC ===== */
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 12px 0 18px;
+    }
+    .toc-card {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 12px 14px;
+      background: var(--soft);
+      break-inside: avoid;
+    }
+    .toc-card h3 { margin: 0 0 8px; font-size: 10.2pt; color: var(--navy); border-bottom: 1px solid var(--line); padding-bottom: 5px; }
+    .toc-card ul { list-style: none; padding: 0; margin: 0; font-size: 9pt; }
+    .toc-card li { margin: 4px 0; }
+    .toc-card a { color: var(--ink); text-decoration: none; }
+    .toc-card a:hover { color: var(--blue); text-decoration: underline; }
+
+    .fig-index {
+      column-count: 2;
+      column-gap: 20px;
+      font-size: 8.6pt;
+      list-style: none;
+      padding: 0;
+      margin: 8px 0 0;
+    }
+    .fig-index li { margin-bottom: 4px; break-inside: avoid; }
+    .fig-index a { color: var(--ink); text-decoration: none; }
+    .fig-index strong { color: var(--blue); }
+
+    /* ===== ICON LEGEND GRID ===== */
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0 16px;
+    }
+    .legend-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 11px;
+      background: var(--soft);
+      font-size: 9pt;
+      break-inside: avoid;
+    }
+    .legend-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 800;
+      margin-right: 7px;
+      font-size: 10pt;
+    }
+
+    /* ===== PRINT STYLES ===== */
+    @page {
+      size: A4 portrait;
+      margin: 16mm 14mm 18mm 14mm;
+    }
+    @page :first {
+      margin: 0;
+    }
+    @media print {
+      body { background: #fff; font-size: 9.8pt; }
+      .screen-nav { display: none !important; }
+      .doc-shell { margin-left: 0; padding: 0; }
+      .doc-paper { max-width: none; box-shadow: none; border-radius: 0; }
+      .doc-body { padding: 0; }
+      .cover-page { min-height: 297mm; width: 210mm; padding: 24mm 18mm 20mm; }
+      a { color: inherit; text-decoration: none; }
+      .figure-frame img { max-height: 122mm; }
+    }
+  </style>
+</head>
+<body>
+
+<aside class="screen-nav" aria-label="Índice lateral del manual">
+  <div class="screen-nav__brand">
+    <img src="imagenes-manual/logo-remax-zona.png" alt="RE/MAX Zona">
+  </div>
+  <p class="screen-nav__meta">Manual de Usuario v1.0 &bull; MAN-USR-RZ-001</p>
+  <button class="screen-nav__print" type="button" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+  <ul>
+    <li><a href="#portada">Portada</a></li>
+    <li><a href="#control-documental">Control Documental e Índice</a></li>
+    <li><a href="#cap-1">1. Introducción y Convenciones</a></li>
+    <li><a href="#cap-2">2. Guía del Sitio Web Público</a></li>
+    <li><a class="nav-sub" href="#sec-2-1">2.1 Navegación global y WhatsApp</a></li>
+    <li><a class="nav-sub" href="#sec-2-2">2.2 Página de Inicio</a></li>
+    <li><a class="nav-sub" href="#sec-2-3">2.3 Empresa y Directorio de Agentes</a></li>
+    <li><a class="nav-sub" href="#sec-2-4">2.4 Catálogo de Propiedades</a></li>
+    <li><a class="nav-sub" href="#sec-2-5">2.5 Oficinas y Catálogo por Sede</a></li>
+    <li><a class="nav-sub" href="#sec-2-6">2.6 Página de Contacto</a></li>
+    <li><a href="#cap-3">3. Acceso, Seguridad y Roles</a></li>
+    <li><a class="nav-sub" href="#sec-3-1">3.1 Inicio de sesión y 2FA</a></li>
+    <li><a class="nav-sub" href="#sec-3-2">3.2 Matriz de Roles y Permisos</a></li>
+    <li><a href="#cap-4">4. Módulos Operativos Compartidos</a></li>
+    <li><a class="nav-sub" href="#sec-4-1">4.1 Gestión de Propiedades</a></li>
+    <li><a class="nav-sub" href="#sec-4-2">4.2 Gestión de Agentes</a></li>
+    <li><a class="nav-sub" href="#sec-4-3">4.3 Ranking Mensual</a></li>
+    <li><a href="#cap-5">5. Módulos Exclusivos Administrador</a></li>
+    <li><a class="nav-sub" href="#sec-5-1">5.1 Portada Principal</a></li>
+    <li><a class="nav-sub" href="#sec-5-2">5.2 Gestión de Oficinas</a></li>
+    <li><a class="nav-sub" href="#sec-5-3">5.3 Historial de Rankings</a></li>
+    <li><a class="nav-sub" href="#sec-5-4">5.4 Contacto Global</a></li>
+    <li><a class="nav-sub" href="#sec-5-5">5.5 Usuarios y Roles</a></li>
+    <li><a href="#cap-6">6. Mi Cuenta y Seguridad Personal</a></li>
+    <li><a href="#cap-7">7. Preguntas Frecuentes (FAQ)</a></li>
+    <li><a href="#cap-8">8. Glosario y Anexo Técnico</a></li>
+  </ul>
+</aside>
+
+<div class="doc-shell">
+  <article class="doc-paper">
+
+    <!-- ==================== PORTADA ==================== -->
+    <header class="cover-page" id="portada">
+      <div class="cover-top">
+        <div class="cover-logo-box">
+          <img src="imagenes-manual/logo-remax-zona.png" alt="RE/MAX Zona Inmobiliaria">
+        </div>
+        <div class="cover-code-pill">MAN-USR-RZ-001 &bull; v1.0</div>
+      </div>
+
+      <div class="cover-hero">
+        <div class="cover-accent-bars"><span></span><span></span><span></span></div>
+        <p class="cover-kicker">Documentación Oficial de Operación y Uso</p>
+        <h1 class="cover-title">Manual de Usuario</h1>
+        <p class="cover-subtitle">
+          Guía integral del Portal Web Público y Panel Administrativo de
+          <strong>RE/MAX Zona Inmobiliaria</strong>: consulta de catálogo inmobiliario,
+          gestión de propiedades, directorio de agentes, ranking mensual, sedes regionales y seguridad de cuentas.
+        </p>
+        <div class="cover-badges">
+          <span class="cover-badge">Sitio Web Público</span>
+          <span class="cover-badge">Panel Administrativo</span>
+          <span class="cover-badge">Roles: Administrador &amp; Marketing</span>
+          <span class="cover-badge">Seguridad 2FA</span>
+        </div>
+      </div>
+
+      <div class="cover-preview">
+        <img src="imagenes-manual/01-publico-inicio.png" alt="Vista previa del portal RE/MAX Zona Inmobiliaria">
+      </div>
+
+      <div class="cover-meta-grid">
+        <div class="cover-meta-item">
+          <span>Organización</span>
+          <strong>RE/MAX Zona Inmobiliaria</strong>
+        </div>
+        <div class="cover-meta-item">
+          <span>Versión / Estado</span>
+          <strong>1.0 — Producción</strong>
+        </div>
+        <div class="cover-meta-item">
+          <span>Fecha de Emisión</span>
+          <strong>Noviembre 2026</strong>
+        </div>
+        <div class="cover-meta-item">
+          <span>Cobertura</span>
+          <strong>Arequipa, Lima, Moquegua y Puno</strong>
+        </div>
+      </div>
+    </header>
+
+    <div class="doc-body">
+
+      <!-- ==================== CONTROL DOCUMENTAL E ÍNDICE ==================== -->
+      <section id="control-documental">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Información del Documento</p>
+          <h1 class="chapter-title">Control Documental y Tabla de Contenidos</h1>
+        </div>
+
+        <h2>Ficha Técnica del Documento</h2>
+        <table>
+          <tbody>
+            <tr>
+              <th style="width:26%">Código del documento</th>
+              <td><code>MAN-USR-RZ-001</code></td>
+              <th style="width:22%">Versión</th>
+              <td>1.0</td>
+            </tr>
+            <tr>
+              <th>Sistema documentado</th>
+              <td>Portal Web y Panel Administrativo RE/MAX Zona Inmobiliaria</td>
+              <th>Fecha de emisión</th>
+              <td>Noviembre 2026</td>
+            </tr>
+            <tr>
+              <th>Público objetivo</th>
+              <td>Visitantes, Equipo de Marketing, Administradores y Soporte Técnico</td>
+              <th>Clasificación</th>
+              <td>Uso Institucional y Operativo</td>
+            </tr>
+            <tr>
+              <th>Plataforma tecnológica</th>
+              <td>Laravel + Livewire + MySQL (Interfaz Web Responsiva WCAG 2.1 AA)</td>
+              <th>Idioma / Zona horaria</th>
+              <td>Español (PE) / <code>America/Lima</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Historial de Revisiones</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:12%">Versión</th>
+              <th style="width:18%">Fecha</th>
+              <th style="width:25%">Responsable</th>
+              <th>Descripción del cambio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1.0</strong></td>
+              <td>Noviembre 2026</td>
+              <td>Equipo de Proyecto RE/MAX Zona</td>
+              <td>Emisión inicial del manual de usuario completo con capturas reales del sistema, diagramas operativos, matriz de permisos, diccionario de campos y guía de seguridad 2FA.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Tabla de Contenidos</h2>
+        <div class="toc-grid">
+          <div class="toc-card">
+            <h3>Parte I — Fundamentos y Sitio Público</h3>
+            <ul>
+              <li><a href="#cap-1"><strong>1.</strong> Introducción, Requisitos y Convenciones</a></li>
+              <li><a href="#cap-2"><strong>2.</strong> Guía del Sitio Web Público</a></li>
+              <li><a href="#sec-2-1">&nbsp;&nbsp;2.1 Navegación global, pie de página y WhatsApp</a></li>
+              <li><a href="#sec-2-2">&nbsp;&nbsp;2.2 Página de Inicio (<code>/</code>)</a></li>
+              <li><a href="#sec-2-3">&nbsp;&nbsp;2.3 Empresa y Directorio de Agentes (<code>/empresa</code>)</a></li>
+              <li><a href="#sec-2-4">&nbsp;&nbsp;2.4 Catálogo General de Propiedades (<code>/propiedades</code>)</a></li>
+              <li><a href="#sec-2-5">&nbsp;&nbsp;2.5 Oficinas y Catálogo por Sede (<code>/oficinas</code>)</a></li>
+              <li><a href="#sec-2-6">&nbsp;&nbsp;2.6 Página de Contacto (<code>/contacto</code>)</a></li>
+            </ul>
+          </div>
+          <div class="toc-card">
+            <h3>Parte II — Panel Administrativo y Soporte</h3>
+            <ul>
+              <li><a href="#cap-3"><strong>3.</strong> Acceso, Seguridad (2FA) y Roles del Panel</a></li>
+              <li><a href="#cap-4"><strong>4.</strong> Módulos Operativos (Propiedades, Agentes, Ranking)</a></li>
+              <li><a href="#cap-5"><strong>5.</strong> Módulos Exclusivos del Administrador</a></li>
+              <li><a href="#sec-5-1">&nbsp;&nbsp;5.1 Portada Principal &bull; 5.2 Oficinas &bull; 5.3 Historial</a></li>
+              <li><a href="#sec-5-4">&nbsp;&nbsp;5.4 Contacto Global &bull; 5.5 Usuarios y Roles</a></li>
+              <li><a href="#cap-6"><strong>6.</strong> Mi Cuenta, Apariencia y Seguridad Personal</a></li>
+              <li><a href="#cap-7"><strong>7.</strong> Preguntas Frecuentes y Solución de Problemas</a></li>
+              <li><a href="#cap-8"><strong>8.</strong> Glosario de Términos y Anexo Técnico</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Índice de Figuras</h2>
+        <ul class="fig-index">
+          <li><a href="#fig-1"><strong>Figura 1.</strong> Portada principal (Hero) de Inicio</a></li>
+          <li><a href="#fig-2"><strong>Figura 2.</strong> Sección de Propiedades Destacadas</a></li>
+          <li><a href="#fig-3"><strong>Figura 3.</strong> Página Empresa e Identidad Corporativa</a></li>
+          <li><a href="#fig-4"><strong>Figura 4.</strong> Directorio público de agentes inmobiliarios</a></li>
+          <li><a href="#fig-5"><strong>Figura 5.</strong> Catálogo general con filtros en tiempo real</a></li>
+          <li><a href="#fig-6"><strong>Figura 6.</strong> Directorio de las cuatro sedes oficiales</a></li>
+          <li><a href="#fig-7"><strong>Figura 7.</strong> Catálogo filtrado por oficina (Arequipa)</a></li>
+          <li><a href="#fig-8"><strong>Figura 8.</strong> Página de Contacto y canales oficiales</a></li>
+          <li><a href="#fig-9"><strong>Figura 9.</strong> Pantalla de inicio de sesión administrativo</a></li>
+          <li><a href="#fig-10"><strong>Figura 10.</strong> Gestión de Propiedades (listado principal)</a></li>
+          <li><a href="#fig-11"><strong>Figura 11.</strong> Editor lateral maestro-detalle de Propiedad</a></li>
+          <li><a href="#fig-12"><strong>Figura 12.</strong> Gestión de Agentes y zona de carga de foto</a></li>
+          <li><a href="#fig-13"><strong>Figura 13.</strong> Módulo de Gestión del Ranking Mensual</a></li>
+          <li><a href="#fig-14"><strong>Figura 14.</strong> Configuración de Portada Principal</a></li>
+          <li><a href="#fig-15"><strong>Figura 15.</strong> Gestión de las cuatro Oficinas Oficiales</a></li>
+          <li><a href="#fig-16"><strong>Figura 16.</strong> Historial de Rankings Mensuales (solo lectura)</a></li>
+          <li><a href="#fig-17"><strong>Figura 17.</strong> Configuración de Información Global de Contacto</a></li>
+          <li><a href="#fig-18"><strong>Figura 18.</strong> Gestión de Usuarios y Roles</a></li>
+          <li><a href="#fig-19"><strong>Figura 19.</strong> Configuración de Perfil de Usuario</a></li>
+          <li><a href="#fig-20"><strong>Figura 20.</strong> Apariencia del Panel (Modo Claro)</a></li>
+          <li><a href="#fig-21"><strong>Figura 21.</strong> Apariencia del Panel (Modo Oscuro)</a></li>
+          <li><a href="#fig-22"><strong>Figura 22.</strong> Seguridad de la Cuenta (Contraseña y 2FA)</a></li>
+        </ul>
+      </section>
+
+      <!-- ==================== CAPÍTULO 1 ==================== -->
+      <section class="section-break" id="cap-1">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 1</p>
+          <h1 class="chapter-title">Introducción, Requisitos y Convenciones</h1>
+        </div>
+
+        <h2>1.1 Propósito del sistema</h2>
+        <p>
+          La plataforma web de <strong>RE/MAX Zona Inmobiliaria</strong> centraliza la presencia digital de la empresa y
+          permite administrar de forma ágil y segura su oferta inmobiliaria en el sur del Perú y Lima. Se compone de dos
+          entornos integrados sobre una misma base de datos en tiempo real:
+        </p>
+        <ul>
+          <li><strong>Sitio Web Público:</strong> Portal abierto al público para explorar propiedades filtrables por texto, ubicación, moneda u oficina, consultar los vendedores destacados del mes, conocer al directorio oficial de agentes y contactar por teléfono, correo o WhatsApp.</li>
+          <li><strong>Panel Administrativo (Intranet):</strong> Consola privada protegida por credenciales, control de roles (<code>ADMINISTRADOR</code> y <code>MARKETING</code>) y autenticación opcional en dos pasos (2FA), donde el equipo publica, actualiza y supervisa todo el contenido del portal sin requerir conocimientos de programación.</li>
+        </ul>
+
+        <h2>1.2 Requisitos técnicos y accesibilidad</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:28%">Aspecto</th>
+              <th>Requisito o característica soportada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Navegadores compatibles</strong></td>
+              <td>Versiones actuales de Google Chrome, Microsoft Edge, Mozilla Firefox y Apple Safari (escritorio, tableta y móvil).</td>
+            </tr>
+            <tr>
+              <td><strong>JavaScript y Cookies</strong></td>
+              <td>Habilitados para el filtrado instantáneo del catálogo, vistas previas de imágenes y operaciones Livewire del panel.</td>
+            </tr>
+            <tr>
+              <td><strong>Accesibilidad (WCAG 2.1 AA)</strong></td>
+              <td>Navegación íntegra mediante teclado (<kbd>Tab</kbd>, <kbd>Shift</kbd>+<kbd>Tab</kbd>, <kbd>Enter</kbd>, <kbd>Espacio</kbd>), enlace rápido <em>«Saltar al contenido»</em>, indicadores visuales de enfoque, contraste verificado y compatibilidad con lectores de pantalla.</td>
+            </tr>
+            <tr>
+              <td><strong>Optimización automática</strong></td>
+              <td>Toda fotografía subida desde el panel (JPG, JPEG, PNG o WebP hasta 4 MB) se optimiza automáticamente generando una copia ligera en formato <strong>WebP</strong> sin perder el archivo original.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>1.3 Convenciones visuales de este manual</h2>
+        <p>Para facilitar la lectura rápida durante la operación diaria, en este manual se utilizan las siguientes convenciones:</p>
+
+        <div class="legend-grid">
+          <div class="legend-item"><span class="legend-icon">★</span><strong>Destacar (Inicio):</strong> Marca o quita una propiedad de la portada principal.</div>
+          <div class="legend-item"><span class="legend-icon">✎</span><strong>Editar registro:</strong> Abre el panel lateral con los datos actuales para modificarlos.</div>
+          <div class="legend-item"><span class="legend-icon">⌫</span><strong>Eliminar registro:</strong> Solicita confirmación antes de borrar permanentemente.</div>
+          <div class="legend-item"><span class="legend-icon">✓</span><strong>Activar / Inactivar:</strong> Alterna visibilidad pública de agentes con un solo clic.</div>
+          <div class="legend-item"><span class="ui-btn">Botón de acción</span><br>Acción principal en pantalla.</div>
+          <div class="legend-item"><span class="route-pill" style="margin:0">/ruta-web</span><br>Dirección URL directa del módulo.</div>
+        </div>
+
+        <div class="callout">
+          <strong class="callout-title">Nota informativa</strong>
+          Destaca comportamiento automático del sistema o detalles técnicos útiles para comprender una pantalla.
+        </div>
+        <div class="callout callout--tip">
+          <strong class="callout-title">Consejo operativo</strong>
+          Recomendaciones de buenas prácticas (por ejemplo, proporción recomendada de fotografías o atajos de carga).
+        </div>
+        <div class="callout callout--warn">
+          <strong class="callout-title">Importante / Regla de negocio</strong>
+          Restricciones obligatorias del sistema (como la ventana de días 1 al 3 para el Ranking Mensual o campos requeridos).
+        </div>
+      </section>
+
+      <!-- ==================== CAPÍTULO 2 ==================== -->
+      <section class="section-break" id="cap-2">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 2</p>
+          <h1 class="chapter-title">Guía del Sitio Web Público</h1>
+        </div>
+
+        <p>
+          El sitio público está diseñado para que cualquier cliente interesado en comprar, vender, alquilar o invertir
+          encuentre rápidamente propiedades, oficinas y asesores autorizados.
+        </p>
+
+        <div class="diagram-box">
+          <svg viewBox="0 0 820 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa de navegación del sitio web público">
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#1768d5"/>
+              </marker>
+            </defs>
+            <rect x="295" y="12" width="230" height="44" rx="8" fill="#071d49"/>
+            <text x="410" y="31" fill="#ffd000" font-size="11" font-weight="700" text-anchor="middle">PORTAL PÚBLICO RE/MAX ZONA</text>
+            <text x="410" y="46" fill="#ffffff" font-size="10" text-anchor="middle">Barra Superior + Botón WhatsApp Global</text>
+
+            <line x1="410" y1="56" x2="410" y2="78" stroke="#1768d5" stroke-width="2"/>
+            <line x1="88" y1="78" x2="732" y2="78" stroke="#1768d5" stroke-width="2"/>
+            <line x1="88" y1="78" x2="88" y2="100" stroke="#1768d5" stroke-width="2" marker-end="url(#arr)"/>
+            <line x1="249" y1="78" x2="249" y2="100" stroke="#1768d5" stroke-width="2" marker-end="url(#arr)"/>
+            <line x1="410" y1="78" x2="410" y2="100" stroke="#1768d5" stroke-width="2" marker-end="url(#arr)"/>
+            <line x1="571" y1="78" x2="571" y2="100" stroke="#1768d5" stroke-width="2" marker-end="url(#arr)"/>
+            <line x1="732" y1="78" x2="732" y2="100" stroke="#1768d5" stroke-width="2" marker-end="url(#arr)"/>
+
+            <rect x="16" y="102" width="144" height="52" rx="7" fill="#eff6ff" stroke="#003da5" stroke-width="1.5"/>
+            <text x="88" y="124" fill="#071d49" font-size="11" font-weight="700" text-anchor="middle">Inicio (/)</text>
+            <text x="88" y="140" fill="#525e75" font-size="9" text-anchor="middle">Hero, Top 3, Destacadas</text>
+
+            <rect x="177" y="102" width="144" height="52" rx="7" fill="#eff6ff" stroke="#003da5" stroke-width="1.5"/>
+            <text x="249" y="124" fill="#071d49" font-size="11" font-weight="700" text-anchor="middle">Empresa (/empresa)</text>
+            <text x="249" y="140" fill="#525e75" font-size="9" text-anchor="middle">Identidad, Top 3, Agentes</text>
+
+            <rect x="338" y="102" width="144" height="52" rx="7" fill="#eff6ff" stroke="#003da5" stroke-width="1.5"/>
+            <text x="410" y="124" fill="#071d49" font-size="11" font-weight="700" text-anchor="middle">Propiedades</text>
+            <text x="410" y="140" fill="#525e75" font-size="9" text-anchor="middle">Filtros + Ficha RE/MAX</text>
+
+            <rect x="499" y="102" width="144" height="52" rx="7" fill="#eff6ff" stroke="#003da5" stroke-width="1.5"/>
+            <text x="571" y="124" fill="#071d49" font-size="11" font-weight="700" text-anchor="middle">Oficinas (/oficinas)</text>
+            <text x="571" y="140" fill="#525e75" font-size="9" text-anchor="middle">4 Sedes Regionales</text>
+
+            <rect x="660" y="102" width="144" height="52" rx="7" fill="#eff6ff" stroke="#003da5" stroke-width="1.5"/>
+            <text x="732" y="124" fill="#071d49" font-size="11" font-weight="700" text-anchor="middle">Contacto (/contacto)</text>
+            <text x="732" y="140" fill="#525e75" font-size="9" text-anchor="middle">Tel, Email, Horarios, WA</text>
+
+            <line x1="571" y1="154" x2="571" y2="176" stroke="#1768d5" stroke-width="1.8" marker-end="url(#arr)"/>
+            <rect x="456" y="178" width="230" height="32" rx="6" fill="#003da5"/>
+            <text x="571" y="198" fill="#ffffff" font-size="9.5" font-weight="700" text-anchor="middle">Catálogo por Sede (/oficinas/{slug})</text>
+
+            <line x1="410" y1="154" x2="410" y2="176" stroke="#0c8a4b" stroke-width="1.8" marker-end="url(#arr)"/>
+            <rect x="346" y="178" width="128" height="32" rx="6" fill="#ecfdf3" stroke="#0c8a4b" stroke-width="1.2"/>
+            <text x="410" y="198" fill="#0c8a4b" font-size="9.2" font-weight="700" text-anchor="middle">Ficha RE/MAX Perú ↗</text>
+          </svg>
+          <p class="diagram-caption"><strong>Diagrama 1.</strong> Estructura general de navegación del Sitio Web Público de RE/MAX Zona.</p>
+        </div>
+
+        <h2 id="sec-2-1">2.1 Navegación global, pie de página y botón flotante de WhatsApp</h2>
+        <p>En la parte superior e inferior de todas las páginas públicas permanecen visibles:</p>
+        <ul>
+          <li><strong>Encabezado institucional:</strong> Logotipo <em>RE/MAX Zona</em> (regresa a Inicio) y enlaces directos a <strong>Inicio</strong>, <strong>Empresa</strong>, <strong>Propiedades</strong>, <strong>Oficinas</strong> y <strong>Contacto</strong>. La sección activa se resalta en amarillo corporativo.</li>
+          <li><strong>Pie de página (Footer):</strong> Muestra el nombre comercial, dirección/cobertura, teléfono cliqueable (<code>tel:</code>), correo (<code>mailto:</code>), acceso a <em>WhatsApp directo</em> y horarios de atención de lunes a viernes y sábados.</li>
+          <li><strong>Botón flotante «💬 WhatsApp»:</strong> Fijo en la esquina inferior derecha para abrir una conversación directa con la central de atención desde cualquier punto de la navegación.</li>
+        </ul>
+
+        <h2 id="sec-2-2">2.2 Página de Inicio <span class="route-pill">/</span></h2>
+        <p>Es la carta de presentación del portal y se organiza en cuatro bloques verticales:</p>
+        <ol class="steps-list">
+          <li><strong>Portada Principal (Hero):</strong> Exhibe la fotografía panorámica administrable desde el panel, el mensaje principal <em>«Encuentra tu propiedad ideal»</em> y el botón <span class="ui-btn" style="background:#ffd000;color:#071d49">Ver propiedades</span> que desplaza directamente al catálogo destacado.</li>
+          <li><strong>Nuestros Destacados (Podio Mensual):</strong> Presenta a los 3 vendedores estrella del mes (1.er, 2.º y 3.er puesto) con fotografía especial, nombre y enlace a su WhatsApp. Si el ranking del mes actual aún no se ha publicado, se muestra automáticamente el mensaje <em>«Ranking mensual en actualización. Pronto conocerás a nuestros vendedores destacados del mes»</em>.</li>
+          <li><strong>Propiedades Destacadas:</strong> Muestra únicamente los inmuebles activos marcados con estrella (<code>★</code>) en el panel administrativo, con su foto, título, ubicación, precio (cuando está registrado) y enlace <strong>Más información →</strong> hacia su ficha oficial en RE/MAX Perú.</li>
+          <li><strong>Llamado a la acción «Trabaja con nosotros»:</strong> Botón <strong>Postular por WhatsApp</strong> conectado al número de reclutamiento configurado en <em>Contacto Global</em>.</li>
+        </ol>
+
+        
+<figure class="figure-card" id="fig-1">
+  <div class="figure-frame">
+    <img src="imagenes-manual/01-publico-inicio.png" alt="Portada principal (Hero) de la página de Inicio con barra de navegación institucional y botón flotante de WhatsApp.">
+  </div>
+  <figcaption><strong>Figura 1.</strong> Portada principal (Hero) de la página de Inicio con barra de navegación institucional y botón flotante de WhatsApp.</figcaption>
+</figure>
+        
+<figure class="figure-card" id="fig-2">
+  <div class="figure-frame">
+    <img src="imagenes-manual/01b-publico-inicio-destacadas.png" alt="Sección de Propiedades Destacadas y bloque inferior de postulación «Trabaja con nosotros».">
+  </div>
+  <figcaption><strong>Figura 2.</strong> Sección de Propiedades Destacadas y bloque inferior de postulación «Trabaja con nosotros».</figcaption>
+</figure>
+
+        <h2 id="sec-2-3">2.3 Página Empresa y Directorio de Agentes <span class="route-pill">/empresa</span></h2>
+        <p>Reúne la identidad institucional y el equipo comercial oficial de RE/MAX Zona:</p>
+        <ul>
+          <li><strong>Quiénes somos e Identidad Corporativa:</strong> Reseña de la empresa, fotografía de reconocimientos, cobertura, <strong>Misión</strong>, <strong>Visión</strong> y <strong>Valores</strong> (Transparencia, Confianza, Ética profesional y Compromiso con el cliente).</li>
+          <li><strong>Nuestros Destacados:</strong> Replica el podio publicado del ranking mensual vigente.</li>
+          <li><strong>Directorio de Agentes Inmobiliarios:</strong> Lista alfabéticamente a todos los agentes con estado <em>Activo</em>, mostrando su fotografía profesional, biografía y enlaces directos a <strong>Celular</strong>, <strong>WhatsApp</strong> y <strong>Correo electrónico</strong>.</li>
+        </ul>
+
+        
+<figure class="figure-card" id="fig-3">
+  <div class="figure-frame">
+    <img src="imagenes-manual/02-publico-empresa.png" alt="Página Empresa: sección institucional «Quiénes somos» e identidad corporativa.">
+  </div>
+  <figcaption><strong>Figura 3.</strong> Página Empresa: sección institucional «Quiénes somos» e identidad corporativa.</figcaption>
+</figure>
+        
+<figure class="figure-card" id="fig-4">
+  <div class="figure-frame">
+    <img src="imagenes-manual/02b-publico-empresa-agentes.png" alt="Sección inferior de Empresa con el directorio público de agentes inmobiliarios.">
+  </div>
+  <figcaption><strong>Figura 4.</strong> Sección inferior de Empresa con el directorio público de agentes inmobiliarios.</figcaption>
+</figure>
+
+        <h2 id="sec-2-4">2.4 Catálogo General de Propiedades <span class="route-pill">/propiedades</span></h2>
+        <p>Permite consultar todas las propiedades activas mediante una barra de búsqueda reactiva que actualiza los resultados instantáneamente sin recargar la página:</p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:26%">Control de filtro</th>
+              <th>Funcionamiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Buscar propiedad o zona</strong></td>
+              <td>Filtra en tiempo real por coincidencias en el nombre del proyecto/inmueble o en su ubicación (ej. <em>Cayma</em>, <em>Miraflores</em>, <em>casa</em>).</td>
+            </tr>
+            <tr>
+              <td><strong>Ubicación</strong></td>
+              <td>Lista desplegable dinámica construida a partir de las ubicaciones existentes entre las propiedades activas.</td>
+            </tr>
+            <tr>
+              <td><strong>Moneda</strong></td>
+              <td>Filtra por <em>Todas las monedas</em>, <em>Soles (S/)</em> o <em>Dólares ($)</em>.</td>
+            </tr>
+            <tr>
+              <td><strong>Limpiar filtros</strong></td>
+              <td>Aparece automáticamente cuando existe algún criterio aplicado para restablecer el catálogo completo.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout callout--tip">
+          <strong class="callout-title">Consejo — Enlaces compartibles</strong>
+          Los filtros seleccionados se sincronizan con la dirección URL del navegador, permitiendo copiar y compartir un enlace con una búsqueda prefiltrada a un cliente.
+        </div>
+
+        
+<figure class="figure-card" id="fig-5">
+  <div class="figure-frame">
+    <img src="imagenes-manual/03-publico-propiedades.png" alt="Catálogo General de Propiedades con barra de filtros por texto, ubicación y moneda.">
+  </div>
+  <figcaption><strong>Figura 5.</strong> Catálogo General de Propiedades con barra de filtros por texto, ubicación y moneda.</figcaption>
+</figure>
+
+        <h2 id="sec-2-5">2.5 Oficinas y Catálogo por Sede <span class="route-pill">/oficinas</span></h2>
+        <p>
+          Presenta las <strong>cuatro sedes oficiales</strong> de RE/MAX Zona: <strong>Arequipa</strong>, <strong>Lima</strong>,
+          <strong>Moquegua</strong> y <strong>Puno</strong>. Cada tarjeta muestra su fotografía representativa (o un bloque
+          institucional neutro si aún no tiene foto), los canales de contacto específicos de la sede (dirección, teléfono,
+          WhatsApp, correo, horario y enlace a Google Maps) y el botón <span class="ui-btn">Ver propiedades</span>.
+        </p>
+        <p>
+          Al pulsar <span class="ui-btn">Ver propiedades</span> en cualquier sede se accede a su catálogo dedicado
+          (<code>/oficinas/arequipa</code>, <code>/oficinas/lima</code>, <code>/oficinas/moquegua</code> o <code>/oficinas/puno</code>),
+          que incluye el resumen de contacto de esa oficina, botones de retorno rápido (<strong>← Todas las oficinas</strong> y
+          <strong>Ver catálogo general</strong>) y los mismos filtros en tiempo real aplicados solo a los inmuebles de esa sede.
+        </p>
+
+        
+<figure class="figure-card" id="fig-6">
+  <div class="figure-frame">
+    <img src="imagenes-manual/04-publico-oficinas.png" alt="Directorio de las cuatro oficinas oficiales de RE/MAX Zona (Arequipa, Lima, Moquegua y Puno).">
+  </div>
+  <figcaption><strong>Figura 6.</strong> Directorio de las cuatro oficinas oficiales de RE/MAX Zona (Arequipa, Lima, Moquegua y Puno).</figcaption>
+</figure>
+        
+<figure class="figure-card" id="fig-7">
+  <div class="figure-frame">
+    <img src="imagenes-manual/05-publico-oficina-sede.png" alt="Catálogo individual de propiedades filtrado por sede (ejemplo: /oficinas/arequipa).">
+  </div>
+  <figcaption><strong>Figura 7.</strong> Catálogo individual de propiedades filtrado por sede (ejemplo: /oficinas/arequipa).</figcaption>
+</figure>
+
+        <h2 id="sec-2-6">2.6 Página de Contacto <span class="route-pill">/contacto</span></h2>
+        <p>
+          Consolida en tarjetas claras los medios oficiales de atención administrados globalmente:
+          <strong>Teléfono y WhatsApp</strong>, <strong>Correo electrónico</strong>, <strong>Dirección y cobertura</strong> y
+          <strong>Horario de atención</strong>, además del bloque de postulación por WhatsApp.
+        </p>
+
+        
+<figure class="figure-card" id="fig-8">
+  <div class="figure-frame">
+    <img src="imagenes-manual/06-publico-contacto.png" alt="Página de Contacto con medios oficiales de atención y horarios configurados.">
+  </div>
+  <figcaption><strong>Figura 8.</strong> Página de Contacto con medios oficiales de atención y horarios configurados.</figcaption>
+</figure>
+      </section>
+
+      <!-- ==================== CAPÍTULO 3 ==================== -->
+      <section class="section-break" id="cap-3">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 3</p>
+          <h1 class="chapter-title">Acceso, Seguridad y Roles del Panel Administrativo</h1>
+        </div>
+
+        <h2 id="sec-3-1">3.1 Inicio de sesión y Verificación en Dos Pasos (2FA) <span class="route-pill">/admin/login</span></h2>
+        <ol class="steps-list">
+          <li>Abra en su navegador la ruta <code>/admin/login</code>.</li>
+          <li>Ingrese su <strong>Correo electrónico</strong> corporativo y su <strong>Contraseña</strong>.</li>
+          <li>Pulse <span class="ui-btn">Iniciar sesión</span>.</li>
+          <li>Si su cuenta tiene <strong>2FA activado</strong>, el sistema le solicitará el <strong>código temporal de 6 dígitos</strong> de su aplicación autenticadora (Google Authenticator, Microsoft Authenticator o Authy). En caso de no contar con su teléfono, pulse <span class="ui-btn ui-btn--soft">Usar un código de recuperación</span> e ingrese uno de sus códigos de emergencia de un solo uso.</li>
+          <li>Tras validarse, ingresará automáticamente al módulo <strong>Gestión de Propiedades</strong> (<code>/admin/propiedades</code>).</li>
+        </ol>
+
+        <div class="callout callout--warn">
+          <strong class="callout-title">Controles de seguridad automáticos en el acceso</strong>
+          <strong>Bloqueo por fuerza bruta:</strong> Tras 5 intentos fallidos consecutivos (en contraseña o código 2FA), el sistema bloquea temporalmente nuevos intentos durante <strong>60 segundos</strong>.<br>
+          <strong>Cuentas suspendidas:</strong> Las cuentas desactivadas por el Administrador no pueden iniciar sesión y muestran el aviso <em>«Esta cuenta se encuentra desactivada. Contacta al administrador.»</em>
+        </div>
+
+        <div class="diagram-box">
+          <svg viewBox="0 0 820 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flujo de autenticación y verificación 2FA">
+            <defs>
+              <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#003da5"/>
+              </marker>
+            </defs>
+            <rect x="14" y="66" width="136" height="52" rx="8" fill="#071d49"/>
+            <text x="82" y="88" fill="#ffd000" font-size="10" font-weight="700" text-anchor="middle">1. Credenciales</text>
+            <text x="82" y="104" fill="#fff" font-size="9" text-anchor="middle">Correo + Contraseña</text>
+
+            <line x1="150" y1="92" x2="188" y2="92" stroke="#003da5" stroke-width="2" marker-end="url(#arr2)"/>
+
+            <rect x="190" y="62" width="152" height="60" rx="8" fill="#eff6ff" stroke="#003da5" stroke-width="1.5"/>
+            <text x="266" y="84" fill="#071d49" font-size="10" font-weight="700" text-anchor="middle">2. Validación y Estado</text>
+            <text x="266" y="99" fill="#525e75" font-size="8.8" text-anchor="middle">Límite 5 intentos / 60 s</text>
+            <text x="266" y="112" fill="#525e75" font-size="8.8" text-anchor="middle">Cuenta Activa</text>
+
+            <line x1="342" y1="92" x2="380" y2="92" stroke="#003da5" stroke-width="2" marker-end="url(#arr2)"/>
+
+            <polygon points="452,48 524,92 452,136 380,92" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+            <text x="452" y="88" fill="#92400e" font-size="9.5" font-weight="700" text-anchor="middle">¿Tiene 2FA</text>
+            <text x="452" y="102" fill="#92400e" font-size="9.5" font-weight="700" text-anchor="middle">activo?</text>
+
+            <!-- NO path -->
+            <line x1="452" y1="48" x2="452" y2="22" stroke="#0c8a4b" stroke-width="1.8"/>
+            <line x1="452" y1="22" x2="735" y2="22" stroke="#0c8a4b" stroke-width="1.8"/>
+            <line x1="735" y1="22" x2="735" y2="62" stroke="#0c8a4b" stroke-width="1.8" marker-end="url(#arr2)"/>
+            <text x="580" y="16" fill="#0c8a4b" font-size="9" font-weight="700" text-anchor="middle">NO — Acceso directo</text>
+
+            <!-- YES path -->
+            <line x1="524" y1="92" x2="554" y2="92" stroke="#b45309" stroke-width="1.8" marker-end="url(#arr2)"/>
+            <text x="538" y="84" fill="#b45309" font-size="9" font-weight="700" text-anchor="middle">SÍ</text>
+
+            <rect x="556" y="62" width="114" height="60" rx="8" fill="#fef2f2" stroke="#dc1c2e" stroke-width="1.5"/>
+            <text x="613" y="83" fill="#991b1b" font-size="9.5" font-weight="700" text-anchor="middle">3. Desafío 2FA</text>
+            <text x="613" y="98" fill="#7f1d1d" font-size="8.5" text-anchor="middle">Código 6 dígitos o</text>
+            <text x="613" y="111" fill="#7f1d1d" font-size="8.5" text-anchor="middle">Recuperación</text>
+
+            <line x1="670" y1="92" x2="692" y2="92" stroke="#0c8a4b" stroke-width="1.8" marker-end="url(#arr2)"/>
+
+            <rect x="694" y="64" width="112" height="56" rx="8" fill="#0c8a4b"/>
+            <text x="750" y="88" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">Panel Admin</text>
+            <text x="750" y="104" fill="#d1fae5" font-size="8.5" text-anchor="middle">/admin/propiedades</text>
+
+            <!-- Fail bottom note -->
+            <text x="266" y="166" fill="#b91c1c" font-size="8.8" text-anchor="middle">Si falla 5 veces: bloqueo temporal de 60 s con aviso en pantalla</text>
+          </svg>
+          <p class="diagram-caption"><strong>Diagrama 2.</strong> Proceso de autenticación segura y verificación en dos factores (2FA).</p>
+        </div>
+
+        
+<figure class="figure-card" id="fig-9">
+  <div class="figure-frame">
+    <img src="imagenes-manual/07-admin-login.png" alt="Pantalla de acceso a la Intranet Inmobiliaria (/admin/login).">
+  </div>
+  <figcaption><strong>Figura 9.</strong> Pantalla de acceso a la Intranet Inmobiliaria (/admin/login).</figcaption>
+</figure>
+
+        <h2 id="sec-3-2">3.2 Roles y Matriz de Permisos</h2>
+        <p>
+          El panel separa estrictamente las responsabilidades entre dos roles. Al navegar, el menú lateral muestra
+          únicamente los módulos autorizados para el usuario autenticado, y las rutas protegidas devuelven error HTTP
+          <code>403</code> ante accesos no autorizados.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:30%">Módulo del Panel</th>
+              <th style="width:26%">Ruta URL</th>
+              <th style="width:14%;text-align:center">ADMINISTRADOR</th>
+              <th style="width:14%;text-align:center">MARKETING</th>
+              <th style="width:16%">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Propiedades</strong></td>
+              <td><code>/admin/propiedades</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td>Crear, editar, destacar, eliminar</td>
+            </tr>
+            <tr>
+              <td><strong>Agentes</strong></td>
+              <td><code>/admin/agentes</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td>Crear, editar, activar/inactivar, eliminar</td>
+            </tr>
+            <tr>
+              <td><strong>Ranking Mensual</strong></td>
+              <td><code>/admin/ranking-actual</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td>Registrar 3 puestos y publicar (días 1–3)</td>
+            </tr>
+            <tr>
+              <td><strong>Portada Principal</strong></td>
+              <td><code>/admin/portada</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-no">Restringido</span></td>
+              <td>Cambiar fotografía Hero de Inicio</td>
+            </tr>
+            <tr>
+              <td><strong>Oficinas</strong></td>
+              <td><code>/admin/oficinas</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-no">Restringido</span></td>
+              <td>Editar datos y foto de las 4 sedes</td>
+            </tr>
+            <tr>
+              <td><strong>Historial de Rankings</strong></td>
+              <td><code>/admin/historial-rankings</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-no">Restringido</span></td>
+              <td>Consulta histórica en solo lectura</td>
+            </tr>
+            <tr>
+              <td><strong>Contacto Global</strong></td>
+              <td><code>/admin/configuracion-contacto</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-no">Restringido</span></td>
+              <td>Teléfonos, WhatsApp, correos y horarios</td>
+            </tr>
+            <tr>
+              <td><strong>Usuarios y Roles</strong></td>
+              <td><code>/admin/usuarios</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-no">Restringido</span></td>
+              <td>Crear, editar y suspender cuentas</td>
+            </tr>
+            <tr>
+              <td><strong>Mi Cuenta y Seguridad</strong></td>
+              <td><code>/settings/profile</code></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td style="text-align:center"><span class="badge-yes">Permitido</span></td>
+              <td>Perfil, Modo Claro/Oscuro, Clave y 2FA</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Anatomía del espacio de trabajo</h3>
+        <ul>
+          <li><strong>Menú lateral izquierdo:</strong> Incluye acceso rápido <em>«⌂ Ver sitio público»</em> (nueva pestaña), lista de módulos según su rol y botón inferior <strong>«↪ Cerrar sesión»</strong>.</li>
+          <li><strong>Barra superior (Topbar):</strong> Muestra el indicador rápido del tema visual (<code>☀ Claro</code> o <code>🌙 Oscuro</code>), la insignia de su rol y el acceso directo a su perfil con su nombre completo.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== CAPÍTULO 4 ==================== -->
+      <section class="section-break" id="cap-4">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 4 &bull; Módulos Compartidos</p>
+          <h1 class="chapter-title">Módulos Operativos (Administrador y Marketing)</h1>
+        </div>
+
+        <!-- 4.1 PROPIEDADES -->
+        <h2 id="sec-4-1">4.1 Gestión de Propiedades <span class="route-pill">/admin/propiedades</span> <span class="role-tag role-tag--admin">ADMIN</span> <span class="role-tag role-tag--mkt">MARKETING</span></h2>
+        <p>
+          Este módulo opera en formato <strong>maestro-detalle</strong>: el listado filtrable se muestra a la izquierda y el
+          formulario de creación/edición se despliega en el panel derecho, permitiendo trabajar sin perder visibilidad del inventario.
+        </p>
+
+        
+<figure class="figure-card" id="fig-10">
+  <div class="figure-frame">
+    <img src="imagenes-manual/08-admin-propiedades.png" alt="Listado principal de Gestión de Propiedades con buscador en vivo, estado, oficina y botones de acción.">
+  </div>
+  <figcaption><strong>Figura 10.</strong> Listado principal de Gestión de Propiedades con buscador en vivo, estado, oficina y botones de acción.</figcaption>
+</figure>
+
+        <h3>Cómo registrar o editar una propiedad</h3>
+        <ol class="steps-list">
+          <li>Para crear una nueva propiedad haga clic en <span class="ui-btn">＋ Agregar propiedad</span>. Para modificar una existente, haga clic en el botón azul <strong>✎</strong> de su fila.</li>
+          <li>Complete los campos del editor lateral según el diccionario de campos inferior.</li>
+          <li>Verifique la <strong>vista previa de fotografía</strong> antes de guardar (puede pulsar <em>«Quitar selección»</em> si eligió un archivo equivocado).</li>
+          <li>Marque o desmarque <strong>«Visible en el sitio público»</strong> según desee publicarla de inmediato o dejarla inactiva.</li>
+          <li>Haga clic en <span class="ui-btn">Guardar cambios</span>. El sistema optimizará la imagen a formato WebP (máx. 1200 px de ancho) automáticamente.</li>
+        </ol>
+
+        
+<figure class="figure-card" id="fig-11">
+  <div class="figure-frame">
+    <img src="imagenes-manual/09-admin-propiedades-editor.png" alt="Panel lateral de edición de propiedad abierto mostrando campos, selector de oficina y vista previa de fotografía.">
+  </div>
+  <figcaption><strong>Figura 11.</strong> Panel lateral de edición de propiedad abierto mostrando campos, selector de oficina y vista previa de fotografía.</figcaption>
+</figure>
+
+        <h3>Diccionario de campos y validaciones — Propiedades</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:24%">Campo</th>
+              <th style="width:14%">Exigencia</th>
+              <th>Reglas de validación y comportamiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Nombre del proyecto o inmueble</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Texto de hasta 140 caracteres. Se muestra como título principal de la tarjeta pública.</td>
+            </tr>
+            <tr>
+              <td><strong>Ubicación</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Texto de hasta 140 caracteres (ej. <em>Cayma, Arequipa</em>). Alimenta el filtro público de ubicaciones.</td>
+            </tr>
+            <tr>
+              <td><strong>Oficina responsable</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Debe seleccionarse una de las 4 sedes: <strong>Arequipa</strong>, <strong>Lima</strong>, <strong>Moquegua</strong> o <strong>Puno</strong>. Define en qué catálogo de sede aparecerá.</td>
+            </tr>
+            <tr>
+              <td><strong>Moneda y Precio</strong></td>
+              <td><span class="req-opt">Opcional</span></td>
+              <td>Si se ingresa un precio numérico (&ge; 0), la moneda (<code>USD $</code> o <code>PEN S/</code>) pasa a ser obligatoria. Si queda vacío, se muestra sin precio.</td>
+            </tr>
+            <tr>
+              <td><strong>Enlace RE/MAX Perú</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>URL válida que inicie con <code>http://</code> o <code>https://</code> (máx. 500 caracteres).</td>
+            </tr>
+            <tr>
+              <td><strong>Fotografía</strong></td>
+              <td><span class="req-yes">Oblig. al crear</span></td>
+              <td>Opcional al editar (dejar vacío conserva la actual). Formatos: <strong>JPG, JPEG, PNG o WEBP</strong>, máx. <strong>4 MB</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>Visible en el sitio público</strong></td>
+              <td><span class="req-opt">Casilla</span></td>
+              <td><code>Activo</code> la muestra en <code>/propiedades</code> y su sede; <code>Inactivo</code> la oculta del público sin borrarla.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Acciones rápidas en la tabla</h3>
+        <ul>
+          <li><strong>Estrella (<code>☆</code> / <code>★</code>):</strong> Marca o quita la propiedad como <strong>Destacada</strong>. Solo las propiedades <em>Activas</em> y con estrella dorada (<code>★</code>) aparecen en la página de Inicio (<code>/</code>).</li>
+          <li><strong>Lápiz (<code>✎</code>):</strong> Abre el editor con el ID y datos de la propiedad seleccionada.</li>
+          <li><strong>Eliminar (<code>⌫</code>):</strong> Solicita confirmación explícita y elimina el registro junto con su fotografía almacenada.</li>
+        </ul>
+
+        <!-- 4.2 AGENTES -->
+        <h2 class="section-break" id="sec-4-2">4.2 Gestión de Agentes <span class="route-pill">/admin/agentes</span> <span class="role-tag role-tag--admin">ADMIN</span> <span class="role-tag role-tag--mkt">MARKETING</span></h2>
+        <p>
+          Administra el directorio institucional de agentes que los visitantes consultan en la sección <strong>Empresa</strong>
+          (<code>/empresa</code>). Incluye buscador por nombres, apellidos, celular, WhatsApp o correo.
+        </p>
+
+        
+<figure class="figure-card" id="fig-12">
+  <div class="figure-frame">
+    <img src="imagenes-manual/10-admin-agentes.png" alt="Módulo Gestión de Agentes con formulario de registro y zona interactiva de carga fotográfica.">
+  </div>
+  <figcaption><strong>Figura 12.</strong> Módulo Gestión de Agentes con formulario de registro y zona interactiva de carga fotográfica.</figcaption>
+</figure>
+
+        <h3>Cómo registrar un agente</h3>
+        <ol class="steps-list">
+          <li>Haga clic en <span class="ui-btn">＋ Registrar agente</span>.</li>
+          <li>Ingrese <strong>Nombres</strong> (máx. 100), <strong>Apellidos</strong> (máx. 100) y <strong>Biografía profesional</strong> (máx. 1000 caracteres).</li>
+          <li>Complete <strong>Celular</strong> y <strong>WhatsApp</strong> (el prefijo <code>+51</code> se añade y normaliza automáticamente) y, opcionalmente, el <strong>Correo electrónico</strong>.</li>
+          <li>Cargue la <strong>Fotografía</strong> (JPG, PNG o WebP hasta 4 MB; optimizada automáticamente a WebP 600 px) usando cualquiera de los tres métodos soportados:
+            <ul>
+              <li>Hacer clic en el recuadro <em>«Seleccionar fotografía»</em>.</li>
+              <li><strong>Arrastrar y soltar</strong> el archivo de imagen sobre el recuadro.</li>
+              <li><strong>Pegar una imagen</strong> directamente desde el portapapeles con <kbd>Ctrl</kbd> + <kbd>V</kbd>.</li>
+            </ul>
+          </li>
+          <li>Verifique la casilla <strong>«Activo (visible en la página pública Empresa)»</strong> y pulse <span class="ui-btn">Registrar agente</span>.</li>
+        </ol>
+
+        <div class="callout callout--tip">
+          <strong class="callout-title">Activación y desactivación en un clic</strong>
+          Use el botón <strong>✓ / ○</strong> en la columna Acciones para ocultar temporalmente a un agente del sitio público (o volver a mostrarlo) sin necesidad de eliminarlo ni editar su ficha completa.
+        </div>
+
+        <!-- 4.3 RANKING MENSUAL -->
+        <h2 class="section-break" id="sec-4-3">4.3 Gestión del Ranking Mensual <span class="route-pill">/admin/ranking-actual</span> <span class="role-tag role-tag--admin">ADMIN</span> <span class="role-tag role-tag--mkt">MARKETING</span></h2>
+        <p>
+          Controla el podio de los <strong>3 vendedores estrella del mes</strong> que se exhiben públicamente en
+          <strong>Inicio</strong> y <strong>Empresa</strong>. Este módulo incorpora reglas automáticas basadas en el
+          calendario de Perú (<code>America/Lima</code>) para garantizar la transparencia e integridad histórica.
+        </p>
+
+        <div class="diagram-box">
+          <svg viewBox="0 0 820 175" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ciclo de vida del Ranking Mensual">
+            <defs>
+              <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#003da5"/>
+              </marker>
+            </defs>
+            <rect x="12" y="14" width="466" height="148" rx="10" fill="#f4f7fb" stroke="#1768d5" stroke-dasharray="5,4"/>
+            <text x="245" y="34" fill="#003da5" font-size="10" font-weight="800" text-anchor="middle">VENTANA HABILITADA: DÍAS 1 AL 3 DEL MES (HASTA 23:59 HORA PERÚ)</text>
+
+            <rect x="30" y="58" width="132" height="58" rx="8" fill="#fff" stroke="#1768d5" stroke-width="1.5"/>
+            <text x="96" y="80" fill="#071d49" font-size="10" font-weight="700" text-anchor="middle">BORRADOR</text>
+            <text x="96" y="96" fill="#525e75" font-size="8.6" text-anchor="middle">Registrar Puesto 1, 2 y 3</text>
+            <text x="96" y="108" fill="#525e75" font-size="8.6" text-anchor="middle">(datos + foto especial)</text>
+
+            <line x1="162" y1="87" x2="210" y2="87" stroke="#003da5" stroke-width="2" marker-end="url(#arr3)"/>
+            <text x="186" y="79" fill="#003da5" font-size="8.2" font-weight="700" text-anchor="middle">3/3 listos</text>
+
+            <rect x="212" y="58" width="144" height="58" rx="8" fill="#ecfdf3" stroke="#0c8a4b" stroke-width="1.6"/>
+            <text x="284" y="80" fill="#0c8a4b" font-size="10" font-weight="800" text-anchor="middle">PUBLICADO</text>
+            <text x="284" y="96" fill="#166534" font-size="8.6" text-anchor="middle">Visible en Inicio y Empresa</text>
+            <text x="284" y="108" fill="#166534" font-size="8.6" text-anchor="middle">(editable hasta día 3)</text>
+
+            <!-- Day 4+ box -->
+            <rect x="510" y="14" width="296" height="148" rx="10" fill="#fffbeb" stroke="#b45309" stroke-width="1.3"/>
+            <text x="658" y="34" fill="#92400e" font-size="10" font-weight="800" text-anchor="middle">A PARTIR DEL DÍA 4 — BLOQUEO AUTOMÁTICO</text>
+
+            <line x1="356" y1="75" x2="544" y2="66" stroke="#0c8a4b" stroke-width="1.8" marker-end="url(#arr3)"/>
+            <rect x="546" y="46" width="242" height="44" rx="7" fill="#071d49"/>
+            <text x="667" y="65" fill="#ffd000" font-size="9.5" font-weight="700" text-anchor="middle">CERRADO (Histórico Inmutable)</text>
+            <text x="667" y="80" fill="#e2ecff" font-size="8.4" text-anchor="middle">Sigue visible todo el mes y pasa al Historial</text>
+
+            <path d="M 96 116 L 96 144 L 544 128" fill="none" stroke="#dc1c2e" stroke-width="1.6" stroke-dasharray="4,3" marker-end="url(#arr3)"/>
+            <text x="340" y="142" fill="#b91c1c" font-size="8.3" font-weight="700" text-anchor="middle">Si NO se publicó antes del día 3 a las 23:59</text>
+
+            <rect x="546" y="106" width="242" height="44" rx="7" fill="#fef2f2" stroke="#dc1c2e" stroke-width="1.4"/>
+            <text x="667" y="125" fill="#b91c1c" font-size="9.5" font-weight="700" text-anchor="middle">VENCIDO (No publicable)</text>
+            <text x="667" y="140" fill="#7f1d1d" font-size="8.4" text-anchor="middle">Sitio muestra «Ranking en actualización...»</text>
+          </svg>
+          <p class="diagram-caption"><strong>Diagrama 3.</strong> Ciclo de vida y bloqueo automático del Ranking Mensual según fecha calendario (Hora Perú).</p>
+        </div>
+
+        
+<figure class="figure-card" id="fig-13">
+  <div class="figure-frame">
+    <img src="imagenes-manual/11-admin-ranking.png" alt="Vista del módulo Gestión del Ranking Mensual (ejemplo con período bloqueado a partir del día 4 del mes).">
+  </div>
+  <figcaption><strong>Figura 13.</strong> Vista del módulo Gestión del Ranking Mensual (ejemplo con período bloqueado a partir del día 4 del mes).</figcaption>
+</figure>
+
+        <h3>Procedimiento operativo (durante los días 1, 2 y 3 del mes)</h3>
+        <ol class="steps-list">
+          <li>Verifique en el encabezado el <strong>Período de desempeño evaluado</strong> (corresponde al mes calendario anterior) y el <strong>Mes de publicación pública</strong> (mes actual).</li>
+          <li>En cada una de las tres tarjetas fijas (<strong>1.er Puesto</strong>, <strong>2.º Puesto</strong> y <strong>3.er Puesto</strong>), registre de forma independiente:
+            <ul>
+              <li><strong>Nombres</strong> y <strong>Apellidos</strong> (mínimo 2 caracteres cada uno).</li>
+              <li><strong>Número de celular</strong> (con prefijo <code>+51</code> automático).</li>
+              <li><strong>Fotografía especial para el ranking</strong> (JPG, PNG o WebP, máx. 4 MB).</li>
+            </ul>
+          </li>
+          <li>Pulse <span class="ui-btn">Guardar puesto</span> en cada tarjeta. El sistema asignará un código interno automático (<code>PART-...</code>) y cambiará la etiqueta de <em>Pendiente</em> a <em>Registrado</em>.</li>
+          <li>Cuando el contador indique <strong>3 / 3 puestos completados</strong>, haga clic en <span class="ui-btn">Publicar Ranking en el Sitio Público</span>.</li>
+        </ol>
+
+        <div class="callout callout--warn">
+          <strong class="callout-title">Validaciones de unicidad y homónimos</strong>
+          &bull; <strong>Celular único por período:</strong> El sistema impide guardar el mismo número de celular en dos puestos diferentes del mismo mes.<br>
+          &bull; <strong>Aviso de homónimo:</strong> Si dos puestos comparten exactamente los mismos nombres y apellidos (con distinto celular), se muestra una alerta informativa no bloqueante para su verificación.<br>
+          &bull; <strong>Inmutabilidad:</strong> Una vez finalizado el día 3 a las 11:59 p. m., ningún usuario puede modificar ni eliminar un ranking cerrado o vencido.
+        </div>
+      </section>
+
+      <!-- ==================== CAPÍTULO 5 ==================== -->
+      <section class="section-break" id="cap-5">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 5 &bull; Administración General</p>
+          <h1 class="chapter-title">Módulos Exclusivos del Administrador</h1>
+        </div>
+
+        <p>Los siguientes cinco módulos son accesibles únicamente para cuentas con rol <span class="role-tag role-tag--admin">ADMINISTRADOR</span>.</p>
+
+        <!-- 5.1 PORTADA -->
+        <h2 id="sec-5-1">5.1 Portada Principal <span class="route-pill">/admin/portada</span></h2>
+        <p>Permite renovar la fotografía panorámica (Hero) visible al ingresar a la página de Inicio (<code>/</code>).</p>
+        <ol class="steps-list">
+          <li>Revise el nombre del archivo activo y la vista previa de la portada publicada actualmente.</li>
+          <li>Seleccione una nueva fotografía en formato <strong>JPG, JPEG, PNG o WEBP</strong> (máximo <strong>4 MB</strong>).</li>
+          <li>Confirme la nueva vista previa (o pulse <em>«Quitar selección»</em> para descartarla) y haga clic en <span class="ui-btn">Guardar fotografía de portada</span>.</li>
+        </ol>
+        <div class="callout callout--tip">
+          <strong class="callout-title">Resolución recomendada</strong>
+          Utilice fotografías horizontales de al menos 1600×900 px. El sistema genera automáticamente una versión optimizada en WebP redimensionada proporcionalmente hasta <strong>1920 px</strong> de ancho.
+        </div>
+        
+<figure class="figure-card" id="fig-14">
+  <div class="figure-frame">
+    <img src="imagenes-manual/12-admin-portada.png" alt="Módulo Portada Principal con vista previa activa y carga de nueva fotografía panorámica.">
+  </div>
+  <figcaption><strong>Figura 14.</strong> Módulo Portada Principal con vista previa activa y carga de nueva fotografía panorámica.</figcaption>
+</figure>
+
+        <!-- 5.2 OFICINAS -->
+        <h2 class="section-break" id="sec-5-2">5.2 Gestión de Oficinas <span class="route-pill">/admin/oficinas</span></h2>
+        <p>
+          Permite administrar la información individual y fotografía de las <strong>cuatro sedes oficiales establecidas</strong>:
+          <strong>Arequipa</strong> (<code>/oficinas/arequipa</code>), <strong>Lima</strong> (<code>/oficinas/lima</code>),
+          <strong>Moquegua</strong> (<code>/oficinas/moquegua</code>) y <strong>Puno</strong> (<code>/oficinas/puno</code>).
+        </p>
+        <div class="callout callout--warn">
+          <strong class="callout-title">Estructura fija de sedes</strong>
+          Por integridad del catálogo público y SEO, las cuatro oficinas oficiales no pueden crearse ni eliminarse, y su <strong>Código oficial</strong> y <strong>Ruta de catálogo (slug)</strong> son inmutables.
+        </div>
+        <ol class="steps-list">
+          <li>En el listado izquierdo, pulse <strong>✎</strong> sobre la sede que desea actualizar.</li>
+          <li>Edite los campos necesarios: <strong>Nombre de la sede</strong> (obligatorio), <strong>Dirección física</strong>, <strong>Teléfono</strong> (<code>+51</code>), <strong>WhatsApp</strong> (solo dígitos, 8 a 20 dígitos), <strong>Correo electrónico</strong>, <strong>Horario de atención</strong>, <strong>Enlace de Google Maps</strong> (<code>http://</code> o <code>https://</code>) y <strong>Fotografía representativa</strong> (opcional, máx. 4 MB, optimizada a WebP 1000 px).</li>
+          <li>Pulse <span class="ui-btn">Guardar cambios de la oficina</span> para reflejar los cambios en <code>/oficinas</code> y en el catálogo de esa sede.</li>
+        </ol>
+        
+<figure class="figure-card" id="fig-15">
+  <div class="figure-frame">
+    <img src="imagenes-manual/13-admin-oficinas.png" alt="Gestión de Oficinas mostrando las 4 sedes establecidas y el panel de edición de la sede seleccionada.">
+  </div>
+  <figcaption><strong>Figura 15.</strong> Gestión de Oficinas mostrando las 4 sedes establecidas y el panel de edición de la sede seleccionada.</figcaption>
+</figure>
+
+        <!-- 5.3 HISTORIAL -->
+        <h2 class="section-break" id="sec-5-3">5.3 Historial de Rankings Mensuales <span class="route-pill">/admin/historial-rankings</span></h2>
+        <p>
+          Archivo histórico en <strong>modo de solo lectura</strong> que conserva permanentemente las fotografías, nombres y
+          celulares exactos de todos los rankings mensuales con estado <code>PUBLICADO</code> o <code>CERRADO</code>.
+        </p>
+        <ol class="steps-list">
+          <li>Seleccione el <strong>Mes de desempeño</strong> y el <strong>Año de desempeño</strong> (desde 2024 hasta el año actual) en los selectores superiores.</li>
+          <li>Alternativamente, haga clic en cualquiera de los accesos directos del bloque inferior <em>«Períodos registrados en el historial»</em>.</li>
+          <li>Consulte el podio completo, la fecha exacta de publicación y la etiqueta de estado <code>SOLO LECTURA</code>.</li>
+        </ol>
+        
+<figure class="figure-card" id="fig-16">
+  <div class="figure-frame">
+    <img src="imagenes-manual/14-admin-historial-rankings.png" alt="Consulta del Historial de Rankings Mensuales en modo de solo lectura.">
+  </div>
+  <figcaption><strong>Figura 16.</strong> Consulta del Historial de Rankings Mensuales en modo de solo lectura.</figcaption>
+</figure>
+
+        <!-- 5.4 CONTACTO GLOBAL -->
+        <h2 class="section-break" id="sec-5-4">5.4 Información Global de Contacto <span class="route-pill">/admin/configuracion-contacto</span></h2>
+        <p>
+          Actualiza de forma centralizada los datos corporativos que se replican en el pie de página de todo el sitio,
+          el botón flotante de WhatsApp, la página <code>/contacto</code>, los canales generales de <code>/oficinas</code>
+          y los botones <em>«Postular por WhatsApp»</em>.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:32%">Campo</th>
+              <th style="width:14%">Exigencia</th>
+              <th>Impacto en el Sitio Público</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Nombre comercial de la empresa</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Títulos SEO, encabezado de portada, pie de página y sección Empresa.</td>
+            </tr>
+            <tr>
+              <td><strong>Teléfono visible en pie de página</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Enlace telefónico en Footer, Oficinas y Contacto (prefijo <code>+51</code> automático).</td>
+            </tr>
+            <tr>
+              <td><strong>WhatsApp general</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Botón flotante global de WhatsApp, Footer, Propiedades, Oficinas y Contacto.</td>
+            </tr>
+            <tr>
+              <td><strong>WhatsApp «Postular por WhatsApp»</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Botón de reclutamiento en la sección <em>Trabaja con nosotros</em> (Inicio, Empresa y Contacto).</td>
+            </tr>
+            <tr>
+              <td><strong>Correo electrónico de contacto</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Enlace <code>mailto:</code> en Footer, Oficinas, Contacto y datos estructurados SEO.</td>
+            </tr>
+            <tr>
+              <td><strong>Dirección o referencia</strong></td>
+              <td><span class="req-opt">Opcional</span></td>
+              <td>Cobertura o dirección principal mostrada en Footer, Empresa, Oficinas y Contacto.</td>
+            </tr>
+            <tr>
+              <td><strong>Horarios (Lun–Vie y Sábados)</strong></td>
+              <td><span class="req-yes">Obligatorio</span></td>
+              <td>Bloques de horario de atención en Footer, Oficinas y Contacto.</td>
+            </tr>
+          </tbody>
+        </table>
+        
+<figure class="figure-card" id="fig-17">
+  <div class="figure-frame">
+    <img src="imagenes-manual/15-admin-contacto.png" alt="Formulario de Información Global de Contacto con prefijos telefónicos +51 automatizados.">
+  </div>
+  <figcaption><strong>Figura 17.</strong> Formulario de Información Global de Contacto con prefijos telefónicos +51 automatizados.</figcaption>
+</figure>
+
+        <!-- 5.5 USUARIOS -->
+        <h2 class="section-break" id="sec-5-5">5.5 Gestión de Usuarios y Roles <span class="route-pill">/admin/usuarios</span></h2>
+        <p>Permite administrar quién tiene acceso al panel administrativo y con qué nivel de privilegios.</p>
+        <ol class="steps-list">
+          <li>Para crear una cuenta nueva, pulse <span class="ui-btn">＋ Nuevo usuario</span>. Para modificar una existente, pulse <strong>✎</strong> en su fila.</li>
+          <li>Complete <strong>Nombre completo</strong>, <strong>Correo electrónico</strong> (único en el sistema) y seleccione el <strong>Rol del usuario</strong> (<code>MARKETING</code> o <code>ADMINISTRADOR</code>).</li>
+          <li>Ingrese una <strong>Contraseña</strong> de al menos <strong>8 caracteres</strong> (al editar un usuario, deje este campo en blanco para conservar su contraseña actual).</li>
+          <li>Use la casilla <strong>«Cuenta activa»</strong> para habilitar o suspender el acceso inmediatamente, y pulse <span class="ui-btn">Crear usuario</span> / <span class="ui-btn">Actualizar usuario</span>.</li>
+        </ol>
+        <div class="callout callout--danger">
+          <strong class="callout-title">Salvaguardas de seguridad del Administrador</strong>
+          El sistema impide automáticamente que un Administrador <strong>desactive su propia cuenta</strong> o <strong>se retire a sí mismo el rol de ADMINISTRADOR</strong>, evitando bloqueos accidentales del panel.
+        </div>
+        
+<figure class="figure-card" id="fig-18">
+  <div class="figure-frame">
+    <img src="imagenes-manual/16-admin-usuarios.png" alt="Módulo Gestión de Usuarios y Roles con listado de cuentas activas/suspendidas y editor lateral.">
+  </div>
+  <figcaption><strong>Figura 18.</strong> Módulo Gestión de Usuarios y Roles con listado de cuentas activas/suspendidas y editor lateral.</figcaption>
+</figure>
+      </section>
+
+      <!-- ==================== CAPÍTULO 6 ==================== -->
+      <section class="section-break" id="cap-6">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 6 &bull; Preferencias Personales</p>
+          <h1 class="chapter-title">Mi Cuenta, Apariencia y Seguridad Personal</h1>
+        </div>
+
+        <p>
+          Accesible para todos los usuarios autenticados (<span class="role-tag role-tag--admin">ADMIN</span> y
+          <span class="role-tag role-tag--mkt">MARKETING</span>) desde el menú lateral <strong>«👤 Mi Cuenta y Seguridad»</strong>
+          o haciendo clic en su nombre en la esquina superior derecha. Se organiza en tres pestañas:
+        </p>
+
+        <h2>6.1 Perfil de Usuario <span class="route-pill">/settings/profile</span></h2>
+        <ul>
+          <li>Muestra en solo lectura su <strong>Rol asignado</strong> y el <strong>Estado de la cuenta</strong>.</li>
+          <li>Permite modificar su <strong>Nombre completo</strong> (mínimo 3 caracteres) y su <strong>Correo electrónico de acceso</strong>.</li>
+          <li><strong>Confirmación por seguridad:</strong> Si cambia su dirección de correo electrónico, deberá ingresar obligatoriamente su <strong>Contraseña actual</strong> antes de pulsar <span class="ui-btn">Guardar cambios del perfil</span>.</li>
+        </ul>
+        
+<figure class="figure-card" id="fig-19">
+  <div class="figure-frame">
+    <img src="imagenes-manual/17-cuenta-perfil.png" alt="Pestaña Perfil de Usuario con metadatos de rol y actualización segura de correo electrónico.">
+  </div>
+  <figcaption><strong>Figura 19.</strong> Pestaña Perfil de Usuario con metadatos de rol y actualización segura de correo electrónico.</figcaption>
+</figure>
+
+        <h2 class="section-break">6.2 Apariencia del Panel (Modo Claro y Modo Oscuro) <span class="route-pill">/settings/appearance</span></h2>
+        <p>
+          Cada usuario puede personalizar el tema visual de su panel administrativo entre <strong>Modo claro</strong> (☀) y
+          <strong>Modo oscuro</strong> (🌙). La preferencia se almacena directamente en su cuenta de usuario y se aplica
+          automáticamente en todos sus inicios de sesión futuros sin afectar a otros usuarios.
+        </p>
+        
+<figure class="figure-card" id="fig-20">
+  <div class="figure-frame">
+    <img src="imagenes-manual/18-cuenta-apariencia.png" alt="Selector de apariencia del panel en Modo Claro.">
+  </div>
+  <figcaption><strong>Figura 20.</strong> Selector de apariencia del panel en Modo Claro.</figcaption>
+</figure>
+        
+<figure class="figure-card" id="fig-21">
+  <div class="figure-frame">
+    <img src="imagenes-manual/19-panel-modo-oscuro.png" alt="Vista del panel administrativo con el Modo Oscuro activado para entornos de baja iluminación.">
+  </div>
+  <figcaption><strong>Figura 21.</strong> Vista del panel administrativo con el Modo Oscuro activado para entornos de baja iluminación.</figcaption>
+</figure>
+
+        <h2 class="section-break">6.3 Seguridad: Contraseña y Autenticación de Dos Factores (2FA) <span class="route-pill">/settings/security</span></h2>
+        <div class="callout">
+          <strong class="callout-title">Confirmación previa de identidad</strong>
+          Al acceder a <code>/settings/security</code>, el sistema puede solicitarle confirmar su contraseña actual en una pantalla intermedia antes de mostrar las opciones sensibles de seguridad.
+        </div>
+
+        <h3>A. Actualizar contraseña</h3>
+        <ol class="steps-list">
+          <li>En la tarjeta izquierda <strong>«Actualizar contraseña»</strong>, ingrese su <strong>Contraseña actual</strong>.</li>
+          <li>Escriba la <strong>Nueva contraseña</strong> (mínimo 8 caracteres) y repítala en <strong>Confirmar nueva contraseña</strong>.</li>
+          <li>Pulse <span class="ui-btn">Actualizar contraseña</span>.</li>
+        </ol>
+
+        <h3>B. Activar y administrar la Autenticación de Dos Factores (2FA)</h3>
+        <ol class="steps-list">
+          <li>Instale en su teléfono una aplicación autenticadora TOTP: <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> o <strong>Authy</strong>.</li>
+          <li>En la tarjeta derecha, escriba su contraseña actual y haga clic en <span class="ui-btn">Habilitar autenticación de dos factores (2FA)</span>.</li>
+          <li><strong>Paso 1:</strong> Escanee el <strong>código QR</strong> que aparecerá en pantalla (o copie la clave secreta manual en su aplicación).</li>
+          <li><strong>Paso 2:</strong> Ingrese el <strong>código de 6 dígitos</strong> generado por la aplicación y pulse <span class="ui-btn">Confirmar y activar 2FA</span>.</li>
+          <li><strong>Respalde sus códigos de recuperación:</strong> Copie y guarde en un lugar seguro los códigos de emergencia mostrados; cada código permite un acceso único si pierde su teléfono.</li>
+        </ol>
+        <p>
+          Cuando 2FA se encuentra activo, puede pulsar <span class="ui-btn ui-btn--soft">Ver códigos de recuperación</span>,
+          <span class="ui-btn ui-btn--soft">Regenerar códigos de recuperación</span> (requiere contraseña actual) o
+          <span class="ui-btn ui-btn--danger">Desactivar 2FA</span> (requiere contraseña actual).
+        </p>
+        
+<figure class="figure-card" id="fig-22">
+  <div class="figure-frame">
+    <img src="imagenes-manual/20-cuenta-seguridad.png" alt="Pestaña Seguridad de la Cuenta: cambio de contraseña y activación de autenticación de dos factores (2FA).">
+  </div>
+  <figcaption><strong>Figura 22.</strong> Pestaña Seguridad de la Cuenta: cambio de contraseña y activación de autenticación de dos factores (2FA).</figcaption>
+</figure>
+      </section>
+
+      <!-- ==================== CAPÍTULO 7 ==================== -->
+      <section class="section-break" id="cap-7">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 7 &bull; Soporte Operativo</p>
+          <h1 class="chapter-title">Preguntas Frecuentes y Solución de Problemas</h1>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:34%">Situación o mensaje en pantalla</th>
+              <th style="width:30%">Causa más probable</th>
+              <th>Solución recomendada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>«Demasiados intentos. Intenta nuevamente en X segundos»</strong></td>
+              <td>Se superó el límite de 5 intentos fallidos de acceso o código 2FA.</td>
+              <td>Espere los segundos indicados (máx. 60 s), verifique mayúsculas/minúsculas o el reloj de su teléfono (para 2FA) y vuelva a intentarlo.</td>
+            </tr>
+            <tr>
+              <td><strong>Una propiedad activa no aparece en la página de Inicio</strong></td>
+              <td>La portada solo muestra propiedades que estén <em>Activas</em> y además marcadas como <em>Destacadas</em>.</td>
+              <td>En <em>Propiedades</em>, haga clic en la estrella (<code>☆</code>) de esa fila para activarla en color dorado (<code>★</code>).</td>
+            </tr>
+            <tr>
+              <td><strong>Una propiedad no figura dentro de su oficina (ej. Puno o Arequipa)</strong></td>
+              <td>El campo <em>Oficina responsable</em> no fue asignado o la propiedad está inactiva.</td>
+              <td>Edite la propiedad (<code>✎</code>), seleccione la sede correcta en <em>Oficina responsable</em> y verifique que <em>Visible en el sitio público</em> esté marcado.</td>
+            </tr>
+            <tr>
+              <td><strong>No puedo guardar ni publicar el Ranking Mensual</strong></td>
+              <td>El reloj de Perú ya pasó del día 3 a las 23:59, o faltan puestos por completar, o existe un celular repetido.</td>
+              <td>Solo se edita los días 1 al 3 del mes. Complete los 3 puestos con celulares distintos y pulse <em>Publicar Ranking en el Sitio Público</em>.</td>
+            </tr>
+            <tr>
+              <td><strong>Error al subir una fotografía (formato o tamaño)</strong></td>
+              <td>El archivo excede los 4 MB o no es JPG, JPEG, PNG o WEBP (ej. HEIC o PDF).</td>
+              <td>Convierta la imagen a JPG o PNG y reduzca su peso por debajo de 4 MB antes de subirla nuevamente.</td>
+            </tr>
+            <tr>
+              <td><strong>No tengo acceso a mi teléfono con el código 2FA</strong></td>
+              <td>Dispositivo extraviado, descargado o reemplazado.</td>
+              <td>En la pantalla de verificación 2FA pulse <em>«Usar un código de recuperación»</em> e ingrese uno de los códigos guardados. Si tampoco los posee, contacte al Administrador técnico.</td>
+            </tr>
+            <tr>
+              <td><strong>No visualizo Portada, Oficinas, Historial, Contacto o Usuarios</strong></td>
+              <td>Su cuenta posee rol <code>MARKETING</code>.</td>
+              <td>Esos cinco módulos son exclusivos del rol <code>ADMINISTRADOR</code>. Solicite la gestión al Administrador o un cambio de rol si corresponde.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ==================== CAPÍTULO 8 ==================== -->
+      <section class="section-break" id="cap-8">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 8 &bull; Referencia</p>
+          <h1 class="chapter-title">Glosario de Términos y Anexo Técnico</h1>
+        </div>
+
+        <h2>8.1 Glosario de términos</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:24%">Término</th>
+              <th>Definición práctica en RE/MAX Zona</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>2FA / TOTP</strong></td>
+              <td>Autenticación de dos factores basada en contraseñas temporales de 6 dígitos que rotan cada 30 segundos en una app autenticadora.</td>
+            </tr>
+            <tr>
+              <td><strong>Propiedad Destacada</strong></td>
+              <td>Inmueble activo marcado con estrella (<code>★</code>) para exhibirse en la sección principal de la página de Inicio.</td>
+            </tr>
+            <tr>
+              <td><strong>Hero / Portada</strong></td>
+              <td>Imagen panorámica de cabecera a pantalla completa ubicada al inicio de la página principal (<code>/</code>).</td>
+            </tr>
+            <tr>
+              <td><strong>Slug</strong></td>
+              <td>Identificador amigable en la dirección URL de cada oficina (<code>arequipa</code>, <code>lima</code>, <code>moquegua</code>, <code>puno</code>).</td>
+            </tr>
+            <tr>
+              <td><strong>Snapshot histórico</strong></td>
+              <td>Copia independiente de nombre, celular y fotografía que el Ranking Mensual congela para cada período, preservando intacto el historial aunque cambien otros registros.</td>
+            </tr>
+            <tr>
+              <td><strong>WebP</strong></td>
+              <td>Formato moderno de compresión de imágenes generado automáticamente por el sistema para acelerar la carga web manteniendo alta calidad visual.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>8.2 Anexo de referencia para mantenimiento técnico</h2>
+        <p>Resumen de recursos de monitoreo, respaldo y optimización disponibles para el personal de TI en el servidor:</p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36%">Recurso / Comando</th>
+              <th>Finalidad operativa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>GET /salud</code></td>
+              <td>Endpoint JSON (<code>Cache-Control: no-store</code>) para monitoreo de disponibilidad: verifica aplicación, MySQL y escritura en almacenamiento sin exponer credenciales.</td>
+            </tr>
+            <tr>
+              <td><code>GET /sitemap.xml</code></td>
+              <td>Mapa del sitio XML generado dinámicamente para indexación SEO (incluye las rutas públicas y las 4 sedes).</td>
+            </tr>
+            <tr>
+              <td><code>php artisan sistema:verificar-salud</code></td>
+              <td>Comprobación programada cada 5 minutos; registra incidencias en <code>storage/logs/disponibilidad.log</code>.</td>
+            </tr>
+            <tr>
+              <td><code>php artisan sistema:respaldar</code></td>
+              <td>Genera respaldo privado de base de datos, <code>multimedia.zip</code> y <code>manifiesto.json</code> con hashes SHA-256 en <code>storage/app/private/respaldos/</code> (programado diariamente 02:30).</td>
+            </tr>
+            <tr>
+              <td><code>php artisan sistema:verificar-respaldo {dir}</code></td>
+              <td>Valida de forma no destructiva la integridad SHA-256 de una carpeta de respaldo antes de cualquier restauración.</td>
+            </tr>
+            <tr>
+              <td><code>php artisan sistema:optimizar-imagenes</code></td>
+              <td>Genera o actualiza por lotes las versiones WebP de todas las imágenes del sitio y catálogo conservando intactos los originales.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <strong class="callout-title">Fin del Manual de Usuario</strong>
+          RE/MAX Zona Inmobiliaria &bull; Documento <code>MAN-USR-RZ-001</code> &bull; Versión 1.0 (Noviembre 2026). Para consultas sobre accesos o permisos, comuníquese con el Administrador del sistema.
+        </div>
+      </section>
+
+    </div>
+  </article>
+</div>
+
+</body>
+</html>

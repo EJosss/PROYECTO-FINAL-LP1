@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Técnico — RE/MAX Zona Inmobiliaria (v1.0)</title>
+  <style>
+    :root {
+      --blue: #003da5;
+      --blue-mid: #1768d5;
+      --navy: #071d49;
+      --navy-deep: #041029;
+      --slate: #0f172a;
+      --red: #dc1c2e;
+      --yellow: #ffd000;
+      --ink: #182238;
+      --muted: #525e75;
+      --line: #dce5f0;
+      --soft: #f4f7fb;
+      --surface: #ffffff;
+      --green: #0c8a4b;
+      --green-bg: #ecfdf3;
+      --amber: #b45309;
+      --amber-bg: #fffbeb;
+      --danger: #b91c1c;
+      --danger-bg: #fef2f2;
+      --info-bg: #eff6ff;
+      --code-bg: #0f172a;
+      --code-fg: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #e6edf6;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+      font-size: 10pt;
+      line-height: 1.56;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .screen-nav {
+      position: fixed; top: 0; left: 0; bottom: 0; width: 280px;
+      background: var(--slate); color: #dbe7fb; padding: 1.2rem 1rem 2rem;
+      overflow-y: auto; z-index: 50; box-shadow: 4px 0 24px rgba(4, 16, 41, 0.25);
+    }
+    .screen-nav__brand { background: #fff; border-radius: 10px; padding: 0.6rem 0.75rem; margin-bottom: 0.85rem; }
+    .screen-nav__brand img { height: 32px; display: block; }
+    .screen-nav__meta { font-size: 0.75rem; color: #94a3b8; margin: 0 0 0.8rem; }
+    .screen-nav__print {
+      width: 100%; padding: 0.65rem; border: 0; border-radius: 8px;
+      background: var(--yellow); color: var(--navy); font-weight: 800; font-size: 0.84rem;
+      cursor: pointer; margin-bottom: 1rem;
+    }
+    .screen-nav ul { list-style: none; margin: 0; padding: 0; }
+    .screen-nav a {
+      display: block; padding: 0.4rem 0.6rem; border-radius: 6px;
+      color: #cbd5e1; text-decoration: none; font-size: 0.82rem;
+    }
+    .screen-nav a:hover { background: rgba(255,255,255,0.09); color: #fff; }
+    .screen-nav .nav-sub { padding-left: 1.25rem; font-size: 0.76rem; color: #94a3b8; }
+
+    .doc-shell { margin-left: 280px; padding: 2rem; }
+    .doc-paper {
+      max-width: 940px; margin: 0 auto; background: #fff;
+      box-shadow: 0 18px 50px rgba(7, 29, 73, 0.12); border-radius: 12px; overflow: hidden;
+    }
+
+    /* COVER */
+    .cover-page {
+      position: relative; min-height: 296mm;
+      background: linear-gradient(155deg, #020817 0%, #071d49 52%, #0d3b8e 100%);
+      color: #fff; padding: 24mm 20mm 20mm;
+      display: flex; flex-direction: column; justify-content: space-between;
+      overflow: hidden; page-break-after: always; break-after: page;
+    }
+    .cover-grid-bg {
+      position: absolute; inset: 0; opacity: 0.08; pointer-events: none;
+      background-image: linear-gradient(#93c5fd 1px, transparent 1px), linear-gradient(90deg, #93c5fd 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+    .cover-top { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
+    .cover-logo-box { background: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
+    .cover-logo-box img { height: 44px; display: block; }
+    .cover-code-pill {
+      border: 1px solid rgba(255,255,255,0.32); background: rgba(255,255,255,0.08);
+      padding: 8px 16px; border-radius: 999px; font-size: 8.8pt; font-weight: 700; letter-spacing: 0.06em;
+    }
+    .cover-hero { position: relative; z-index: 2; margin: 22mm 0 14mm; }
+    .cover-bars { display: flex; gap: 8px; margin-bottom: 16px; }
+    .cover-bars span:nth-child(1) { width: 64px; height: 6px; border-radius: 3px; background: #38bdf8; }
+    .cover-bars span:nth-child(2) { width: 32px; height: 6px; border-radius: 3px; background: var(--yellow); }
+    .cover-bars span:nth-child(3) { width: 16px; height: 6px; border-radius: 3px; background: var(--red); }
+    .cover-kicker { text-transform: uppercase; letter-spacing: 0.16em; font-size: 9pt; font-weight: 700; color: #7dd3fc; margin: 0 0 10px; }
+    .cover-title { font-size: 33pt; line-height: 1.08; font-weight: 800; margin: 0 0 14px; letter-spacing: -0.02em; }
+    .cover-subtitle { font-size: 12.8pt; line-height: 1.5; color: #dbeafe; max-width: 610px; margin: 0 0 22px; }
+    .tech-stack-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+      position: relative; z-index: 2; margin-bottom: 14mm;
+    }
+    .tech-pill-card {
+      background: rgba(15, 23, 42, 0.58); border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 10px; padding: 12px 14px;
+    }
+    .tech-pill-card span { display: block; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.08em; color: #7dd3fc; margin-bottom: 3px; }
+    .tech-pill-card strong { font-size: 10.2pt; color: #fff; }
+    .tech-pill-card small { display: block; font-size: 8.2pt; color: #cbd5e1; margin-top: 2px; }
+    .cover-meta-grid {
+      position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+      border-top: 1px solid rgba(255,255,255,0.22); padding-top: 14px;
+    }
+    .cover-meta-item span { display: block; font-size: 7.4pt; text-transform: uppercase; letter-spacing: 0.08em; color: #93c5fd; margin-bottom: 3px; }
+    .cover-meta-item strong { font-size: 9.2pt; color: #fff; }
+
+    /* BODY */
+    .doc-body { padding: 16mm 17mm 18mm; }
+    .section-break { page-break-before: always; break-before: page; }
+    .chapter-header { border-bottom: 2.5px solid var(--blue); padding-bottom: 9px; margin: 0 0 16px; }
+    .chapter-eyebrow { font-size: 8.2pt; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--blue-mid); margin: 0 0 3px; }
+    h1.chapter-title { font-size: 19pt; line-height: 1.2; color: var(--navy); margin: 0; font-weight: 800; }
+    h2 { font-size: 13pt; color: var(--navy); margin: 20px 0 9px; padding-bottom: 4px; border-bottom: 1px solid var(--line); page-break-after: avoid; break-after: avoid; }
+    h3 { font-size: 10.8pt; color: var(--blue); margin: 14px 0 6px; page-break-after: avoid; break-after: avoid; }
+    p { margin: 0 0 9px; }
+    ul, ol { margin: 0 0 11px; padding-left: 1.35rem; }
+    li { margin-bottom: 4px; }
+    code {
+      font-family: Consolas, "Cascadia Code", monospace; font-size: 0.86em;
+      background: var(--soft); border: 1px solid var(--line); padding: 1px 5px;
+      border-radius: 4px; color: var(--navy);
+    }
+
+    /* CODE CARDS */
+    .code-card {
+      margin: 10px 0 14px; border-radius: 8px; overflow: hidden;
+      border: 1px solid #1e293b; background: var(--code-bg);
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .code-card__head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 12px; background: #1e293b; color: #93c5fd;
+      font-family: Consolas, monospace; font-size: 8.2pt; font-weight: 700;
+    }
+    .code-card pre {
+      margin: 0; padding: 10px 12px; overflow-x: auto;
+      color: var(--code-fg); font-family: Consolas, "Cascadia Code", monospace;
+      font-size: 8.1pt; line-height: 1.48; white-space: pre-wrap; word-break: break-word;
+    }
+    .code-card pre code { background: transparent; border: 0; padding: 0; color: inherit; font-size: inherit; }
+
+    /* TABLES */
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 8.9pt; }
+    thead { display: table-header-group; }
+    tr { break-inside: avoid; page-break-inside: avoid; }
+    th { background: var(--navy); color: #fff; text-align: left; padding: 7px 9px; font-weight: 700; font-size: 8.3pt; }
+    td { padding: 6.5px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tbody tr:nth-child(even) td { background: #f8fafd; }
+
+    .badge { display: inline-block; padding: 2px 7px; border-radius: 999px; font-size: 7.6pt; font-weight: 800; }
+    .badge--blue { background: #e0ecff; color: var(--blue); }
+    .badge--green { background: var(--green-bg); color: var(--green); }
+    .badge--amber { background: var(--amber-bg); color: var(--amber); }
+    .badge--red { background: var(--danger-bg); color: var(--danger); }
+
+    /* CALLOUTS */
+    .callout {
+      border-left: 4px solid var(--blue); background: var(--info-bg);
+      border-radius: 0 8px 8px 0; padding: 10px 13px; margin: 11px 0 14px;
+      break-inside: avoid; page-break-inside: avoid; font-size: 9.2pt;
+    }
+    .callout strong.callout-title { display: block; margin-bottom: 3px; font-size: 8.8pt; text-transform: uppercase; letter-spacing: 0.04em; color: var(--blue); }
+    .callout--tip { border-left-color: var(--green); background: var(--green-bg); }
+    .callout--tip strong.callout-title { color: var(--green); }
+    .callout--warn { border-left-color: var(--amber); background: var(--amber-bg); }
+    .callout--warn strong.callout-title { color: var(--amber); }
+    .callout--danger { border-left-color: var(--danger); background: var(--danger-bg); }
+    .callout--danger strong.callout-title { color: var(--danger); }
+
+    /* DIAGRAMS */
+    .diagram-box {
+      margin: 12px 0 16px; padding: 12px; background: #fff;
+      border: 1px solid var(--line); border-radius: 10px;
+      break-inside: avoid; page-break-inside: avoid; text-align: center;
+    }
+    .diagram-box svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .diagram-caption { margin-top: 7px; font-size: 8.6pt; color: var(--muted); }
+    .diagram-caption strong { color: var(--navy); }
+
+    .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0 14px; }
+    .toc-card { border: 1px solid var(--line); border-radius: 8px; padding: 10px 13px; background: var(--soft); break-inside: avoid; }
+    .toc-card h3 { margin: 0 0 6px; font-size: 9.8pt; color: var(--navy); border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+    .toc-card ul { list-style: none; padding: 0; margin: 0; font-size: 8.7pt; }
+    .toc-card li { margin: 3px 0; }
+    .toc-card a { color: var(--ink); text-decoration: none; }
+
+    @page { size: A4 portrait; margin: 15mm 13mm 17mm 13mm; }
+    @page :first { margin: 0; }
+    @media print {
+      body { background: #fff; font-size: 9.4pt; }
+      .screen-nav { display: none !important; }
+      .doc-shell { margin-left: 0; padding: 0; }
+      .doc-paper { max-width: none; box-shadow: none; border-radius: 0; }
+      .doc-body { padding: 0; }
+      .cover-page { min-height: 297mm; width: 210mm; padding: 22mm 18mm 18mm; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+<aside class="screen-nav">
+  <div class="screen-nav__brand">
+    <img src="imagenes-manual/logo-remax-zona.png" alt="RE/MAX Zona">
+  </div>
+  <p class="screen-nav__meta">Manual Técnico v1.0 &bull; MAN-TEC-RZ-001</p>
+  <button class="screen-nav__print" type="button" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+  <ul>
+    <li><a href="#portada">Portada</a></li>
+    <li><a href="#control">Control Documental e Índice</a></li>
+    <li><a href="#cap-1">1. Arquitectura y Stack Tecnológico</a></li>
+    <li><a href="#cap-2">2. Estructura de Directorios y Clases</a></li>
+    <li><a href="#cap-3">3. Base de Datos, ERD y Triggers</a></li>
+    <li><a href="#cap-4">4. Rutas, Middlewares y Ciclo HTTP</a></li>
+    <li><a href="#cap-5">5. Lógica Crítica y Servicios</a></li>
+    <li><a href="#cap-6">6. Seguridad (Defensa en Profundidad)</a></li>
+    <li><a href="#cap-7">7. RNF025–RNF030 y Operaciones</a></li>
+    <li><a href="#cap-8">8. Instalación, Despliegue y Pruebas</a></li>
+  </ul>
+</aside>
+
+<div class="doc-shell">
+  <article class="doc-paper">
+
+    <!-- ==================== PORTADA ==================== -->
+    <header class="cover-page" id="portada">
+      <div class="cover-grid-bg"></div>
+      <div class="cover-top">
+        <div class="cover-logo-box">
+          <img src="imagenes-manual/logo-remax-zona.png" alt="RE/MAX Zona Inmobiliaria">
+        </div>
+        <div class="cover-code-pill">MAN-TEC-RZ-001 &bull; v1.0</div>
+      </div>
+
+      <div class="cover-hero">
+        <div class="cover-bars"><span></span><span></span><span></span></div>
+        <p class="cover-kicker">Documentación de Arquitectura, Código y Operación</p>
+        <h1 class="cover-title">Manual Técnico del Sistema</h1>
+        <p class="cover-subtitle">
+          Especificación arquitectónica, modelo de datos relacional, reglas de negocio en tres capas,
+          middlewares de seguridad, servicios de dominio, requerimientos no funcionales y procedimientos de
+          despliegue del Portal Web <strong>RE/MAX Zona Inmobiliaria</strong>.
+        </p>
+      </div>
+
+      <div class="tech-stack-grid">
+        <div class="tech-pill-card">
+          <span>Backend &amp; Reactividad</span>
+          <strong>Laravel 13 + Livewire 4</strong>
+          <small>PHP ^8.3 &bull; Componentes Full-Page</small>
+        </div>
+        <div class="tech-pill-card">
+          <span>Persistencia &amp; Integridad</span>
+          <strong>MySQL 8 / MariaDB</strong>
+          <small>13 Migraciones &bull; CHECK &amp; 5 Triggers</small>
+        </div>
+        <div class="tech-pill-card">
+          <span>Seguridad &amp; Calidad</span>
+          <strong>Fortify 2FA + CSP + PHPUnit</strong>
+          <small>TOTP &bull; RateLimiter &bull; 36 Pruebas</small>
+        </div>
+      </div>
+
+      <div class="cover-meta-grid">
+        <div class="cover-meta-item">
+          <span>Proyecto</span>
+          <strong>RE/MAX Zona Inmobiliaria</strong>
+        </div>
+        <div class="cover-meta-item">
+          <span>Código / Versión</span>
+          <strong>MAN-TEC-RZ-001 &bull; v1.0</strong>
+        </div>
+        <div class="cover-meta-item">
+          <span>Fecha de Emisión</span>
+          <strong>Noviembre 2026</strong>
+        </div>
+        <div class="cover-meta-item">
+          <span>Audiencia</span>
+          <strong>Desarrolladores, TI y Jurado</strong>
+        </div>
+      </div>
+    </header>
+
+    <div class="doc-body">
+
+      <!-- ==================== CONTROL DOCUMENTAL ==================== -->
+      <section id="control">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Información Técnica del Documento</p>
+          <h1 class="chapter-title">Control Documental y Tabla de Contenidos</h1>
+        </div>
+
+        <table>
+          <tbody>
+            <tr>
+              <th style="width:24%">Código</th><td><code>MAN-TEC-RZ-001</code></td>
+              <th style="width:22%">Versión</th><td>1.0 (Producción)</td>
+            </tr>
+            <tr>
+              <th>Framework / Runtime</th><td>Laravel <code>^13.17</code>, Livewire <code>^4.1</code>, PHP <code>^8.3</code></td>
+              <th>Autenticación 2FA</th><td>Laravel Fortify <code>^1.37.2</code></td>
+            </tr>
+            <tr>
+              <th>Base de datos</th><td>MySQL / MariaDB (SQLite soportado en tests)</td>
+              <th>Pruebas &amp; Análisis</th><td>PHPUnit 12, Larastan/PHPStan, Laravel Pint</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="toc-grid">
+          <div class="toc-card">
+            <h3>Arquitectura y Datos</h3>
+            <ul>
+              <li><a href="#cap-1"><strong>1.</strong> Arquitectura del Sistema y Stack Tecnológico</a></li>
+              <li><a href="#cap-2"><strong>2.</strong> Estructura de Directorios y Catálogo de Clases</a></li>
+              <li><a href="#cap-3"><strong>3.</strong> Diseño de Base de Datos, ERD, CHECKs y Triggers</a></li>
+              <li><a href="#cap-4"><strong>4.</strong> Enrutamiento, Middlewares y Ciclo HTTP</a></li>
+            </ul>
+          </div>
+          <div class="toc-card">
+            <h3>Lógica, Seguridad y Despliegue</h3>
+            <ul>
+              <li><a href="#cap-5"><strong>5.</strong> Lógica de Negocio Crítica y Servicios de Dominio</a></li>
+              <li><a href="#cap-6"><strong>6.</strong> Seguridad Web (Defensa en Profundidad)</a></li>
+              <li><a href="#cap-7"><strong>7.</strong> Requerimientos No Funcionales (RNF025–RNF030)</a></li>
+              <li><a href="#cap-8"><strong>8.</strong> Instalación, Despliegue en Producción y Pruebas</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== CAPÍTULO 1 ==================== -->
+      <section class="section-break" id="cap-1">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 1</p>
+          <h1 class="chapter-title">Arquitectura del Sistema y Stack Tecnológico</h1>
+        </div>
+
+        <h2>1.1 Patrón arquitectónico: Monolito Modular Reactivo (Full-Page Livewire)</h2>
+        <p>
+          La aplicación sigue una arquitectura <strong>monolítica modular por capas</strong> sobre <strong>Laravel 13</strong>
+          y <strong>Livewire 4</strong>. A diferencia de un patrón MVC clásico con múltiples controladores REST + SPA JavaScript,
+          las rutas web en <code>routes/web.php</code> y <code>routes/settings.php</code> apuntan directamente a
+          <strong>componentes Livewire de página completa</strong> (<code>#[Layout(...)]</code>), los cuales gestionan estado,
+          validación en servidor, autorización y renderizado Blade reactivo mediante peticiones AJAX firmadas.
+        </p>
+        <p>
+          El único controlador HTTP tradicional del sistema es <code>EstadoSistemaController</code> (controlador invocable
+          <code>__invoke</code>) dedicado al endpoint JSON sin estado <code>GET /salud</code>. La lógica compleja de dominio
+          (ranking mensual, respaldos, disponibilidad y optimización WebP) se desacopla en la capa <code>app/Services/</code>.
+        </p>
+
+        <div class="diagram-box">
+          <svg viewBox="0 0 820 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de arquitectura por capas">
+            <defs>
+              <marker id="ta1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#1768d5"/>
+              </marker>
+            </defs>
+            <!-- Layer 1 -->
+            <rect x="16" y="10" width="788" height="42" rx="7" fill="#071d49"/>
+            <text x="410" y="28" fill="#ffd000" font-size="10.5" font-weight="800" text-anchor="middle">CAPA DE PRESENTACIÓN (Navegador / Cliente)</text>
+            <text x="410" y="43" fill="#dbeafe" font-size="9" text-anchor="middle">Blade Templates + Livewire 4 AJAX + Alpine.js (Dropzone) + CSS Público/Admin (Modo Claro/Oscuro) + &lt;x-imagen-optimizada&gt;</text>
+
+            <line x1="410" y1="52" x2="410" y2="70" stroke="#1768d5" stroke-width="2" marker-end="url(#ta1)"/>
+
+            <!-- Layer 2 -->
+            <rect x="16" y="72" width="788" height="44" rx="7" fill="#eff6ff" stroke="#003da5" stroke-width="1.5"/>
+            <text x="410" y="90" fill="#071d49" font-size="10.2" font-weight="800" text-anchor="middle">CAPA HTTP, ENRUTAMIENTO Y MIDDLEWARES</text>
+            <text x="410" y="106" fill="#525e75" font-size="8.8" text-anchor="middle">routes/web.php · routes/settings.php · CabecerasSeguridad (Global CSP/HSTS) · auth · guest · rol:ADMINISTRADOR,MARKETING (VerificarRol) · password.confirm</text>
+
+            <line x1="210" y1="116" x2="210" y2="134" stroke="#1768d5" stroke-width="2" marker-end="url(#ta1)"/>
+            <line x1="610" y1="116" x2="610" y2="134" stroke="#1768d5" stroke-width="2" marker-end="url(#ta1)"/>
+
+            <!-- Layer 3 -->
+            <rect x="16" y="136" width="384" height="52" rx="7" fill="#ecfdf3" stroke="#0c8a4b" stroke-width="1.4"/>
+            <text x="208" y="154" fill="#065f46" font-size="9.8" font-weight="800" text-anchor="middle">COMPONENTES LIVEWIRE Y CONTROLADOR</text>
+            <text x="208" y="169" fill="#166534" font-size="8.4" text-anchor="middle">Publico (6) · Admin (8) · Autenticacion (2) · Settings (3)</text>
+            <text x="208" y="182" fill="#166534" font-size="8.4" text-anchor="middle">EstadoSistemaController (GET /salud)</text>
+
+            <rect x="420" y="136" width="384" height="52" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+            <text x="612" y="154" fill="#92400e" font-size="9.8" font-weight="800" text-anchor="middle">SERVICIOS DE DOMINIO Y CONSOLA (Artisan)</text>
+            <text x="612" y="169" fill="#78350f" font-size="8.4" text-anchor="middle">ServicioRankingMensual · ServicioOptimizacionImagen</text>
+            <text x="612" y="182" fill="#78350f" font-size="8.4" text-anchor="middle">ServicioDisponibilidad · ServicioRespaldo · Schedule (Cron)</text>
+
+            <line x1="208" y1="188" x2="208" y2="208" stroke="#1768d5" stroke-width="2" marker-end="url(#ta1)"/>
+            <line x1="612" y1="188" x2="612" y2="208" stroke="#1768d5" stroke-width="2" marker-end="url(#ta1)"/>
+
+            <!-- Layer 4 -->
+            <rect x="16" y="210" width="384" height="46" rx="7" fill="#0f172a"/>
+            <text x="208" y="228" fill="#7dd3fc" font-size="9.6" font-weight="800" text-anchor="middle">MODELOS ELOQUENT + GUARDAS booted()</text>
+            <text x="208" y="244" fill="#e2e8f0" font-size="8.4" text-anchor="middle">MySQL 8 (9 tablas, CHECK constraints, 5 Triggers BEFORE)</text>
+
+            <rect x="420" y="210" width="384" height="46" rx="7" fill="#0f172a"/>
+            <text x="612" y="228" fill="#ffd000" font-size="9.6" font-weight="800" text-anchor="middle">ALMACENAMIENTO Y BITÁCORAS</text>
+            <text x="612" y="244" fill="#e2e8f0" font-size="8.4" text-anchor="middle">storage/app/public (.htaccess) · private/respaldos · logs diarios</text>
+          </svg>
+          <p class="diagram-caption"><strong>Diagrama 1.</strong> Arquitectura general por capas del sistema RE/MAX Zona Inmobiliaria.</p>
+        </div>
+
+        <h2>1.2 Stack tecnológico y dependencias principales (<code>composer.json</code>)</h2>
+        <table>
+          <thead>
+            <tr><th style="width:24%">Componente</th><th style="width:18%">Versión</th><th>Función dentro del proyecto</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>PHP</strong></td><td><code>^8.3</code> (GD)</td><td>Lenguaje base del servidor. Extensión nativa GD usada para conversión WebP (<code>imagewebp</code>) sin librerías externas.</td></tr>
+            <tr><td><strong>laravel/framework</strong></td><td><code>^13.17</code></td><td>Framework principal: ORM Eloquent, migraciones, sesiones, RateLimiter, Process, Schedule y validaciones.</td></tr>
+            <tr><td><strong>livewire/livewire</strong></td><td><code>^4.1</code></td><td>Componentes reactivos de página completa (filtros URL <code>#[Url]</code>, carga temporal de archivos <code>WithFileUploads</code>).</td></tr>
+            <tr><td><strong>laravel/fortify</strong></td><td><code>^1.37.2</code></td><td>Motor criptográfico de autenticación 2FA (TOTP, QR SVG y códigos de recuperación). Sus rutas por defecto se desactivan con <code>Fortify::ignoreRoutes()</code>.</td></tr>
+            <tr><td><strong>phpunit / larastan / pint</strong></td><td><code>12 / 3.9 / 1.27</code></td><td>Pruebas automatizadas de integración, análisis estático de tipos y formateo PSR-12.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>1.3 Decisiones globales en <code>AppServiceProvider</code></h2>
+        <ul>
+          <li><code>Fortify::ignoreRoutes()</code>: Evita exponer rutas genéricas en inglés (<code>/register</code>, <code>/login</code>) para mantener control total sobre <code>/admin/login</code> y cerrar el auto-registro público.</li>
+          <li><code>Date::use(CarbonImmutable::class)</code>: Garantiza fechas inmutables, evitando mutaciones accidentales al calcular períodos de ranking.</li>
+          <li><code>DB::prohibitDestructiveCommands(app()-&gt;isProduction())</code>: Impide ejecutar accidentalmente <code>migrate:fresh</code> o <code>db:wipe</code> en producción.</li>
+          <li><code>URL::forceScheme('https')</code>: Fuerza URLs HTTPS cuando <code>APP_ENV=production</code> y <code>APP_URL</code> inicia con <code>https://</code>.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== CAPÍTULO 2 ==================== -->
+      <section class="section-break" id="cap-2">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 2</p>
+          <h1 class="chapter-title">Estructura de Directorios y Catálogo de Clases</h1>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th style="width:30%">Directorio / Archivo</th><th>Responsabilidad y clases contenidas</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>app/Livewire/Publico/</code></td><td>6 páginas públicas: <code>PaginaInicio</code>, <code>PaginaEmpresa</code>, <code>PaginaPropiedades</code>, <code>PaginaOficinas</code>, <code>PaginaPropiedadesOficina</code>, <code>PaginaContacto</code>.</td></tr>
+            <tr><td><code>app/Livewire/Admin/</code></td><td>Módulos del panel: <code>GestionPropiedades</code>, <code>GestionAgentes</code>, <code>GestionRankingActual</code>, <code>GestionPortada</code>, <code>GestionOficinas</code>, <code>HistorialRankings</code>, <code>GestionContacto</code>, <code>GestionUsuarios</code> (y clase legada <code>GestionVendedores</code> no enrutada).</td></tr>
+            <tr><td><code>app/Livewire/Autenticacion/</code></td><td><code>IniciarSesion</code> (login + RateLimiter + desafío 2FA) y <code>ConfirmarPassword</code> (confirmación previa a seguridad).</td></tr>
+            <tr><td><code>app/Livewire/Settings/</code></td><td><code>Profile</code> (nombre/correo), <code>Appearance</code> (tema claro/oscuro persistido en BD y sesión) y <code>Security</code> (cambio de contraseña + ciclo 2FA completo).</td></tr>
+            <tr><td><code>app/Models/</code></td><td>9 modelos Eloquent: <code>Usuario</code>, <code>Propiedad</code>, <code>Oficina</code>, <code>Agente</code>, <code>Vendedor</code>, <code>RankingMensual</code>, <code>PosicionRanking</code>, <code>ConfiguracionContacto</code>, <code>ConfiguracionPortada</code>.</td></tr>
+            <tr><td><code>app/Services/</code></td><td>4 servicios de dominio: <code>ServicioRankingMensual</code>, <code>ServicioOptimizacionImagen</code>, <code>ServicioDisponibilidad</code>, <code>ServicioRespaldo</code>.</td></tr>
+            <tr><td><code>app/Http/Middleware/</code></td><td><code>CabecerasSeguridad</code> (global) y <code>VerificarRol</code> (alias <code>rol</code>).</td></tr>
+            <tr><td><code>app/Http/Controllers/</code></td><td><code>EstadoSistemaController</code> (controlador invocable para <code>GET /salud</code>).</td></tr>
+            <tr><td><code>app/Console/Commands/</code></td><td><code>VerificarSaludSistema</code>, <code>RespaldarSistema</code>, <code>VerificarRespaldo</code>, <code>OptimizarImagenes</code>.</td></tr>
+            <tr><td><code>app/Support/TelefonoPeru.php</code></td><td>Utilidad pura para normalización de prefijos peruanos (<code>+51</code> visible y <code>51...</code> para <code>wa.me</code>).</td></tr>
+            <tr><td><code>resources/views/components/</code></td><td>Layouts <code>layouts/publico.blade.php</code>, <code>layouts/admin.blade.php</code> y componente <code>imagen-optimizada.blade.php</code>.</td></tr>
+            <tr><td><code>bootstrap/app.php</code></td><td>Registro de rutas, middlewares globales/alias y captura de <code>QueryException</code>/<code>PDOException</code> hacia el canal diario <code>disponibilidad</code>.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ==================== CAPÍTULO 3 ==================== -->
+      <section class="section-break" id="cap-3">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 3</p>
+          <h1 class="chapter-title">Diseño de Base de Datos, ERD, Restricciones y Triggers</h1>
+        </div>
+
+        <h2>3.1 Diagrama Entidad-Relación (ERD)</h2>
+        <div class="diagram-box">
+          <svg viewBox="0 0 820 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama Entidad-Relación de la base de datos">
+            <defs>
+              <marker id="erd-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#1768d5"/>
+              </marker>
+            </defs>
+            <!-- usuarios -->
+            <rect x="14" y="14" width="188" height="132" rx="7" fill="#fff" stroke="#071d49" stroke-width="1.6"/>
+            <rect x="14" y="14" width="188" height="24" rx="6" fill="#071d49"/>
+            <text x="108" y="30" fill="#ffd000" font-size="9.5" font-weight="800" text-anchor="middle">usuarios</text>
+            <text x="22" y="52" fill="#182238" font-size="8.2" font-family="Consolas,monospace">PK id</text>
+            <text x="22" y="65" fill="#182238" font-size="8.2" font-family="Consolas,monospace">UK correo (150)</text>
+            <text x="22" y="78" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   nombre, password</text>
+            <text x="22" y="91" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   rol (ENUM) · activo</text>
+            <text x="22" y="104" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   tema (claro|oscuro)</text>
+            <text x="22" y="117" fill="#525e75" font-size="7.8" font-family="Consolas,monospace">   two_factor_secret</text>
+            <text x="22" y="130" fill="#525e75" font-size="7.8" font-family="Consolas,monospace">   two_factor_recovery_codes</text>
+            <text x="22" y="141" fill="#525e75" font-size="7.8" font-family="Consolas,monospace">   two_factor_confirmed_at</text>
+
+            <!-- rankings_mensuales -->
+            <rect x="262" y="14" width="232" height="132" rx="7" fill="#fff" stroke="#003da5" stroke-width="1.6"/>
+            <rect x="262" y="14" width="232" height="24" rx="6" fill="#003da5"/>
+            <text x="378" y="30" fill="#fff" font-size="9.5" font-weight="800" text-anchor="middle">rankings_mensuales</text>
+            <text x="270" y="52" fill="#182238" font-size="8.2" font-family="Consolas,monospace">PK id</text>
+            <text x="270" y="65" fill="#182238" font-size="8.2" font-family="Consolas,monospace">UK (anio_desempeno, mes_desempeno)</text>
+            <text x="270" y="78" fill="#182238" font-size="8.2" font-family="Consolas,monospace">UK (anio_publicacion, mes_publicacion)</text>
+            <text x="270" y="91" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   estado (BORRADOR|PUBLICADO|CERRADO|VENCIDO)</text>
+            <text x="270" y="104" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   fecha_publicacion, fecha_cierre</text>
+            <text x="270" y="117" fill="#003da5" font-size="8.2" font-family="Consolas,monospace">FK creado_por -&gt; usuarios.id</text>
+            <text x="270" y="130" fill="#003da5" font-size="8.2" font-family="Consolas,monospace">FK actualizado_por -&gt; usuarios.id</text>
+            <text x="270" y="142" fill="#b91c1c" font-size="7.6" font-weight="700">2 Triggers BEFORE UPDATE/DELETE + 2 CHECK</text>
+
+            <!-- posiciones_ranking -->
+            <rect x="556" y="14" width="250" height="142" rx="7" fill="#fff" stroke="#0c8a4b" stroke-width="1.6"/>
+            <rect x="556" y="14" width="250" height="24" rx="6" fill="#0c8a4b"/>
+            <text x="681" y="30" fill="#fff" font-size="9.5" font-weight="800" text-anchor="middle">posiciones_ranking</text>
+            <text x="564" y="52" fill="#182238" font-size="8.2" font-family="Consolas,monospace">PK id</text>
+            <text x="564" y="65" fill="#0c8a4b" font-size="8.2" font-family="Consolas,monospace">FK ranking_mensual_id (CASCADE)</text>
+            <text x="564" y="78" fill="#182238" font-size="8.2" font-family="Consolas,monospace">UK (ranking_mensual_id, puesto 1..3)</text>
+            <text x="564" y="91" fill="#182238" font-size="8.2" font-family="Consolas,monospace">UK codigo_interno (PART-...)</text>
+            <text x="564" y="104" fill="#182238" font-size="8.2" font-family="Consolas,monospace">UK (ranking_id, celular_normalizado)</text>
+            <text x="564" y="117" fill="#525e75" font-size="8" font-family="Consolas,monospace">   nombres/apellidos/celular/foto_snapshot</text>
+            <text x="564" y="130" fill="#525e75" font-size="8" font-family="Consolas,monospace">   vendedor_id (nullable, legado)</text>
+            <text x="564" y="146" fill="#b91c1c" font-size="7.6" font-weight="700">3 Triggers BEFORE INS/UPD/DEL + CHECK</text>
+
+            <!-- Relaciones fila superior -->
+            <line x1="202" y1="80" x2="260" y2="80" stroke="#1768d5" stroke-width="1.8" marker-end="url(#erd-arrow)"/>
+            <text x="231" y="73" fill="#003da5" font-size="8.2" font-weight="700" text-anchor="middle">1 : N</text>
+
+            <line x1="494" y1="80" x2="554" y2="80" stroke="#0c8a4b" stroke-width="1.8" marker-end="url(#erd-arrow)"/>
+            <text x="524" y="73" fill="#0c8a4b" font-size="8.2" font-weight="700" text-anchor="middle">1 : 3</text>
+
+            <!-- oficinas -->
+            <rect x="14" y="196" width="194" height="138" rx="7" fill="#fff" stroke="#071d49" stroke-width="1.5"/>
+            <rect x="14" y="196" width="194" height="24" rx="6" fill="#071d49"/>
+            <text x="111" y="212" fill="#ffd000" font-size="9.5" font-weight="800" text-anchor="middle">oficinas (4 fijas)</text>
+            <text x="22" y="234" fill="#182238" font-size="8.2" font-family="Consolas,monospace">PK id</text>
+            <text x="22" y="247" fill="#003da5" font-size="8.2" font-family="Consolas,monospace">UK codigo (ENUM 4 sedes)</text>
+            <text x="22" y="260" fill="#182238" font-size="8.2" font-family="Consolas,monospace">UK slug (arequipa|lima|...)</text>
+            <text x="22" y="273" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   nombre, direccion</text>
+            <text x="22" y="286" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   telefono, whatsapp, correo</text>
+            <text x="22" y="299" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   horario, enlace_google_maps</text>
+            <text x="22" y="312" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   imagen</text>
+            <text x="22" y="327" fill="#b45309" font-size="7.6" font-weight="700">CHECK codigo-slug + booted()</text>
+
+            <!-- propiedades -->
+            <rect x="256" y="196" width="204" height="138" rx="7" fill="#fff" stroke="#1768d5" stroke-width="1.5"/>
+            <rect x="256" y="196" width="204" height="24" rx="6" fill="#1768d5"/>
+            <text x="358" y="212" fill="#fff" font-size="9.5" font-weight="800" text-anchor="middle">propiedades</text>
+            <text x="264" y="234" fill="#182238" font-size="8.2" font-family="Consolas,monospace">PK id</text>
+            <text x="264" y="247" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   nombre, imagen, ubicacion</text>
+            <text x="264" y="260" fill="#003da5" font-size="8.2" font-family="Consolas,monospace">FK oficina -&gt; oficinas.codigo</text>
+            <text x="264" y="273" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   precio (12,2), moneda</text>
+            <text x="264" y="286" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   enlace_remax (500)</text>
+            <text x="264" y="299" fill="#182238" font-size="8.2" font-family="Consolas,monospace">   activo, destacada</text>
+            <text x="264" y="314" fill="#525e75" font-size="7.8" font-family="Consolas,monospace">IDX activo+destacada · activo+ofic</text>
+            <text x="264" y="327" fill="#b45309" font-size="7.6" font-weight="700">CHECK precio &lt;-&gt; moneda</text>
+
+            <line x1="208" y1="258" x2="254" y2="258" stroke="#1768d5" stroke-width="1.8" marker-end="url(#erd-arrow)"/>
+            <text x="231" y="251" fill="#003da5" font-size="8.2" font-weight="700" text-anchor="middle">1 : N</text>
+
+            <!-- agentes -->
+            <rect x="484" y="196" width="152" height="138" rx="7" fill="#fff" stroke="#475569" stroke-width="1.4"/>
+            <rect x="484" y="196" width="152" height="24" rx="6" fill="#334155"/>
+            <text x="560" y="212" fill="#fff" font-size="9.5" font-weight="800" text-anchor="middle">agentes</text>
+            <text x="492" y="234" fill="#182238" font-size="8.1" font-family="Consolas,monospace">PK id</text>
+            <text x="492" y="247" fill="#182238" font-size="8.1" font-family="Consolas,monospace">   nombres, apellidos</text>
+            <text x="492" y="260" fill="#182238" font-size="8.1" font-family="Consolas,monospace">   fotografia (255)</text>
+            <text x="492" y="273" fill="#182238" font-size="8.1" font-family="Consolas,monospace">   biografia (TEXT)</text>
+            <text x="492" y="286" fill="#182238" font-size="8.1" font-family="Consolas,monospace">   celular, whatsapp</text>
+            <text x="492" y="299" fill="#182238" font-size="8.1" font-family="Consolas,monospace">   correo (nullable)</text>
+            <text x="492" y="312" fill="#182238" font-size="8.1" font-family="Consolas,monospace">   activo (IDX)</text>
+
+            <!-- Singletons -->
+            <rect x="652" y="196" width="154" height="64" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.4"/>
+            <rect x="652" y="196" width="154" height="21" rx="6" fill="#b45309"/>
+            <text x="729" y="210" fill="#fff" font-size="8.6" font-weight="800" text-anchor="middle">configuracion_contacto</text>
+            <text x="660" y="231" fill="#182238" font-size="7.9" font-family="Consolas,monospace">PK id=1 (CHECK id=1)</text>
+            <text x="660" y="244" fill="#525e75" font-size="7.7" font-family="Consolas,monospace">tel, wa, correo, horarios</text>
+
+            <rect x="652" y="270" width="154" height="64" rx="7" fill="#fff" stroke="#b45309" stroke-width="1.4"/>
+            <rect x="652" y="270" width="154" height="21" rx="6" fill="#b45309"/>
+            <text x="729" y="284" fill="#fff" font-size="8.6" font-weight="800" text-anchor="middle">configuracion_portada</text>
+            <text x="660" y="305" fill="#182238" font-size="7.9" font-family="Consolas,monospace">PK id=1 (CHECK id=1)</text>
+            <text x="660" y="318" fill="#525e75" font-size="7.7" font-family="Consolas,monospace">imagen (Hero principal)</text>
+          </svg>
+          <p class="diagram-caption"><strong>Diagrama 2.</strong> Modelo Entidad-Relación real de la base de datos (9 tablas operativas; la tabla <code>vendedores</code> se conserva como respaldo de migración histórica).</p>
+        </div>
+
+        <h2>3.2 Reglas de integridad directamente en MySQL (CHECK Constraints y 5 Triggers)</h2>
+        <p>
+          Una fortaleza técnica destacable del proyecto es que las reglas de negocio críticas no dependen únicamente de
+          validaciones en PHP, sino que también están protegidas en el propio motor <strong>MySQL / MariaDB</strong>:
+        </p>
+        <table>
+          <thead>
+            <tr><th style="width:28%">Restricción / Trigger</th><th style="width:20%">Tabla</th><th>Regla garantizada a nivel de motor BD</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>chk_propiedades_precio_moneda</code></td><td><code>propiedades</code></td><td>Impide guardar un precio sin moneda o una moneda sin precio (ambos nulos o ambos válidos con <code>precio &gt;= 0</code>).</td></tr>
+            <tr><td><code>chk_oficinas_codigo_slug</code></td><td><code>oficinas</code></td><td>Garantiza correspondencia exacta entre <code>codigo</code> y <code>slug</code> para las 4 sedes oficiales.</td></tr>
+            <tr><td><code>chk_configuracion_unica</code> / <code>portada</code></td><td><code>configuracion_*</code></td><td>Garantiza patrón Singleton en base de datos mediante <code>CHECK (id = 1)</code>.</td></tr>
+            <tr><td><code>chk_ranking_sucesion</code></td><td><code>rankings_mensuales</code></td><td>Exige matemáticamente que <code>mes_publicacion</code> sea el mes inmediatamente posterior a <code>mes_desempeno</code> (incluyendo salto diciembre &rarr; enero).</td></tr>
+            <tr><td><code>trg_rankings_bloqueo_update</code></td><td><code>rankings_mensuales</code></td><td>Lanza <code>SQLSTATE '45000'</code> ante cualquier <code>UPDATE</code> sobre rankings <code>CERRADO</code> o <code>VENCIDO</code>.</td></tr>
+            <tr><td><code>trg_rankings_bloqueo_delete</code></td><td><code>rankings_mensuales</code></td><td>Impide <code>DELETE</code> de rankings <code>PUBLICADO</code>, <code>CERRADO</code> o <code>VENCIDO</code>.</td></tr>
+            <tr><td><code>trg_posiciones_bloqueo_insert/update/delete</code></td><td><code>posiciones_ranking</code></td><td>3 triggers que consultan el estado del ranking padre y bloquean cualquier inserción, edición o borrado si el padre está <code>CERRADO</code> o <code>VENCIDO</code>.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout--tip">
+          <strong class="callout-title">Evolución de esquema sin pérdida de datos (Migración 13)</strong>
+          En la migración <code>0001_01_01_000013_adaptar_posiciones_ranking_independiente.php</code>, la tabla <code>posiciones_ranking</code> evolucionó de depender de una clave foránea obligatoria <code>vendedor_id</code> a un registro <strong>100 % independiente</strong> con <code>codigo_interno</code> (<code>PART-...</code>) y <code>celular_normalizado</code> único por período, rellenando retroactivamente los registros históricos existentes sin perder datos.
+        </div>
+      </section>
+
+      <!-- ==================== CAPÍTULO 4 ==================== -->
+      <section class="section-break" id="cap-4">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 4</p>
+          <h1 class="chapter-title">Enrutamiento, Middlewares y Ciclo de Vida HTTP</h1>
+        </div>
+
+        <h2>4.1 Ciclo de vida de una petición administrativa</h2>
+        <div class="diagram-box">
+          <svg viewBox="0 0 820 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pipeline HTTP y Middlewares">
+            <defs>
+              <marker id="pa1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#003da5"/>
+              </marker>
+            </defs>
+            <rect x="8" y="34" width="114" height="52" rx="7" fill="#071d49"/>
+            <text x="65" y="56" fill="#ffd000" font-size="9" font-weight="700" text-anchor="middle">1. Request HTTP</text>
+            <text x="65" y="72" fill="#fff" font-size="8" text-anchor="middle">GET /admin/...</text>
+
+            <line x1="122" y1="60" x2="146" y2="60" stroke="#003da5" stroke-width="1.8" marker-end="url(#pa1)"/>
+
+            <rect x="148" y="30" width="144" height="60" rx="7" fill="#eff6ff" stroke="#003da5" stroke-width="1.4"/>
+            <text x="220" y="51" fill="#071d49" font-size="9" font-weight="700" text-anchor="middle">2. CabecerasSeguridad</text>
+            <text x="220" y="66" fill="#525e75" font-size="7.8" text-anchor="middle">Global en bootstrap/app.php</text>
+            <text x="220" y="79" fill="#525e75" font-size="7.8" text-anchor="middle">CSP · X-Frame · HSTS</text>
+
+            <line x1="292" y1="60" x2="316" y2="60" stroke="#003da5" stroke-width="1.8" marker-end="url(#pa1)"/>
+
+            <rect x="318" y="30" width="144" height="60" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+            <text x="390" y="51" fill="#92400e" font-size="9" font-weight="700" text-anchor="middle">3. auth + VerificarRol</text>
+            <text x="390" y="66" fill="#78350f" font-size="7.8" text-anchor="middle">Expulsa si activo=false</text>
+            <text x="390" y="79" fill="#78350f" font-size="7.8" text-anchor="middle">Valida rol (o abort 403)</text>
+
+            <line x1="462" y1="60" x2="486" y2="60" stroke="#003da5" stroke-width="1.8" marker-end="url(#pa1)"/>
+
+            <rect x="488" y="30" width="154" height="60" rx="7" fill="#ecfdf3" stroke="#0c8a4b" stroke-width="1.4"/>
+            <text x="565" y="51" fill="#065f46" font-size="9" font-weight="700" text-anchor="middle">4. Componente Livewire</text>
+            <text x="565" y="66" fill="#166534" font-size="7.8" text-anchor="middle">mount() + doble auth</text>
+            <text x="565" y="79" fill="#166534" font-size="7.8" text-anchor="middle">Servicio / Modelo Eloquent</text>
+
+            <line x1="642" y1="60" x2="666" y2="60" stroke="#003da5" stroke-width="1.8" marker-end="url(#pa1)"/>
+
+            <rect x="668" y="34" width="144" height="52" rx="7" fill="#003da5"/>
+            <text x="740" y="56" fill="#fff" font-size="9" font-weight="700" text-anchor="middle">5. Respuesta Segura</text>
+            <text x="740" y="72" fill="#dbeafe" font-size="8" text-anchor="middle">HTML / JSON + Headers</text>
+          </svg>
+          <p class="diagram-caption"><strong>Diagrama 3.</strong> Pipeline de ejecución y doble barrera de autorización por petición.</p>
+        </div>
+
+        <h2>4.2 Mapa completo de rutas (<code>routes/web.php</code> y <code>routes/settings.php</code>)</h2>
+        <table>
+          <thead>
+            <tr><th style="width:10%">Método</th><th style="width:28%">URI</th><th style="width:28%">Destino</th><th>Middleware</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>GET</code></td><td><code>/</code>, <code>/empresa</code>, <code>/propiedades</code>, <code>/oficinas</code>, <code>/oficinas/{oficina}</code>, <code>/contacto</code></td><td><code>AppLivewirePublico*</code></td><td><code>web</code> + <code>CabecerasSeguridad</code></td></tr>
+            <tr><td><code>GET</code></td><td><code>/salud</code> · <code>/sitemap.xml</code></td><td><code>EstadoSistemaController</code> · Closure XML</td><td><code>web</code> (<code>no-store</code> en <code>/salud</code>)</td></tr>
+            <tr><td><code>GET</code></td><td><code>/admin/login</code></td><td><code>IniciarSesion</code></td><td><code>guest</code></td></tr>
+            <tr><td><code>POST</code></td><td><code>/admin/logout</code></td><td>Closure (invalida sesión y regenera CSRF)</td><td><code>auth</code></td></tr>
+            <tr><td><code>GET</code></td><td><code>/admin/propiedades</code>, <code>/admin/agentes</code>, <code>/admin/ranking-actual</code></td><td><code>GestionPropiedades</code>, <code>GestionAgentes</code>, <code>GestionRankingActual</code></td><td><code>auth</code>, <code>rol:ADMINISTRADOR,MARKETING</code></td></tr>
+            <tr><td><code>GET</code></td><td><code>/admin/portada</code>, <code>/admin/oficinas</code>, <code>/admin/historial-rankings</code>, <code>/admin/configuracion-contacto</code>, <code>/admin/usuarios</code></td><td>Módulos exclusivos de administración</td><td><code>auth</code>, <code>rol:ADMINISTRADOR</code></td></tr>
+            <tr><td><code>GET</code></td><td><code>/settings/profile</code>, <code>/settings/appearance</code>, <code>/settings/security</code>, <code>/user/confirm-password</code></td><td><code>Profile</code>, <code>Appearance</code>, <code>Security</code>, <code>ConfirmarPassword</code></td><td><code>auth</code>, <code>rol:ADMINISTRADOR,MARKETING</code> (+ <code>password.confirm</code> en <code>security</code>)</td></tr>
+          </tbody>
+        </table>
+
+        <h2>4.3 Implementación del middleware <code>VerificarRol</code></h2>
+        
+<div class="code-card">
+  <div class="code-card__head"><span>app/Http/Middleware/VerificarRol.php (líneas 26–43)</span><span>PHP / SQL</span></div>
+  <pre><code>if (! $usuario-&gt;activo) {
+    Auth::logout();
+    $request-&gt;session()-&gt;invalidate();
+    $request-&gt;session()-&gt;regenerateToken();
+    return redirect()-&gt;route('login')-&gt;withErrors([
+        'correo' =&gt; 'Tu cuenta ha sido desactivada. Contacta al administrador.',
+    ]);
+}
+if ($usuario-&gt;esAdministrador()) {
+    return $next($request);
+}
+if (! empty($rolesPermitidos) &amp;&amp; ! in_array($usuario-&gt;rol, $rolesPermitidos, true)) {
+    abort(403, 'No tienes permisos para acceder a este módulo.');
+}</code></pre>
+</div>
+      </section>
+
+      <!-- ==================== CAPÍTULO 5 ==================== -->
+      <section class="section-break" id="cap-5">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 5</p>
+          <h1 class="chapter-title">Lógica de Negocio Crítica y Servicios de Dominio</h1>
+        </div>
+
+        <h2>5.1 Concurrencia, transacciones y gestión de archivos en <code>ServicioRankingMensual</code></h2>
+        <p>
+          El servicio <code>app/Services/ServicioRankingMensual.php</code> encapsula el ciclo completo del Ranking Mensual.
+          Para evitar condiciones de carrera si dos usuarios editan o cierran el período simultáneamente, emplea
+          <strong>transacciones atómicas</strong> (<code>DB::transaction</code>) combinadas con <strong>bloqueo pesimista a nivel de fila</strong>
+          (<code>lockForUpdate()</code>). Además, protege el sistema de archivos ante fallos de BD eliminando la fotografía recién
+          subida en el bloque <code>catch (Throwable)</code> y purgando fotografías reemplazadas únicamente <em>después</em> de confirmar el commit.
+        </p>
+        
+<div class="code-card">
+  <div class="code-card__head"><span>app/Services/ServicioRankingMensual.php (patrón transaccional)</span><span>PHP / SQL</span></div>
+  <pre><code>$resultado = DB::transaction(function () use ($puesto, $datos, $usuarioId, $fotoArchivo, ...) {
+    $ranking = $this-&gt;obtenerYValidarRankingEditable($usuarioId); // usa lockForUpdate()
+    $posicionesExistentes = $ranking-&gt;posiciones()-&gt;lockForUpdate()-&gt;get()-&gt;keyBy('puesto');
+    // Valida celular único por período (hash_equals) + detecta homónimo no bloqueante
+    // Crea o actualiza snapshot independiente (codigo_interno PART-...)
+});
+// Limpieza post-commit de foto reemplazada solo si no sigue referenciada</code></pre>
+</div>
+
+        <h2>5.2 Doble capa de inmutabilidad en <code>RankingMensual</code> y <code>PosicionRanking</code></h2>
+        <p>
+          Los métodos <code>booted()</code> de ambos modelos interceptan eventos Eloquent (<code>creating</code>, <code>updating</code>,
+          <code>deleting</code>) y lanzan <code>DomainException</code> si se intenta operar fuera de los días 1 al 3
+          (<code>RankingMensual::dentroDePlazoDeGestion()</code> evaluado con <code>now('America/Lima')</code>) o sobre un
+          ranking <code>CERRADO</code>/<code>VENCIDO</code>. La única excepción controlada tras el día 3 es
+          <code>esTransicionInternaDeCierre()</code>, que solo permite actualizar los campos <code>estado</code> y
+          <code>fecha_cierre</code> para el paso <code>PUBLICADO &rarr; CERRADO</code> o <code>BORRADOR &rarr; VENCIDO</code>.
+        </p>
+
+        <h2>5.3 Optimización WebP nativa sin paquetes externos (<code>ServicioOptimizacionImagen</code>)</h2>
+        <ul>
+          <li>Usa las funciones nativas de <strong>PHP GD</strong> (<code>imagecreatefromjpeg/png</code>, <code>imagecopyresampled</code>, <code>imagewebp</code> con calidad 82) preservando transparencia alfa en PNG.</li>
+          <li>Anchos máximos por entidad: <strong>1920 px</strong> (Portada), <strong>1200 px</strong> (Propiedades), <strong>1000 px</strong> (Oficinas), <strong>600 px</strong> (Agentes y Ranking).</li>
+          <li>Nunca borra el archivo original y omite reconversión si el <code>.webp</code> ya existe y su <code>filemtime()</code> es vigente.</li>
+          <li>El componente Blade <code>&lt;x-imagen-optimizada&gt;</code> renderiza <code>&lt;picture&gt;&lt;source type="image/webp"&gt;&lt;img ...&gt;&lt;/picture&gt;</code> junto con <code>picture { display: contents; }</code> en CSS para no alterar las grillas existentes.</li>
+        </ul>
+
+        <h2>5.4 Respaldos privados con verificación criptográfica (<code>ServicioRespaldo</code>)</h2>
+        <ul>
+          <li>Almacena respaldos fuera de <code>public/</code> en <code>storage/app/private/respaldos/{entorno}/{Y-m-d_His}</code> sin sobrescribir copias previas.</li>
+          <li>Ejecuta <code>mysqldump --single-transaction --routines --triggers</code> pasando la contraseña en la variable de entorno efímera <code>MYSQL_PWD</code> (nunca en argumentos visibles en procesos ni archivos de script).</li>
+          <li>Comprime <code>storage/app/public</code> y <code>public/images</code> en <code>multimedia.zip</code> y genera <code>manifiesto.json</code> con los hashes <strong>SHA-256</strong> de cada archivo.</li>
+          <li><code>verificarIntegridad()</code> valida cada archivo comparando hashes con <code>hash_equals()</code> sin modificar datos.</li>
+        </ul>
+      </section>
+
+      <!-- ==================== CAPÍTULO 6 ==================== -->
+      <section class="section-break" id="cap-6">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 6</p>
+          <h1 class="chapter-title">Seguridad Web (Defensa en Profundidad)</h1>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th style="width:22%">Vector / Riesgo</th><th style="width:30%">Implementación en el código</th><th>Archivo clave</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Inyección SQL (SQLi)</strong></td><td>Consultas parametrizadas con Eloquent ORM y Query Builder en todo el sistema; validación estricta de enumerados e IDs.</td><td><code>app/Livewire/**</code>, <code>app/Models/**</code></td></tr>
+            <tr><td><strong>XSS y JSON-LD Injection</strong></td><td>Escape automático Blade <code>{{ }}</code> y serialización JSON-LD con banderas <code>JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT</code>.</td><td><code>layouts/publico.blade.php</code></td></tr>
+            <tr><td><strong>CSRF</strong></td><td>Tokens <code>@csrf</code> en formularios POST y validación automática de firmas en solicitudes Livewire.</td><td><code>layouts/admin.blade.php</code></td></tr>
+            <tr><td><strong>Clickjacking / MIME / HSTS</strong></td><td>Cabeceras <code>X-Frame-Options: SAMEORIGIN</code>, <code>X-Content-Type-Options: nosniff</code>, <code>Content-Security-Policy</code>, <code>Permissions-Policy</code> y <code>Strict-Transport-Security</code>.</td><td><code>CabecerasSeguridad.php</code></td></tr>
+            <tr><td><strong>Fuerza Bruta</strong></td><td><code>RateLimiter</code> de máximo <strong>5 intentos / 60 s</strong> por correo+IP en login y por usuario+IP en desafío 2FA.</td><td><code>IniciarSesion.php</code></td></tr>
+            <tr><td><strong>Robo de Credenciales</strong></td><td>2FA TOTP opcional (Fortify) con secreto cifrado, códigos de recuperación comparados con <code>hash_equals()</code> y confirmación previa <code>password.confirm</code>.</td><td><code>Security.php</code>, <code>ConfirmarPassword.php</code></td></tr>
+            <tr><td><strong>Escalada de Privilegios</strong></td><td>Doble verificación: middleware <code>rol:ADMINISTRADOR</code> en rutas + <code>abort(403)</code> dentro de los componentes Livewire; autoprotección en <code>GestionUsuarios</code>.</td><td><code>VerificarRol.php</code>, <code>GestionUsuarios.php</code></td></tr>
+            <tr><td><strong>Ejecución en Uploads (RCE)</strong></td><td>Validación MIME/imagen en servidor (<code>image|mimes:jpg,jpeg,png,webp|max:4096</code>) + bloqueo de scripts ejecutables y listado en <code>storage/app/public/.htaccess</code>.</td><td><code>storage/app/public/.htaccess</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ==================== CAPÍTULO 7 ==================== -->
+      <section class="section-break" id="cap-7">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 7</p>
+          <h1 class="chapter-title">Requerimientos No Funcionales (RNF025–RNF030)</h1>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th style="width:12%">Código</th><th style="width:24%">Requerimiento</th><th>Evidencia técnica implementada</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>RNF025</strong></td><td>Accesibilidad WCAG 2.1 AA</td><td>Landmarks semánticos, <code>skip-link</code>, <code>aria-current="page"</code>, <code>:focus-visible</code> global, contraste <code>--muted: #525e75</code> (&ge; 4.5:1), <code>role="alert"</code> y <code>aria-invalid</code>.</td></tr>
+            <tr><td><strong>RNF026</strong></td><td>Optimización SEO</td><td>Títulos únicos, <code>meta description</code>, <code>canonical</code>, Open Graph, Twitter Cards, JSON-LD <code>RealEstateAgent</code> e <code>ItemList</code>, <code>robots.txt</code> y <code>GET /sitemap.xml</code> dinámico.</td></tr>
+            <tr><td><strong>RNF027</strong></td><td>Disponibilidad (99 %)</td><td>Endpoint <code>GET /salud</code> (<code>200</code>/<code>503</code>), canal diario <code>disponibilidad</code> (30 días), captura de <code>QueryException</code>/<code>PDOException</code> y tarea programada cada 5 min.</td></tr>
+            <tr><td><strong>RNF028</strong></td><td>Copias de Seguridad</td><td>Respaldos privados por entorno en <code>storage/app/private/respaldos/</code>, <code>multimedia.zip</code>, <code>manifiesto.json</code> SHA-256 y comando <code>sistema:verificar-respaldo</code>.</td></tr>
+            <tr><td><strong>RNF029</strong></td><td>Protección Ataques Web</td><td><code>CabecerasSeguridad</code>, HTTPS forzado en producción, <code>.htaccess</code> endurecido, RateLimiter, 2FA y autorización estricta de roles.</td></tr>
+            <tr><td><strong>RNF030</strong></td><td>Optimización de Recursos</td><td>Conversión WebP automática + por lotes, <code>loading="lazy"</code>, <code>fetchpriority="high"</code> en Hero, versionado CSS <code>?v=filemtime(...)</code> y compresión/caché Apache.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ==================== CAPÍTULO 8 ==================== -->
+      <section class="section-break" id="cap-8">
+        <div class="chapter-header">
+          <p class="chapter-eyebrow">Capítulo 8</p>
+          <h1 class="chapter-title">Instalación, Despliegue en Producción y Pruebas</h1>
+        </div>
+
+        <h2>8.1 Instalación en entorno local</h2>
+        
+<div class="code-card">
+  <div class="code-card__head"><span>Secuencia de instalación local (PowerShell / Bash)</span><span>PHP / SQL</span></div>
+  <pre><code>composer install
+copy .env.example .env
+php artisan key:generate
+# Configurar DB_CONNECTION=mysql, DB_DATABASE=remax_zona, DB_USERNAME y DB_PASSWORD en .env
+php artisan migrate --seed
+php artisan storage:link
+php artisan sistema:optimizar-imagenes
+php artisan serve</code></pre>
+</div>
+
+        <h2>8.2 Comandos Artisan propios y tareas programadas (<code>routes/console.php</code>)</h2>
+        <table>
+          <thead>
+            <tr><th style="width:38%">Comando</th><th style="width:20%">Frecuencia Cron</th><th>Descripción</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>php artisan sistema:verificar-salud</code></td><td>Cada 5 minutos</td><td>Evalúa aplicación, MySQL y escritura en <code>storage/</code>; registra fallos en <code>disponibilidad.log</code>.</td></tr>
+            <tr><td><code>php artisan sistema:respaldar</code></td><td>Diario 02:30</td><td>Genera respaldo completo (BD + <code>multimedia.zip</code> + <code>manifiesto.json</code> SHA-256).</td></tr>
+            <tr><td><code>php artisan sistema:verificar-respaldo {dir}</code></td><td>Bajo demanda</td><td>Comprueba integridad SHA-256 de un respaldo sin alterar archivos ni base de datos.</td></tr>
+            <tr><td><code>php artisan sistema:optimizar-imagenes</code></td><td>Bajo demanda</td><td>Genera o actualiza copias WebP para todas las fotografías del catálogo y recursos.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>8.3 Lista de verificación para despliegue en producción</h2>
+        <ul>
+          <li>Configurar <code>.env</code> con <code>APP_ENV=production</code>, <code>APP_DEBUG=false</code>, <code>APP_URL=https://tudominio.com</code> (activa <code>URL::forceScheme('https')</code>, HSTS y protección de comandos destructivos).</li>
+          <li>Registrar en Cron del servidor: <code>* * * * * cd /ruta/proyecto &amp;&amp; php artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1</code>.</li>
+          <li>Verificar disponibilidad de <code>mysqldump</code> en <code>PATH</code> (o definir <code>MYSQLDUMP_PATH</code> en <code>.env</code>) y replicar <code>storage/app/private/respaldos/production</code> a almacenamiento externo.</li>
+          <li>Habilitar módulos Apache <code>mod_rewrite</code>, <code>mod_deflate</code>, <code>mod_expires</code> y <code>mod_headers</code>, y apuntar un monitor externo de uptime a <code>GET /salud</code>.</li>
+        </ul>
+
+        <h2>8.4 Suite de pruebas automatizadas (<code>php artisan test</code>)</h2>
+        <p>
+          El proyecto cuenta con una batería de pruebas automatizadas en PHPUnit que valida autenticación, 2FA, roles,
+          reglas de negocio del ranking mensual, maestro-detalle de propiedades, gestión de agentes y cumplimiento RNF025–RNF030
+          (<strong>36 pruebas aprobadas, 157 aserciones</strong>):
+        </p>
+        <table>
+          <thead>
+            <tr><th style="width:42%">Archivo de prueba</th><th>Cobertura verificada</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>tests/Feature/Auth/AuthenticationTest.php</code> &amp; <code>TwoFactorChallengeTest.php</code></td><td>Login, cierre de sesión, bloqueo de cuentas inactivas, desafío TOTP y códigos de recuperación.</td></tr>
+            <tr><td><code>tests/Feature/GestionPropiedadesMasterDetailTest.php</code></td><td>Flujo maestro-detalle, oficinas responsables, validaciones de precio/moneda y destacado.</td></tr>
+            <tr><td><code>tests/Feature/GestionAgentesTest.php</code></td><td>CRUD de agentes, carga de fotografía, normalización +51 y visibilidad pública en <code>/empresa</code>.</td></tr>
+            <tr><td><code>tests/Feature/RankingMensualIndependienteTest.php</code></td><td>Ventana días 1–3, 3 puestos fijos, celular único, homónimos, publicación y bloqueo día 4+.</td></tr>
+            <tr><td><code>tests/Feature/Settings/ProfileUpdateTest.php</code> &amp; <code>SecurityTest.php</code></td><td>Actualización de perfil con contraseña actual, cambio de clave y activación/desactivación 2FA.</td></tr>
+            <tr><td><code>tests/Feature/RequerimientosNoFuncionalesTest.php</code></td><td>Validación automatizada de accesibilidad, SEO/sitemap, <code>/salud</code>, respaldos SHA-256, cabeceras de seguridad, error 403 por rol y conversión WebP.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+  </article>
+</div>
+</body>
+</html>

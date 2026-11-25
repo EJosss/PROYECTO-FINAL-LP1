@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía Integrante 1 — Sitio Público, Contenidos Fijos, SEO y WebP | RE/MAX Zona</title>
+  <style>
+    :root {
+      --accent: #003da5; --accent-light: #1768d5; --navy: #071d49; --yellow: #ffd000;
+      --ink: #182238; --muted: #525e75; --line: #dce5f0; --soft: #f4f7fb;
+      --green: #0c8a4b; --green-bg: #ecfdf3; --amber: #b45309; --amber-bg: #fffbeb; --info-bg: #eff6ff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--ink); background: #e8eef7;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+      font-size: 9.8pt; line-height: 1.54;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .topbar {
+      position: sticky; top: 0; z-index: 40; background: var(--navy); color: #fff;
+      padding: 0.65rem 1.25rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem;
+      box-shadow: 0 4px 18px rgba(7,29,73,0.25);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; }
+    .topbar-nav { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .topbar-nav a {
+      color: #dbeafe; text-decoration: none; font-size: 8.5pt; font-weight: 700;
+      padding: 0.35rem 0.65rem; border-radius: 6px; background: rgba(255,255,255,0.09);
+    }
+    .topbar-nav a:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    .topbar button {
+      background: var(--yellow); color: var(--navy); border: 0; border-radius: 7px;
+      padding: 0.45rem 0.95rem; font-weight: 800; cursor: pointer; font-size: 8.8pt;
+    }
+    .doc-wrap {
+      max-width: 920px; margin: 1.5rem auto 2.5rem; background: #fff;
+      border-radius: 12px; box-shadow: 0 18px 48px rgba(7,29,73,0.12); overflow: hidden;
+    }
+    .cover {
+      min-height: 292mm; padding: 22mm 18mm 18mm;
+      background: linear-gradient(155deg, #071d49 0%, #003da5 58%, #0f172a 100%);
+      color: #fff; display: flex; flex-direction: column; justify-content: space-between;
+      page-break-after: always; break-after: page;
+    }
+    .cover-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .cover-logo { background: #fff; padding: 10px 16px; border-radius: 10px; }
+    .cover-logo img { height: 40px; display: block; }
+    .cover-pill { border: 1px solid rgba(255,255,255,0.35); padding: 6px 14px; border-radius: 999px; font-size: 8.5pt; font-weight: 700; }
+    .cover-kicker { color: var(--yellow); font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; font-size: 9.2pt; margin: 18px 0 8px; }
+    .cover h1 { font-size: 29pt; line-height: 1.12; margin: 0 0 12px; font-weight: 800; }
+    .cover-sub { font-size: 11.4pt; color: #dbeafe; max-width: 650px; line-height: 1.5; margin: 0 0 14px; }
+    .cover-box {
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+    }
+    .cover-box h2 { margin: 0 0 6px; color: var(--yellow); font-size: 10.5pt; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cover-box p, .cover-box li { color: #e2e8f0; font-size: 9.3pt; margin: 0; }
+    .cover-box ul { margin: 6px 0 0; padding-left: 1.2rem; }
+    .cover-box li { margin-bottom: 4px; }
+    .cover-foot {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      border-top: 1px solid rgba(255,255,255,0.22); padding-top: 12px;
+    }
+    .cover-foot span { display: block; font-size: 7.3pt; text-transform: uppercase; color: #93c5fd; }
+    .cover-foot strong { font-size: 9.2pt; }
+
+    .body { padding: 15mm 16mm 18mm; }
+    .section-title {
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      color: #fff; border-radius: 10px; padding: 11px 15px; margin: 0 0 14px;
+    }
+    .section-title small { display: block; color: var(--yellow); font-size: 7.6pt; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
+    .section-title h2 { margin: 2px 0 0; font-size: 14.5pt; color: #fff; }
+
+    .speech-box {
+      background: var(--amber-bg); border: 1px solid #fde68a; border-left: 4px solid var(--amber);
+      border-radius: 8px; padding: 11px 14px; margin: 0 0 14px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .speech-box .label { display: block; font-size: 7.8pt; font-weight: 800; text-transform: uppercase; color: var(--amber); margin-bottom: 4px; }
+    .speech-box p { margin: 0; font-style: italic; color: #451a03; font-size: 9.5pt; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+    .mini-card {
+      border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--soft);
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .mini-card h3 { margin: 0 0 6px; font-size: 9.8pt; color: var(--navy); }
+    .mini-card ul { margin: 0; padding-left: 1.15rem; font-size: 8.9pt; }
+    .mini-card li { margin-bottom: 4px; }
+
+    .file-card {
+      border: 1px solid var(--line); border-radius: 9px; margin: 0 0 12px; overflow: hidden; background: #fff;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .file-head {
+      background: var(--soft); border-bottom: 1px solid var(--line); padding: 8px 12px;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .file-head strong { color: var(--navy); font-size: 9.8pt; }
+    .file-path {
+      font-family: Consolas, monospace; font-size: 8.2pt; background: #fff; border: 1px solid #cbd5e1;
+      color: var(--accent); padding: 2px 7px; border-radius: 5px; font-weight: 700;
+    }
+    .file-body { padding: 9px 13px; font-size: 9.2pt; }
+    .file-body ul { margin: 4px 0 0; padding-left: 1.2rem; }
+    .file-body li { margin-bottom: 5px; }
+
+    .qa-card {
+      border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin: 0 0 10px; background: #fff;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .qa-head { display: flex; align-items: flex-start; gap: 9px; background: var(--navy); color: #fff; padding: 8px 11px; }
+    .qa-num { flex: 0 0 auto; background: var(--yellow); color: var(--navy); font-weight: 800; font-size: 7.9pt; padding: 2px 6px; border-radius: 4px; margin-top: 1px; }
+    .qa-head h4 { margin: 0; font-size: 9.6pt; line-height: 1.32; color: #fff; }
+    .qa-ans { padding: 8px 11px; background: var(--green-bg); border-left: 3.5px solid var(--green); font-size: 9.1pt; }
+    .qa-ans strong { color: var(--green); }
+
+    .checklist-box {
+      background: var(--info-bg); border: 1px solid #bfdbfe; border-radius: 9px; padding: 12px 14px; margin: 14px 0;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .checklist-box h3 { margin: 0 0 8px; font-size: 10pt; color: var(--accent); }
+    .checklist-box label { display: flex; align-items: flex-start; gap: 8px; font-size: 9.1pt; margin-bottom: 5px; cursor: pointer; }
+    .checklist-box input { margin-top: 3px; accent-color: var(--accent); }
+
+    .pass-box {
+      border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px;
+      padding: 10px 13px; background: var(--soft); margin-top: 12px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .pass-box strong { display: block; color: var(--navy); font-size: 9.2pt; margin-bottom: 3px; }
+    .pass-box p { margin: 0; font-style: italic; font-size: 9.1pt; color: var(--muted); }
+
+    code { font-family: Consolas, monospace; font-size: 0.86em; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 1px 4px; border-radius: 4px; color: var(--navy); }
+    .page-break { page-break-before: always; break-before: page; padding-top: 4px; }
+
+    @media (max-width: 700px) { .grid-2, .cover-foot { grid-template-columns: 1fr; } .body { padding: 14px; } }
+    @page { size: A4 portrait; margin: 13mm 12mm 15mm 12mm; }
+    @page :first { margin: 0; }
+    @media print {
+      body { background: #fff; font-size: 9pt; }
+      .topbar { display: none !important; }
+      .doc-wrap { max-width: none; margin: 0; box-shadow: none; border-radius: 0; }
+      .body { padding: 0; }
+      .cover { min-height: 297mm; width: 210mm; padding: 20mm 16mm 16mm; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <strong>Integrante 1 — Sitio Público, SEO y WebP</strong>
+    <nav class="topbar-nav">
+      <a href="#demo">Tu Demo</a>
+      <a href="#codigo">Tu Código</a>
+      <a href="#preguntas">Preguntas Trampa</a>
+      <a href="#checklist">Checklist</a>
+    </nav>
+  </div>
+  <button type="button" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+</div>
+
+<main class="doc-wrap">
+  <header class="cover">
+    <div class="cover-top">
+      <div class="cover-logo"><img src="imagenes-manual/logo-remax-zona.png" alt="RE/MAX Zona"></div>
+      <div class="cover-pill">Integrante 1 de 3 &bull; Abre la exposición</div>
+    </div>
+
+    <div>
+      <p class="cover-kicker">Guía Individual de Estudio y Sustentación</p>
+      <h1>Sitio Público, Contenidos Fijos, SEO y Optimización WebP</h1>
+      <p class="cover-sub">
+        Todo lo que debes estudiar, abrir en VS Code y defender frente al profesor como tu módulo propio en el proyecto <strong>RE/MAX Zona Inmobiliaria</strong>.
+      </p>
+
+      <div class="cover-box">
+        <h2>Tus 6 pestañas obligatorias abiertas en VS Code</h2>
+        <ul>
+          <li><code>routes/web.php</code> (L24–62) — Rutas públicas Full-Page y Sitemap XML dinámico</li>
+          <li><code>app/Livewire/Publico/PaginaPropiedades.php</code> — Filtros reactivos <code>#[Url]</code> y JSON-LD</li>
+          <li><code>app/Services/ServicioOptimizacionImagen.php</code> — Conversión WebP con PHP GD nativo</li>
+          <li><code>app/Support/TelefonoPeru.php</code> — Helper DRY para formato <code>+51</code> y WhatsApp</li>
+          <li><code>app/Models/ConfiguracionContacto.php</code> — Patrón Singleton (<code>id = 1</code>)</li>
+          <li><code>app/Models/Oficina.php</code> — 4 oficinas oficiales inmutables</li>
+        </ul>
+      </div>
+
+      <div class="cover-box">
+        <h2>Regla de oro para responder (3 pasos)</h2>
+        <p><strong>1.</strong> Di qué problema resuelve &nbsp;→&nbsp; <strong>2.</strong> Nombra el mecanismo técnico (<code>#[Url]</code>, PHP GD, Singleton) &nbsp;→&nbsp; <strong>3.</strong> Abre el archivo y señala la línea exacta.</p>
+      </div>
+    </div>
+
+    <div class="cover-foot">
+      <div><span>Nivel técnico</span><strong>Visual / Arquitectura Web</strong></div>
+      <div><span>Tablas BD propias</span><strong>contacto, oficinas, portada</strong></div>
+      <div><span>Preguntas a dominar</span><strong>6 Preguntas Trampa</strong></div>
+    </div>
+  </header>
+
+  <div class="body">
+    <section id="demo">
+      <div class="section-title">
+        <small>Paso 1 &bull; Tu presentación en vivo</small>
+        <h2>Qué dices y qué pantallas muestras</h2>
+      </div>
+
+      <div class="speech-box">
+        <span class="label">Tu discurso si el profesor pregunta: "¿Qué hiciste tú en el proyecto?"</span>
+        <p>"Yo programé toda la cara pública de RE/MAX Zona Inmobiliaria usando componentes Full-Page de Livewire 4: la portada, el catálogo con filtros reactivos sincronizados en la URL, las páginas de las 4 oficinas, empresa y contacto. También desarrollé los módulos administrativos de contenidos fijos (portada, oficinas inmutables y contacto con patrón Singleton), el SEO técnico (sitemap.xml dinámico y JSON-LD) y el servicio de optimización automática de imágenes a WebP con PHP GD nativo."</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="mini-card">
+          <h3>Pantallas que muestras en el navegador</h3>
+          <ul>
+            <li><strong>Portada (<code>/</code>):</strong> propiedades destacadas, textos editables y podio del ranking.</li>
+            <li><strong>Empresa (<code>/empresa</code>):</strong> historia y tarjetas de agentes.</li>
+            <li><strong>Propiedades (<code>/propiedades</code>):</strong> filtra por búsqueda, ubicación y moneda mirando cómo cambia la URL sin recargar.</li>
+            <li><strong>Oficinas (<code>/oficinas</code> y <code>/oficinas/puno</code>):</strong> sedes fijas y sus propiedades.</li>
+            <li><strong>Contacto (<code>/contacto</code>) y <code>/sitemap.xml</code>:</strong> enlaces <code>wa.me</code> y XML dinámico.</li>
+            <li><strong>En <code>/admin</code>:</strong> Portada, Oficinas y Contacto.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>Tablas y archivos que son tuyos</h3>
+          <ul>
+            <li><strong>Migraciones:</strong> <code>0006</code> (configuracion_contacto), <code>0009</code> (oficinas), <code>0010</code> (configuracion_portada).</li>
+            <li><strong>Livewire Público (6):</strong> <code>PaginaInicio</code>, <code>PaginaEmpresa</code>, <code>PaginaPropiedades</code>, <code>PaginaOficinas</code>, <code>PaginaPropiedadesOficina</code>, <code>PaginaContacto</code>.</li>
+            <li><strong>Livewire Admin (3):</strong> <code>GestionPortada</code>, <code>GestionOficinas</code>, <code>GestionContacto</code>.</li>
+            <li><strong>Vistas/Servicios:</strong> <code>publico.blade.php</code>, <code>imagen-optimizada.blade.php</code>, <code>ServicioOptimizacionImagen.php</code>, <code>TelefonoPeru.php</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="codigo" class="page-break">
+      <div class="section-title">
+        <small>Paso 2 &bull; Dominio técnico</small>
+        <h2>Explicación profunda archivo por archivo</h2>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>1. Rutas Full-Page Livewire 4 y Sitemap XML dinámico</strong>
+          <span class="file-path">routes/web.php (L24–62)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li>Todas las rutas públicas apuntan <strong>directamente a clases Livewire</strong> (<code>PaginaInicio::class</code>, <code>PaginaPropiedades::class</code>, etc.). No se necesitan controladores intermedios ni una API REST aparte porque Livewire maneja estado, consultas y renderizado Blade.</li>
+            <li><code>GET /sitemap.xml</code> (L33–62) construye un XML estándar recorriendo las rutas públicas + los 4 slugs de <code>Propiedad::SLUGS_OFICINAS</code> (<code>arequipa</code>, <code>lima</code>, <code>moquegua</code>, <code>puno</code>), escapa con <code>e()</code> y responde <code>Content-Type: application/xml; charset=UTF-8</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>2. Filtros en tiempo real sincronizados con la URL y JSON-LD</strong>
+          <span class="file-path">app/Livewire/Publico/PaginaPropiedades.php (L12–72)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Atributos PHP 8 (L12–13):</strong> <code>#[Layout('components.layouts.publico')]</code> y <code>#[Title('Propiedades | RE/MAX Zona')]</code>.</li>
+            <li><strong>URL compartible (L16–23):</strong> <code>#[Url(except: '')]</code> en <code>$busqueda</code>, <code>$ubicacion</code> y <code>$moneda</code>. En Blade se enlazan con <code>wire:model.live.debounce.300ms</code>; Livewire actualiza la URL sin recargar y omite parámetros vacíos.</li>
+            <li><strong>Seguridad en consultas (L32–50):</strong> Eloquent usa sentencias preparadas (anti SQL Injection) y valida <code>$moneda</code> contra lista blanca estricta (<code>in_array(..., true)</code>).</li>
+            <li><strong>SEO dinámico (L67–71):</strong> <code>layoutData()</code> envía <code>metaDescription</code>, <code>canonicalUrl</code> y <code>datosEstructurados</code> (JSON-LD <code>ItemList</code>) a <code>publico.blade.php</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>3. Optimización WebP con PHP GD nativo (sin librerías externas)</strong>
+          <span class="file-path">app/Services/ServicioOptimizacionImagen.php (L10–163)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Constantes (L10–12):</strong> Ancho máximo <code>1200 px</code> y calidad WebP <code>82</code>.</li>
+            <li><strong>Caché por fecha (L20–44):</strong> Ignora URLs externas o archivos <code>.webp</code>. Si ya existe el <code>.webp</code> y <code>filemtime($rutaWebp) &gt;= filemtime($rutaOrigen)</code>, devuelve la URL sin volver a procesar.</li>
+            <li><strong>Transparencia PNG (L136–139):</strong> Desactiva <code>imagealphablending</code>, activa <code>imagesavealpha</code> y rellena con canal alfa <code>127</code> (transparente) para que los logos PNG no salgan con fondo negro.</li>
+            <li><strong>Sin romper CSS:</strong> Nunca borra el original; <code>&lt;x-imagen-optimizada&gt;</code> usa <code>&lt;picture&gt;</code> (WebP + fallback original) con <code>picture { display: contents; }</code> en CSS para que las cuadrículas no se descuadren.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>4. Helper DRY para teléfonos peruanos (+51)</strong>
+          <span class="file-path">app/Support/TelefonoPeru.php (L10–55)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><code>quitarPrefijo()</code>: limpia <code>+51</code> o <code>51</code> inicial para que al editar un formulario nunca quede <code>+51 +51 987...</code>.</li>
+            <li><code>formatearConPrefijo()</code>: muestra siempre <code>+51 ...</code> uniforme en la web.</li>
+            <li><code>formatearWhatsapp()</code>: devuelve solo dígitos con <code>51</code> delante para enlaces <code>https://wa.me/51...</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>5. Patrón Singleton y 4 Oficinas Inmutables</strong>
+          <span class="file-path">ConfiguracionContacto.php (L12–59) &bull; Oficina.php (L15–90)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Singleton (<code>ConfiguracionContacto</code> y <code>ConfiguracionPortada</code>):</strong> <code>$incrementing = false</code>, <code>id = 1</code> fijo, <code>booted()</code> lanza <code>DomainException</code> si intentan crear una segunda fila o borrar la única existente, respaldado por <code>CHECK (id = 1)</code> en MySQL. Se lee con <code>obtenerUnica()</code> (<code>firstOrCreate</code>).</li>
+            <li><strong>4 Oficinas fijas (<code>Oficina.php</code>):</strong> Solo existen <code>AREQUIPA</code>, <code>LIMA</code>, <code>MOQUEGUA</code> y <code>PUNO</code>. <code>booted()</code> bloquea crear, borrar o cambiar <code>codigo</code>/<code>slug</code> (<code>isDirty('codigo') || isDirty('slug')</code>) porque son rutas SEO fijas. <code>obtenerTodas()</code> ordena con <code>ORDER BY CASE codigo ...</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="preguntas" class="page-break">
+      <div class="section-title">
+        <small>Paso 3 &bull; Defensa ante el profesor</small>
+        <h2>6 Preguntas Trampa para el Integrante 1</h2>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P1</span><h4>¿Por qué casi no hay Controladores en <code>app/Http/Controllers/</code> si es un proyecto Laravel?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Usamos Livewire 4 con Full-Page Components en <code>routes/web.php</code> (L24–94): las rutas apuntan directo a clases Livewire que gestionan estado y vistas Blade. El único controlador tradicional es <code>EstadoSistemaController</code> porque <code>/salud</code> responde JSON sin estado.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P2</span><h4>Si filtro por "casa" y comparto el enlace, ¿la otra persona ve el mismo resultado?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Sí, porque <code>$busqueda</code>, <code>$ubicacion</code> y <code>$moneda</code> llevan <code>#[Url(except: '')]</code> en <code>PaginaPropiedades.php</code> (L16–23), reflejando los filtros en la URL sin recargar la página.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P3</span><h4>¿Qué pasa si subo un PNG con fondo transparente? ¿El conversor WebP le pone fondo negro?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> No. En <code>ServicioOptimizacionImagen.php</code> (L136–139) desactivamos <code>imagealphablending</code>, activamos <code>imagesavealpha</code> y rellenamos el lienzo con canal alfa <code>127</code> antes de redimensionar.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P4</span><h4>¿Qué ocurre si el servidor no tiene extensión GD o el navegador no soporta WebP?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> <code>convertirAWebp()</code> retorna <code>false</code> sin generar error y nunca borramos el original; además <code>&lt;picture&gt;</code> en <code>imagen-optimizada.blade.php</code> hace fallback automático a la etiqueta <code>&lt;img&gt;</code> original.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P5</span><h4>¿Por qué no dejan crear una quinta oficina desde el panel administrativo?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Porque los 4 códigos y slugs son rutas SEO fijas (<code>/oficinas/{slug}</code>), figuran en el <code>sitemap.xml</code> y clasifican el catálogo. Tanto <code>Oficina::booted()</code> (L38–62) como el <code>CHECK</code> de MySQL bloquean crear, borrar o renombrar slugs.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P6</span><h4>¿Cómo evitan que al editar un teléfono se duplique el prefijo <code>+51</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Centralizamos el formato en <code>TelefonoPeru.php</code> (L10–55): <code>quitarPrefijo()</code> limpia el <code>+51</code> al cargar el formulario y <code>formatearConPrefijo()</code> lo vuelve a añadir limpiamente al guardar.</div>
+      </div>
+
+      <div id="checklist" class="checklist-box">
+        <h3>Checklist final antes de exponer (Integrante 1)</h3>
+        <label><input type="checkbox"> Puedo explicar en 30 segundos qué es un Full-Page Component de Livewire 4.</label>
+        <label><input type="checkbox"> Sé abrir <code>PaginaPropiedades.php</code> y señalar <code>#[Url(except: '')]</code> y <code>layoutData()</code>.</label>
+        <label><input type="checkbox"> Sé explicar cómo <code>ServicioOptimizacionImagen.php</code> conserva transparencia PNG y caché por <code>filemtime()</code>.</label>
+        <label><input type="checkbox"> Sé explicar el patrón Singleton en <code>ConfiguracionContacto.php</code> y el bloqueo de <code>Oficina.php</code>.</label>
+      </div>
+
+      <div class="pass-box">
+        <strong>Frase de pase al Integrante 2 cuando termines tu parte:</strong>
+        <p>"Todo este catálogo, oficinas y ranking que ve el cliente se administran desde el panel con reglas estrictas de integridad; ahora mi compañero les explicará cómo funciona ese núcleo de negocio y la base de datos."</p>
+      </div>
+    </section>
+  </div>
+</main>
+</body>
+</html>

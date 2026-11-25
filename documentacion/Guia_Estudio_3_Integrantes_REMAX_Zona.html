@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía de Estudio del Código (3 Integrantes) — RE/MAX Zona</title>
+  <style>
+    :root {
+      --blue: #003da5;
+      --blue-mid: #1768d5;
+      --navy: #071d49;
+      --slate: #0f172a;
+      --red: #dc1c2e;
+      --yellow: #ffd000;
+      --ink: #182238;
+      --muted: #525e75;
+      --line: #dce5f0;
+      --soft: #f4f7fb;
+      --green: #0c8a4b;
+      --green-bg: #ecfdf3;
+      --amber: #b45309;
+      --amber-bg: #fffbeb;
+      --info-bg: #eff6ff;
+      --purple: #6d28d9;
+      --purple-bg: #f5f3ff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #e8eef7;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+      font-size: 9.8pt;
+      line-height: 1.54;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Barra superior interactiva (solo pantalla) */
+    .topbar-screen {
+      position: sticky; top: 0; z-index: 40;
+      background: var(--navy); color: #fff;
+      padding: 0.65rem 1.25rem;
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem;
+      box-shadow: 0 4px 18px rgba(7,29,73,0.25);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; }
+    .topbar-nav { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .topbar-nav a {
+      color: #dbeafe; text-decoration: none; font-size: 8.5pt; font-weight: 700;
+      padding: 0.35rem 0.65rem; border-radius: 6px; background: rgba(255,255,255,0.09);
+      transition: background 0.15s;
+    }
+    .topbar-nav a:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .topbar-screen button {
+      background: var(--yellow); color: var(--navy); border: 0; border-radius: 7px;
+      padding: 0.45rem 0.95rem; font-weight: 800; cursor: pointer; font-size: 8.8pt;
+    }
+
+    .doc-wrap {
+      max-width: 960px; margin: 1.5rem auto 2.5rem; background: #fff;
+      border-radius: 12px; box-shadow: 0 18px 48px rgba(7,29,73,0.12); overflow: hidden;
+    }
+
+    /* Portada */
+    .cover {
+      min-height: 292mm; padding: 22mm 18mm 18mm;
+      background: linear-gradient(155deg, #071d49 0%, #0d3178 55%, #0f172a 100%);
+      color: #fff; display: flex; flex-direction: column; justify-content: space-between;
+      page-break-after: always; break-after: page;
+    }
+    .cover-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .cover-logo { background: #fff; padding: 10px 16px; border-radius: 10px; }
+    .cover-logo img { height: 40px; display: block; }
+    .cover-pill { border: 1px solid rgba(255,255,255,0.3); padding: 6px 14px; border-radius: 999px; font-size: 8.5pt; font-weight: 700; }
+    .cover-kicker { color: var(--yellow); font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; font-size: 9pt; margin: 18px 0 8px; }
+    .cover h1 { font-size: 30pt; line-height: 1.1; margin: 0 0 12px; font-weight: 800; }
+    .cover-sub { font-size: 11.8pt; color: #dbeafe; max-width: 660px; line-height: 1.5; margin: 0; }
+
+    .roles-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12mm 0 8mm;
+    }
+    .role-pill-card {
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 10px; padding: 12px 13px;
+    }
+    .role-pill-card .tag {
+      display: inline-block; background: var(--yellow); color: var(--navy);
+      font-size: 7.5pt; font-weight: 800; padding: 2px 8px; border-radius: 999px; text-transform: uppercase;
+    }
+    .role-pill-card h3 { margin: 8px 0 5px; font-size: 10.2pt; color: #fff; line-height: 1.25; }
+    .role-pill-card p { margin: 0; font-size: 8.5pt; color: #dbeafe; line-height: 1.4; }
+
+    .strategy-box {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 10mm;
+    }
+    .strategy-box h2 { margin: 0 0 6px; color: var(--yellow); font-size: 11pt; }
+    .strategy-box ol { margin: 0; padding-left: 1.2rem; color: #e2e8f0; font-size: 9.2pt; }
+    .strategy-box li { margin-bottom: 4px; }
+
+    .cover-foot {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      border-top: 1px solid rgba(255,255,255,0.22); padding-top: 12px;
+    }
+    .cover-foot span { display: block; font-size: 7.3pt; text-transform: uppercase; color: #93c5fd; }
+    .cover-foot strong { font-size: 9.2pt; }
+
+    /* Cuerpo */
+    .body { padding: 15mm 16mm 18mm; }
+    .section-break { page-break-before: always; break-before: page; padding-top: 4px; }
+
+    .member-banner {
+      border-radius: 11px; padding: 14px 16px; color: #fff; margin: 0 0 14px;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;
+    }
+    .member-banner--1 { background: linear-gradient(135deg, #003da5, #1768d5); }
+    .member-banner--2 { background: linear-gradient(135deg, #0c6b3a, #0c8a4b); }
+    .member-banner--3 { background: linear-gradient(135deg, #7f1d1d, #dc1c2e); }
+    .member-banner--plan { background: linear-gradient(135deg, #071d49, #1e3a8a); }
+    .member-eyebrow { font-size: 7.8pt; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--yellow); margin: 0 0 3px; }
+    .member-banner h2 { margin: 0; font-size: 16pt; line-height: 1.2; color: #fff; }
+    .member-badge {
+      background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.3);
+      padding: 5px 10px; border-radius: 8px; font-size: 8.2pt; font-weight: 700; white-space: nowrap;
+    }
+
+    .speech-box {
+      background: var(--amber-bg); border: 1px solid #fde68a; border-left: 4px solid var(--amber);
+      border-radius: 8px; padding: 10px 13px; margin: 0 0 14px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .speech-box .label {
+      display: block; font-size: 7.8pt; font-weight: 800; text-transform: uppercase;
+      color: var(--amber); letter-spacing: 0.05em; margin-bottom: 3px;
+    }
+    .speech-box p { margin: 0; font-style: italic; color: #451a03; font-size: 9.4pt; }
+
+    h3.sub-title {
+      font-size: 11.8pt; color: var(--navy); border-bottom: 2px solid var(--line);
+      padding-bottom: 5px; margin: 16px 0 10px;
+    }
+
+    /* Tarjetas de archivo */
+    .file-card {
+      border: 1px solid var(--line); border-radius: 9px; margin: 0 0 11px;
+      overflow: hidden; background: #fff;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .file-head {
+      background: var(--soft); border-bottom: 1px solid var(--line);
+      padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .file-head strong { color: var(--navy); font-size: 9.8pt; }
+    .file-path {
+      font-family: Consolas, monospace; font-size: 8.2pt;
+      background: #fff; border: 1px solid #cbd5e1; color: var(--blue);
+      padding: 2px 7px; border-radius: 5px; font-weight: 700;
+    }
+    .file-body { padding: 9px 13px; font-size: 9.2pt; }
+    .file-body ul { margin: 4px 0 0; padding-left: 1.2rem; }
+    .file-body li { margin-bottom: 5px; }
+    .file-body p { margin: 0 0 6px; }
+
+    /* Flujo ASCII */
+    .flow-pre {
+      background: #0f172a; color: #e2e8f0; padding: 12px 14px; border-radius: 9px;
+      font-family: Consolas, monospace; font-size: 8.3pt; line-height: 1.48;
+      overflow-x: auto; margin: 8px 0 14px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+
+    /* Tarjetas de preguntas trampa */
+    .qa-card {
+      border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+      margin: 0 0 9px; background: #fff;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .qa-head {
+      display: flex; align-items: flex-start; gap: 9px;
+      background: var(--navy); color: #fff; padding: 7px 11px;
+    }
+    .qa-num {
+      flex: 0 0 auto; background: var(--yellow); color: var(--navy);
+      font-weight: 800; font-size: 7.9pt; padding: 2px 6px; border-radius: 4px; margin-top: 1px;
+    }
+    .qa-head h4 { margin: 0; font-size: 9.6pt; line-height: 1.32; font-weight: 700; color: #fff; }
+    .qa-ans {
+      padding: 8px 11px; background: var(--green-bg); border-left: 3.5px solid var(--green);
+      font-size: 9pt;
+    }
+    .qa-ans strong { color: var(--green); }
+
+    /* Checklist */
+    .checklist-box {
+      background: var(--info-bg); border: 1px solid #bfdbfe; border-radius: 9px;
+      padding: 10px 13px; margin: 12px 0 6px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .checklist-box h4 { margin: 0 0 6px; font-size: 9.6pt; color: var(--blue); }
+    .checklist-box label {
+      display: flex; align-items: flex-start; gap: 8px; font-size: 9pt;
+      margin-bottom: 4px; cursor: pointer;
+    }
+    .checklist-box input { margin-top: 3px; accent-color: var(--blue); }
+
+    /* Tablas */
+    table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 8.8pt; }
+    th { background: var(--navy); color: #fff; text-align: left; padding: 7px 9px; font-size: 8.3pt; }
+    td { padding: 6.5px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tbody tr:nth-child(even) td { background: #f8fafd; }
+
+    code {
+      font-family: Consolas, monospace; font-size: 0.86em;
+      background: #f1f5f9; border: 1px solid #cbd5e1;
+      padding: 1px 4px; border-radius: 4px; color: var(--navy);
+    }
+
+    .passes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px; }
+    .pass-card {
+      border: 1px solid var(--line); border-radius: 9px; padding: 11px 13px; background: var(--soft);
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .pass-card strong { display: block; color: var(--navy); margin-bottom: 4px; font-size: 9.3pt; }
+    .pass-card p { margin: 0; font-style: italic; font-size: 9pt; color: var(--muted); }
+
+    @media (max-width: 720px) {
+      .roles-grid, .cover-foot, .passes-grid { grid-template-columns: 1fr; }
+      .body { padding: 14px; }
+    }
+
+    @page { size: A4 portrait; margin: 13mm 12mm 15mm 12mm; }
+    @page :first { margin: 0; }
+    @media print {
+      body { background: #fff; font-size: 9pt; }
+      .topbar-screen { display: none !important; }
+      .doc-wrap { max-width: none; margin: 0; box-shadow: none; border-radius: 0; }
+      .body { padding: 0; }
+      .cover { min-height: 297mm; width: 210mm; padding: 20mm 16mm 16mm; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar-screen">
+  <div class="topbar-left">
+    <strong>Guía de Estudio (3 Integrantes) — RE/MAX Zona</strong>
+    <nav class="topbar-nav">
+      <a href="#mapa">Mapa General</a>
+      <a href="#integrante-1">Integrante 1</a>
+      <a href="#integrante-2">Integrante 2</a>
+      <a href="#integrante-3">Integrante 3</a>
+      <a href="#plan">Plan y Pases</a>
+    </nav>
+  </div>
+  <button type="button" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+</div>
+
+<main class="doc-wrap">
+
+  <!-- PORTADA -->
+  <header class="cover">
+    <div class="cover-top">
+      <div class="cover-logo"><img src="imagenes-manual/logo-remax-zona.png" alt="RE/MAX Zona"></div>
+      <div class="cover-pill">GE3-RZ-001 &bull; División para 3 Expositores</div>
+    </div>
+
+    <div>
+      <p class="cover-kicker">Guía Profunda de Estudio del Código</p>
+      <h1>Sustentación Individual en Equipo de 3</h1>
+      <p class="cover-sub">
+        División modular sin archivos repetidos del proyecto <strong>RE/MAX Zona Inmobiliaria</strong> (Laravel 13 + Livewire 4 + MySQL),
+        diseñada para que cada integrante domine al 100 % su bloque y responda con solvencia qué programó y en qué línea está.
+      </p>
+
+      <div class="roles-grid">
+        <div class="role-pill-card">
+          <span class="tag">Integrante 1</span>
+          <h3>Sitio Público, Contenidos Fijos, SEO y WebP</h3>
+          <p>6 páginas Livewire públicas, filtros <code>#[Url]</code>, Singleton de portada/contacto, 4 oficinas inmutables, Sitemap y WebP con GD.</p>
+        </div>
+        <div class="role-pill-card">
+          <span class="tag">Integrante 2</span>
+          <h3>Núcleo de Negocio, BD y Ranking Mensual</h3>
+          <p>CRUD de propiedades/agentes, <code>CHECK</code> + 5 Triggers MySQL, <code>lockForUpdate()</code>, cierre día 3 y snapshots inmutables.</p>
+        </div>
+        <div class="role-pill-card">
+          <span class="tag">Integrante 3</span>
+          <h3>Seguridad, Roles/2FA, Respaldos y QA</h3>
+          <p><code>VerificarRol</code>, <code>RateLimiter</code>, Fortify 2FA, cabeceras CSP/HSTS, respaldos <code>SHA-256</code>, <code>/salud</code> y 36 tests PHPUnit.</p>
+        </div>
+      </div>
+
+      <div class="strategy-box">
+        <h2>Regla de oro para responder al profesor (Técnica en 3 pasos)</h2>
+        <ol>
+          <li><strong>Qué problema resuelve:</strong> responde en 1 frase directa sin rodeos.</li>
+          <li><strong>Qué mecanismo técnico implementaste:</strong> menciona el nombre real (<code>lockForUpdate()</code>, <code>RateLimiter</code>, <code>CHECK</code>, <code>#[Url]</code>, etc.).</li>
+          <li><strong>Abre el archivo y señala la línea exacta</strong> en VS Code para demostrar dominio real del código.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="cover-foot">
+      <div><span>Stack tecnológico</span><strong>Laravel 13 &bull; Livewire 4 &bull; MySQL</strong></div>
+      <div><span>Cobertura de estudio</span><strong>22 Preguntas Trampa + Checklists</strong></div>
+      <div><span>Pruebas verificadas</span><strong>36 Tests &bull; 157 Aserciones</strong></div>
+    </div>
+  </header>
+
+  <div class="body">
+
+    <!-- SECCIÓN 0: MAPA GENERAL -->
+    <section id="mapa">
+      <div class="member-banner member-banner--plan">
+        <div>
+          <p class="member-eyebrow">Panorama común para los 3 integrantes</p>
+          <h2>1. Mapa general de cómo viaja una petición</h2>
+        </div>
+        <div class="member-badge">Lectura obligatoria para todos</div>
+      </div>
+
+      <pre class="flow-pre">Navegador del usuario
+   │
+   ▼
+[bootstrap/app.php] ──► Middleware global: CabecerasSeguridad (CSP, HSTS, X-Frame-Options...)
+   │
+   ▼
+[routes/web.php]
+   ├── Rutas públicas (/, /propiedades, /oficinas/{slug}, /contacto, /sitemap.xml)
+   │        └──► Componentes Full-Page de Livewire 4 (app/Livewire/Publico/*)     [INTEGRANTE 1]
+   │
+   ├── Ruta de salud (/salud)
+   │        └──► EstadoSistemaController (__invoke) ──► ServicioDisponibilidad    [INTEGRANTE 3]
+   │
+   └── Rutas /admin/* (Middleware: auth + rol:ADMINISTRADOR,MARKETING)
+            ├── VerificarRol (verifica sesión, activo=true y rol)                 [INTEGRANTE 3]
+            └──► Componentes Livewire Admin (app/Livewire/Admin/*)
+                     └──► Servicios (app/Services/*) ──► Modelos ──► MySQL        [INTEGRANTE 2]</pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Integrante</th>
+            <th>Rol que defiende</th>
+            <th>Pestañas clave abiertas en VS Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Integrante 1</strong></td>
+            <td>Sitio Público, Contenidos Fijos, SEO y WebP</td>
+            <td><code>routes/web.php</code>, <code>PaginaPropiedades.php</code>, <code>ServicioOptimizacionImagen.php</code>, <code>TelefonoPeru.php</code>, <code>Oficina.php</code>, <code>ConfiguracionContacto.php</code></td>
+          </tr>
+          <tr>
+            <td><strong>Integrante 2</strong></td>
+            <td>Núcleo de Negocio, BD y Motor de Ranking</td>
+            <td><code>GestionPropiedades.php</code>, <code>ServicioRankingMensual.php</code>, <code>RankingMensual.php</code>, <code>PosicionRanking.php</code>, migraciones <code>0002/0004/0005/0013</code></td>
+          </tr>
+          <tr>
+            <td><strong>Integrante 3</strong></td>
+            <td>Seguridad, Roles/2FA, Respaldos, Salud y QA</td>
+            <td><code>VerificarRol.php</code>, <code>IniciarSesion.php</code>, <code>CabecerasSeguridad.php</code>, <code>bootstrap/app.php</code>, <code>AppServiceProvider.php</code>, <code>ServicioRespaldo.php</code>, <code>ServicioDisponibilidad.php</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- INTEGRANTE 1 -->
+    <!-- ====================================================== -->
+    <section id="integrante-1" class="section-break">
+      <div class="member-banner member-banner--1">
+        <div>
+          <p class="member-eyebrow">Integrante 1 &bull; Abre la exposición</p>
+          <h2>Sitio Público, Contenidos Fijos, SEO y Optimización WebP</h2>
+        </div>
+        <div class="member-badge">6 Preguntas Trampa</div>
+      </div>
+
+      <div class="speech-box">
+        <span class="label">Tu discurso si el profesor pregunta: "¿Qué hiciste tú en el proyecto?"</span>
+        <p>"Yo programé toda la cara pública de RE/MAX Zona Inmobiliaria con componentes Full-Page de Livewire 4: portada, catálogo con filtros reactivos sincronizados en la URL, páginas de las 4 oficinas, empresa y contacto. También desarrollé los módulos de contenidos fijos (portada, oficinas inmutables y contacto con patrón Singleton), el SEO técnico (sitemap.xml dinámico y JSON-LD) y el servicio de optimización automática de imágenes a WebP con PHP GD nativo."</p>
+      </div>
+
+      <h3 class="sub-title">Estudio profundo archivo por archivo</h3>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>1. Arquitectura Full-Page Livewire 4 y Sitemap dinámico</strong>
+          <span class="file-path">routes/web.php (L24–62)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li>Las rutas públicas (<code>/</code>, <code>/empresa</code>, <code>/propiedades</code>, <code>/oficinas</code>, <code>/oficinas/{oficina}</code>, <code>/contacto</code>) apuntan <strong>directamente a clases Livewire</strong> sin controladores intermedios ni API REST separada.</li>
+            <li><code>GET /sitemap.xml</code> (L33–62) genera dinámicamente el XML de Schema <code>sitemaps.org/0.9</code> incluyendo automáticamente los 4 slugs de <code>Propiedad::SLUGS_OFICINAS</code> (<code>arequipa</code>, <code>lima</code>, <code>moquegua</code>, <code>puno</code>), escapando URLs con <code>e()</code> y devolviendo <code>application/xml; charset=UTF-8</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>2. Catálogo con filtros en tiempo real y URL compartible</strong>
+          <span class="file-path">app/Livewire/Publico/PaginaPropiedades.php (L12–72)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Atributos PHP 8 (L12–13):</strong> <code>#[Layout('components.layouts.publico')]</code> y <code>#[Title('Propiedades | RE/MAX Zona')]</code>.</li>
+            <li><strong>Estado en la URL (L16–23):</strong> <code>#[Url(except: '')]</code> en <code>$busqueda</code>, <code>$ubicacion</code> y <code>$moneda</code>. Al filtrar, la URL se actualiza sin recargar la página para poder compartirla; si el filtro queda vacío, se omite de la URL.</li>
+            <li><strong>Consultas seguras (L32–50):</strong> Eloquent usa sentencias preparadas contra SQL Injection y valida <code>$moneda</code> contra una lista blanca estricta (<code>in_array(..., true)</code>).</li>
+            <li><strong>SEO por página (L67–71):</strong> <code>layoutData()</code> inyecta <code>metaDescription</code>, <code>canonicalUrl</code> y <code>datosEstructurados</code> (JSON-LD <code>ItemList</code>) al layout <code>publico.blade.php</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>3. Optimización WebP con PHP GD nativo (sin paquetes externos)</strong>
+          <span class="file-path">app/Services/ServicioOptimizacionImagen.php (L10–163)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Constantes (L10–12):</strong> Ancho máximo <code>1200 px</code> y calidad WebP <code>82</code>.</li>
+            <li><strong>Caché inteligente (L20–44):</strong> Ignora URLs externas o archivos ya <code>.webp</code>; si el <code>.webp</code> ya existe y su <code>filemtime()</code> es mayor o igual al original, no reconvierte.</li>
+            <li><strong>Transparencia PNG preservada (L95–159):</strong> Usa <code>getimagesize()</code>, redimensiona proporcionalmente y preserva el canal alfa con <code>imagealphablending($lienzo, false)</code> + <code>imagesavealpha($lienzo, true)</code> + color transparente <code>127</code> antes de <code>imagewebp()</code>.</li>
+            <li><strong>Cero ruptura de CSS:</strong> Conserva la imagen original y <code>&lt;x-imagen-optimizada&gt;</code> renderiza <code>&lt;picture&gt;</code> con <code>picture { display: contents; }</code> para no alterar grids ni flexboxes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>4. Helper DRY para teléfonos de Perú (+51)</strong>
+          <span class="file-path">app/Support/TelefonoPeru.php (L10–55)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><code>quitarPrefijo()</code>: remueve <code>+51</code> o <code>51</code> inicial para evitar duplicar <code>+51 +51</code> al editar formularios.</li>
+            <li><code>formatearConPrefijo()</code>: garantiza presentación uniforme <code>+51 ...</code>.</li>
+            <li><code>formatearWhatsapp()</code>: deja solo dígitos con <code>51</code> delante listo para enlaces <code>https://wa.me/</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>5. Patrón Singleton (Portada/Contacto) y 4 Oficinas Inmutables</strong>
+          <span class="file-path">ConfiguracionContacto.php &bull; ConfiguracionPortada.php &bull; Oficina.php</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Singleton (<code>ConfiguracionContacto.php</code>, L12–59):</strong> <code>$incrementing = false</code>, <code>id = 1</code> fijo, <code>booted()</code> bloquea crear un segundo registro o borrarlo con <code>DomainException</code>, respaldado por <code>CHECK (id = 1)</code> en MySQL. Se accede con <code>obtenerUnica()</code> (<code>firstOrCreate</code>).</li>
+            <li><strong>4 Oficinas fijas (<code>Oficina.php</code>, L15–90):</strong> Solo existen <code>AREQUIPA</code>, <code>LIMA</code>, <code>MOQUEGUA</code> y <code>PUNO</code>. <code>booted()</code> bloquea crear, eliminar o alterar <code>codigo</code>/<code>slug</code> (<code>isDirty('codigo') || isDirty('slug')</code>) porque sus slugs son rutas SEO fijas. <code>obtenerTodas()</code> ordena con <code>ORDER BY CASE codigo ...</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Preguntas trampa del profesor (Integrante 1)</h3>
+
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I1-P1</span><h4>¿Por qué casi no hay Controladores en <code>app/Http/Controllers/</code> si esto es Laravel?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Porque usamos Livewire 4 con Full-Page Components en <code>routes/web.php</code> (L24–94). El único controlador tradicional es <code>EstadoSistemaController</code> porque <code>/salud</code> devuelve JSON sin vista ni estado.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I1-P2</span><h4>Si filtro por "casa" y comparto el enlace, ¿la otra persona ve el mismo filtro?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Sí, porque <code>$busqueda</code>, <code>$ubicacion</code> y <code>$moneda</code> llevan <code>#[Url(except: '')]</code> en <code>PaginaPropiedades.php</code> (L16–23), reflejando el estado en la query string sin recargar.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I1-P3</span><h4>¿Qué pasa si subo un PNG con fondo transparente? ¿Tu conversor WebP le pone fondo negro?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> No. En <code>ServicioOptimizacionImagen.php</code> (L136–139) desactivamos <code>imagealphablending</code>, activamos <code>imagesavealpha</code> y rellenamos con canal alfa <code>127</code> antes de <code>imagecopyresampled()</code>.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I1-P4</span><h4>¿Qué ocurre si el servidor no tiene PHP GD o el navegador no soporta WebP?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> <code>convertirAWebp()</code> retorna <code>false</code> sin romper la app y nunca borramos el original; además <code>&lt;picture&gt;</code> en <code>imagen-optimizada.blade.php</code> hace fallback automático al <code>&lt;img&gt;</code> original.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I1-P5</span><h4>¿Por qué no dejan crear una quinta oficina desde el panel?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Porque los 4 códigos/slugs son rutas SEO fijas (<code>/oficinas/{slug}</code>) y claves del catálogo. <code>Oficina::booted()</code> (L38–62) y el <code>CHECK</code> de MySQL bloquean crear, borrar o cambiar slugs; solo se editan sus datos.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I1-P6</span><h4>¿Cómo evitan que al editar un teléfono se duplique el prefijo <code>+51</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Con <code>TelefonoPeru::quitarPrefijo()</code> (<code>app/Support/TelefonoPeru.php</code>, L10–27) antes de llenar el input y <code>formatearConPrefijo()</code> al guardar.</div>
+      </div>
+
+      <div class="checklist-box">
+        <h4>Checklist de dominio — Integrante 1</h4>
+        <label><input type="checkbox"> Sé explicar qué es un Full-Page Component en Livewire 4 y abrir <code>routes/web.php</code>.</label>
+        <label><input type="checkbox"> Sé señalar <code>#[Url(except: '')]</code> y <code>layoutData()</code> en <code>PaginaPropiedades.php</code>.</label>
+        <label><input type="checkbox"> Sé explicar caché por <code>filemtime()</code>, transparencia PNG y <code>display: contents</code> en WebP.</label>
+        <label><input type="checkbox"> Sé explicar el patrón Singleton en <code>ConfiguracionContacto.php</code> y el bloqueo de <code>Oficina.php</code>.</label>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- INTEGRANTE 2 -->
+    <!-- ====================================================== -->
+    <section id="integrante-2" class="section-break">
+      <div class="member-banner member-banner--2">
+        <div>
+          <p class="member-eyebrow">Integrante 2 &bull; Núcleo de negocio y datos</p>
+          <h2>Propiedades, Agentes, Integridad MySQL y Motor de Ranking Mensual</h2>
+        </div>
+        <div class="member-badge">8 Preguntas Trampa</div>
+      </div>
+
+      <div class="speech-box">
+        <span class="label">Tu discurso si el profesor pregunta: "¿Qué hiciste tú en el proyecto?"</span>
+        <p>"Yo programé el núcleo de negocio del panel administrativo: el CRUD de propiedades y agentes con validación condicional y limpieza de archivos huérfanos, las reglas de integridad en MySQL (CHECK y 5 Triggers), y todo el motor del Ranking Mensual con control de concurrencia (DB::transaction + lockForUpdate), bloqueo automático tras el día 3 del mes, snapshots históricos inmutables y control de celulares duplicados y homónimos."</p>
+      </div>
+
+      <h3 class="sub-title">Estudio profundo archivo por archivo</h3>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>1. CRUD de Propiedades: validación condicional y cero archivos huérfanos</strong>
+          <span class="file-path">app/Livewire/Admin/GestionPropiedades.php (L71–155)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Precio y moneda acoplados (L76–85):</strong> Si hay precio, <code>moneda</code> es obligatoria (<code>PEN</code> o <code>USD</code>); si el precio queda vacío, ambos se guardan como <code>null</code> (L126–127). Respaldado en MySQL por <code>chk_propiedades_precio_moneda</code> (migración <code>0002</code>).</li>
+            <li><strong>Subida segura + WebP (L88–90, L113–116):</strong> Valida <code>image|mimes:jpg,jpeg,png,webp|max:4096</code>, guarda con nombre aleatorio vía <code>store('propiedades', 'public')</code> y dispara la generación WebP automáticamente.</li>
+            <li><strong>Cero archivos huérfanos (L133–152):</strong> Si falla el guardado en BD, el <code>catch (Throwable)</code> borra inmediatamente la foto recién subida; y si se reemplazó una foto vieja, la anterior solo se elimina <strong>después</strong> de que la BD confirmó el cambio.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>2. Defensa en profundidad en MySQL: CHECK, 5 Triggers y Migración 13</strong>
+          <span class="file-path">database/migrations/0002, 0004, 0005 y 0013</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Por qué 5 Triggers <code>BEFORE</code> (migraciones <code>0004</code> y <code>0005</code>):</strong> Eloquent <code>booted()</code> solo protege operaciones vía ORM. Los 5 triggers lanzan <code>SIGNAL SQLSTATE '45000'</code> bloqueando cambios o borrados sobre rankings cerrados/vencidos incluso si alguien entra por SQL directo o <code>DB::table()</code>.</li>
+            <li><strong>Qué hizo la migración <code>0013</code>:</strong> Desacopló <code>posiciones_ranking</code> de <code>vendedores</code> (<code>vendedor_id</code> nullable), agregó <code>codigo_interno</code> único (<code>PART-...</code>) y <code>celular_normalizado</code> único por período (<code>uk_posicion_celular_periodo</code>), manteniendo los campos <code>*_snapshot</code> inmutables.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>3. Reglas temporales y transición controlada de cierre</strong>
+          <span class="file-path">app/Models/RankingMensual.php (L58–154)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Estados:</strong> <code>BORRADOR</code> → <code>PUBLICADO</code> → <code>CERRADO</code> (o <code>BORRADOR</code> → <code>VENCIDO</code>).</li>
+            <li><strong><code>periodoActual()</code> (L99–110):</strong> Usa <code>now('America/Lima')</code> y <code>startOfMonth()->subMonthNoOverflow()</code> para obtener el mes de desempeño anterior sin el bug de fin de mes (ej. 31 de marzo).</li>
+            <li><strong>Ventana días 1–3 (L116–124):</strong> <code>dentroDePlazoDeGestion()</code> verifica en tiempo real que hoy sea día 1, 2 o 3 en zona horaria <code>America/Lima</code>.</li>
+            <li><strong><code>esTransicionInternaDeCierre()</code> (L66–83 y L138–154):</strong> Permite pasar el ranking a <code>CERRADO</code> o <code>VENCIDO</code> pasado el día 3 <strong>solo</strong> si <code>getDirty()</code> demuestra que únicamente cambiaron <code>estado</code>, <code>fecha_cierre</code> y <code>updated_at</code>. Cualquier otro cambio lanza <code>DomainException</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>4. Concurrencia, duplicados, homónimos y limpieza post-commit</strong>
+          <span class="file-path">app/Services/ServicioRankingMensual.php (L20–316) &bull; PosicionRanking.php</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Bloqueo pesimista (L31–32, L71, L91, L191–193, L253):</strong> Todas las escrituras corren dentro de <code>DB::transaction()</code> con <code>lockForUpdate()</code> sobre <code>rankings_mensuales</code> y sus <code>posiciones</code>, serializando ediciones simultáneas.</li>
+            <li><strong>Celulares duplicados vs. Homónimos (L96–118):</strong> <code>normalizarCelular()</code> unifica <code>519...</code> a 9 dígitos y compara con <code>hash_equals()</code> bloqueando duplicados con <code>DomainException</code>. En cambio, <code>normalizarNombreCompleto()</code> (<code>Str::ascii</code> en minúsculas) solo emite una advertencia no bloqueante por si existen dos personas con el mismo nombre.</li>
+            <li><strong>Publicación atómica (L189–229):</strong> Exige exactamente los 3 puestos <code>[1, 2, 3]</code>, 3 celulares únicos y que las 3 fotos existan físicamente en disco.</li>
+            <li><strong>Limpieza post-commit (L168–183 y L284–316):</strong> Si falla la transacción borra la foto nueva; si hay commit, borra la foto anterior (y su <code>.webp</code>) solo si el ranking no está <code>CERRADO</code>, la ruta está dentro de <code>rankings/AAAA/MM/</code> y ningún otro registro la referencia.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Preguntas trampa del profesor (Integrante 2)</h3>
+
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I2-P1</span><h4>¿Qué pasa si dos usuarios guardan o publican el Ranking al mismo milisegundo?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> <code>ServicioRankingMensual</code> ejecuta todo dentro de <code>DB::transaction()</code> con <code>lockForUpdate()</code> (L71, L91, L253), serializando las escrituras concurrentes a nivel de fila en MySQL.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I2-P2</span><h4>¿Por qué pusieron 5 Triggers en MySQL si ya tenían <code>booted()</code> en los Modelos?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Defensa en profundidad: <code>booted()</code> solo actúa vía Eloquent; los 5 triggers <code>BEFORE</code> con <code>SIGNAL SQLSTATE '45000'</code> protegen el historial incluso frente a consultas SQL directas o Query Builder.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I2-P3</span><h4>Si el ranking se bloquea tras el día 3, ¿cómo hace el sistema el día 4 para pasarlo a <code>CERRADO</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Mediante <code>esTransicionInternaDeCierre()</code> en <code>RankingMensual.php</code> (L138–154), que valida con <code>getDirty()</code> que solo se modifiquen <code>estado</code>, <code>fecha_cierre</code> y <code>updated_at</code>.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I2-P4</span><h4>¿Por qué guardan campos <code>*_snapshot</code> en vez de hacer solo un <code>JOIN</code> a <code>agentes</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Para congelar nombre, celular y fotografía exactos de cada ganador en ese período; si meses después cambia de foto o deja la empresa, el historial queda intacto.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I2-P5</span><h4>¿Qué pasa si subo una foto de propiedad y MySQL falla al guardar?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> El <code>try/catch (Throwable)</code> de <code>GestionPropiedades.php</code> (L133–148) borra inmediatamente <code>$rutaImagenNueva</code> del disco para evitar archivos huérfanos.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I2-P6</span><h4>¿Por qué un homónimo solo muestra aviso y un celular duplicado sí bloquea?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Porque dos asesores distintos pueden llamarse igual, pero no compartir el mismo celular personal en dos puestos del mismo podio.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I2-P7</span><h4>¿Por qué usan <code>subMonthNoOverflow()</code> en <code>periodoActual()</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Evita el bug de desbordamiento de Carbon al restar 1 mes en días 30/31 (ej. 31 de marzo menos 1 mes daría 3 de marzo en vez de febrero).</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I2-P8</span><h4>¿Cómo garantizan que nunca exista una propiedad con precio sin moneda?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Validación condicional en <code>GestionPropiedades.php</code> (L76–85) más restricción MySQL <code>CHECK (chk_propiedades_precio_moneda)</code> en la migración <code>0002</code>.</div>
+      </div>
+
+      <div class="checklist-box">
+        <h4>Checklist de dominio — Integrante 2</h4>
+        <label><input type="checkbox"> Sé explicar <code>DB::transaction()</code> + <code>lockForUpdate()</code> en <code>ServicioRankingMensual.php</code>.</label>
+        <label><input type="checkbox"> Sé señalar <code>esTransicionInternaDeCierre()</code> y <code>getDirty()</code> en <code>RankingMensual.php</code>.</label>
+        <label><input type="checkbox"> Sé explicar por qué coexisten validaciones en Eloquent (<code>booted()</code>) y en MySQL (<code>CHECK</code> + 5 Triggers).</label>
+        <label><input type="checkbox"> Sé explicar cómo se evitan archivos huérfanos en <code>GestionPropiedades.php</code> y <code>ServicioRankingMensual.php</code>.</label>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- INTEGRANTE 3 -->
+    <!-- ====================================================== -->
+    <section id="integrante-3" class="section-break">
+      <div class="member-banner member-banner--3">
+        <div>
+          <p class="member-eyebrow">Integrante 3 &bull; Cierra la exposición</p>
+          <h2>Seguridad, Roles/2FA, Respaldos, Disponibilidad y Pruebas</h2>
+        </div>
+        <div class="member-badge">8 Preguntas Trampa</div>
+      </div>
+
+      <div class="speech-box">
+        <span class="label">Tu discurso si el profesor pregunta: "¿Qué hiciste tú en el proyecto?"</span>
+        <p>"Yo me encargué de toda la seguridad, operación y calidad del sistema: implementé el login con protección contra fuerza bruta (RateLimiter), el middleware de control de roles (ADMINISTRADOR y MARKETING) con suspensión inmediata de sesiones, la autenticación en dos pasos (2FA TOTP) con Laravel Fortify, las cabeceras HTTP de seguridad (CSP, HSTS, X-Frame-Options), el sistema de respaldos automáticos verificables con SHA-256, el endpoint de salud /salud y la suite de 36 pruebas automatizadas en PHPUnit."</p>
+      </div>
+
+      <h3 class="sub-title">Estudio profundo archivo por archivo</h3>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>1. Control de Roles y revocación inmediata de sesión</strong>
+          <span class="file-path">app/Http/Middleware/VerificarRol.php (L17–46)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li>Registrado con alias <code>'rol'</code> en <code>bootstrap/app.php</code> (L22–24) y aplicado en <code>routes/web.php</code> (L78–94).</li>
+            <li><strong>Suspensión en vivo (L26–34):</strong> Si <code>$usuario->activo</code> pasa a <code>false</code> mientras el usuario está conectado, en la siguiente petición ejecuta <code>Auth::logout()</code>, <code>session()->invalidate()</code> y <code>regenerateToken()</code>, expulsándolo al instante.</li>
+            <li><strong>Permisos (L37–43):</strong> <code>ADMINISTRADOR</code> tiene acceso total; si <code>MARKETING</code> intenta entrar a módulos exclusivos (<code>/admin/usuarios</code>, <code>/admin/oficinas</code>, etc.) recibe <code>abort(403)</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>2. Login, Fuerza Bruta (RateLimiter) y 2FA con Laravel Fortify</strong>
+          <span class="file-path">app/Livewire/Autenticacion/IniciarSesion.php (L30–164) &bull; Security.php</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Fuerza bruta (L41–56 y L95–100):</strong> <code>RateLimiter</code> de máximo <strong>5 intentos / 60 segundos</strong> por <code>correo|IP</code> en login y por <code>2fa|usuario_id|IP</code> en el segundo factor.</li>
+            <li><strong>Anti-enumeración (L52–55):</strong> Si el correo no existe o falla <code>Hash::check()</code>, muestra el mismo error genérico.</li>
+            <li><strong>2FA TOTP y códigos de recuperación (L66–139):</strong> Si tiene 2FA activo, no inicia sesión aún; descifra <code>two_factor_secret</code> con <code>Fortify::currentEncrypter()->decrypt()</code> y verifica el código de 6 dígitos con <code>TwoFactorAuthenticationProvider</code>. Los códigos de recuperación se comparan con <code>hash_equals()</code> y se queman con <code>replaceRecoveryCode()</code>.</li>
+            <li><strong>Anti Session Fixation (L157–164):</strong> Siempre ejecuta <code>session()->regenerate()</code> al autenticar.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>3. Cabeceras HTTP, bootstrap/app.php y AppServiceProvider</strong>
+          <span class="file-path">CabecerasSeguridad.php &bull; bootstrap/app.php &bull; AppServiceProvider.php</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong><code>CabecerasSeguridad.php</code> (L14–44):</strong> Middleware global que agrega <code>X-Frame-Options: SAMEORIGIN</code> (anti Clickjacking), <code>X-Content-Type-Options: nosniff</code>, <code>Referrer-Policy</code>, <code>Permissions-Policy</code>, <code>X-Permitted-Cross-Domain-Policies</code>, <code>Content-Security-Policy</code> y <code>Strict-Transport-Security</code> (HSTS en HTTPS/producción).</li>
+            <li><strong><code>AppServiceProvider.php</code> (L17–56):</strong> <code>Fortify::ignoreRoutes()</code> cierra rutas genéricas/registro; <code>CarbonImmutable</code>; <code>DB::prohibitDestructiveCommands()</code> en producción; <code>URL::forceScheme('https')</code>; contraseñas fuertes (12+ chars + <code>uncompromised()</code>) en producción.</li>
+            <li><strong><code>bootstrap/app.php</code> (L26–34):</strong> Reporta cualquier <code>QueryException</code>/<code>PDOException</code> al canal diario <code>disponibilidad</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>4. Respaldos en storage privado con MYSQL_PWD y verificación SHA-256</strong>
+          <span class="file-path">app/Services/ServicioRespaldo.php (L19–262)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Sin sobrescritura (L21–33):</strong> Crea carpetas únicas en <code>storage/app/private/respaldos/{entorno}/{fecha}</code> (inaccesible vía web).</li>
+            <li><strong><code>mysqldump</code> seguro (L180–199):</strong> Usa <code>--single-transaction --routines --triggers</code> y pasa la contraseña mediante variable de entorno efímera <code>MYSQL_PWD</code> para nunca exponerla en la lista de procesos (<code>ps aux</code>).</li>
+            <li><strong>Integridad <code>SHA-256</code> (L58–80 y L100–144):</strong> Empaqueta <code>multimedia.zip</code>, genera <code>manifiesto.json</code> con los hashes <code>SHA-256</code> y <code>verificarIntegridad()</code> los compara con <code>hash_equals()</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>5. Monitoreo de salud (/salud) y Suite PHPUnit</strong>
+          <span class="file-path">ServicioDisponibilidad.php &bull; RequerimientosNoFuncionalesTest.php</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong><code>GET /salud</code> (<code>ServicioDisponibilidad.php</code>, L16–60):</strong> Verifica modo mantenimiento, <code>SELECT 1</code> en MySQL y permisos de escritura en <code>storage/logs</code> y <code>storage/app/public</code>. Responde <code>200</code> o <code>503</code> con <code>Cache-Control: no-store</code> sin exponer credenciales.</li>
+            <li><strong>Pruebas automatizadas:</strong> <code>php artisan test</code> ejecuta <strong>36 pruebas y 157 aserciones</strong> validando WCAG, SEO, <code>/salud</code>, respaldos <code>SHA-256</code>, cabeceras, error <code>403</code> por rol y conversión WebP.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Preguntas trampa del profesor (Integrante 3)</h3>
+
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I3-P1</span><h4>Si el Admin desactiva a un usuario de <code>MARKETING</code> que ya tiene sesión abierta, ¿puede seguir entrando?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> No. En su siguiente petición <code>VerificarRol.php</code> (L26–34) detecta <code>! $usuario->activo</code>, ejecuta <code>Auth::logout()</code>, invalida la sesión, regenera el token CSRF y lo expulsa al login.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I3-P2</span><h4>¿Cómo protegen el login y el código 2FA contra ataques de fuerza bruta?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Con <code>RateLimiter</code> de máximo 5 intentos cada 60 segundos tanto en login (<code>correo|IP</code>) como en 2FA (<code>2fa|usuario_id|IP</code>) en <code>IniciarSesion.php</code> (L41–47 y L95–100).</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I3-P3</span><h4>¿Por qué usan <code>hash_equals()</code> en códigos de recuperación y verificación SHA-256?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Porque compara cadenas en tiempo constante, previniendo ataques de temporización (<em>timing attacks</em>).</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I3-P4</span><h4>¿Por qué pasan la clave de MySQL por <code>MYSQL_PWD</code> y no con <code>-pCLAVE</code> en <code>mysqldump</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Pasar <code>-p</code> en argumentos expone la contraseña en <code>ps aux</code> y logs del sistema. Con <code>->env(['MYSQL_PWD' => ...])</code> (<code>ServicioRespaldo.php</code>, L194–198) solo existe en el entorno efímero del subproceso.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I3-P5</span><h4>¿Qué impide subir un script PHP disfrazado de imagen o descargar los respaldos por URL?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Validación <code>image|mimes:jpg,jpeg,png,webp</code> en servidor, nombres seguros con <code>store()</code>, bloqueo de ejecución PHP en <code>storage/app/public/.htaccess</code>, y respaldos guardados en <code>storage/app/private/respaldos/</code> (fuera de <code>public/</code>).</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I3-P6</span><h4>¿Para qué sirve <code>Fortify::ignoreRoutes()</code> en <code>AppServiceProvider.php</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Desactiva las rutas públicas por defecto de Fortify (como <code>/register</code>) para que el acceso sea estrictamente cerrado vía <code>/admin/login</code>.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I3-P7</span><h4>¿Por qué <code>GET /salud</code> usa un Controller tradicional y no Livewire?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Porque es un endpoint JSON sin estado para monitores externos que solo leen HTTP <code>200</code>/<code>503</code> con <code>Cache-Control: no-store</code>.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">I3-P8</span><h4>¿Qué evita ejecutar <code>migrate:fresh</code> por accidente en producción?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> <code>DB::prohibitDestructiveCommands(app()->isProduction())</code> en <code>AppServiceProvider.php</code> (L43–45).</div>
+      </div>
+
+      <div class="checklist-box">
+        <h4>Checklist de dominio — Integrante 3</h4>
+        <label><input type="checkbox"> Sé mostrar <code>VerificarRol.php</code> y explicar la expulsión inmediata si <code>activo = false</code>.</label>
+        <label><input type="checkbox"> Sé explicar <code>RateLimiter</code>, <code>session()->regenerate()</code> y el flujo 2FA en <code>IniciarSesion.php</code>.</label>
+        <label><input type="checkbox"> Sé nombrar al menos 4 cabeceras de <code>CabecerasSeguridad.php</code> y qué ataque mitiga cada una.</label>
+        <label><input type="checkbox"> Sé explicar <code>MYSQL_PWD</code> y <code>manifiesto.json</code> (<code>SHA-256</code>) en <code>ServicioRespaldo.php</code>.</label>
+        <label><input type="checkbox"> Sé ejecutar <code>php artisan test</code> en terminal y mostrar <code>/salud</code> en vivo en el navegador.</label>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- PLAN DE ESTUDIO Y PASES -->
+    <!-- ====================================================== -->
+    <section id="plan" class="section-break">
+      <div class="member-banner member-banner--plan">
+        <div>
+          <p class="member-eyebrow">Preparación final del equipo</p>
+          <h2>Plan de Estudio Express y Guión de Pases</h2>
+        </div>
+        <div class="member-badge">2 horas en total</div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Sesión</th>
+            <th>Duración</th>
+            <th>Actividad exacta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Sesión 1 — Lectura individual</strong></td>
+            <td>45 min</td>
+            <td>Cada integrante abre en VS Code <strong>solo sus 5–6 archivos</strong> y los recorre junto con su sección de esta guía hasta entender cada método y línea.</td>
+          </tr>
+          <tr>
+            <td><strong>Sesión 2 — Demo en vivo</strong></td>
+            <td>45 min</td>
+            <td>Corren <code>php artisan serve</code>. Cada uno navega su parte en el navegador explicando en voz alta qué archivo y qué regla se ejecutan detrás de cada clic.</td>
+          </tr>
+          <tr>
+            <td><strong>Sesión 3 — Simulacro de profesor</strong></td>
+            <td>30 min</td>
+            <td>Se cruzan las preguntas trampa: el 1 evalúa al 2, el 2 evalúa al 3 y el 3 evalúa al 1. Si alguien duda, abre la línea exacta en VS Code y la repasa.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="sub-title">Pases sugeridos durante la exposición</h3>
+      <div class="passes-grid">
+        <div class="pass-card">
+          <strong>Integrante 1 ──► Integrante 2</strong>
+          <p>"Todo este catálogo, oficinas y ranking que ve el cliente se administran desde el panel con reglas estrictas de integridad; ahora mi compañero les explicará cómo funciona ese núcleo de negocio y la base de datos."</p>
+        </div>
+        <div class="pass-card">
+          <strong>Integrante 2 ──► Integrante 3</strong>
+          <p>"Para proteger toda esta operación contra accesos no autorizados, pérdida de datos o caídas del servidor, mi compañero les mostrará la capa de seguridad, los respaldos y las pruebas automatizadas."</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+</body>
+</html>

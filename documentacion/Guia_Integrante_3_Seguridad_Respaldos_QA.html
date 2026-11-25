@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía Integrante 3 — Seguridad, Roles/2FA, Respaldos, Salud y QA | RE/MAX Zona</title>
+  <style>
+    :root {
+      --accent: #991b1b; --accent-light: #dc1c2e; --navy: #071d49; --yellow: #ffd000;
+      --ink: #182238; --muted: #525e75; --line: #dce5f0; --soft: #f4f7fb;
+      --green: #0c8a4b; --green-bg: #ecfdf3; --amber: #b45309; --amber-bg: #fffbeb; --info-bg: #eff6ff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--ink); background: #e8eef7;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+      font-size: 9.8pt; line-height: 1.54;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .topbar {
+      position: sticky; top: 0; z-index: 40; background: var(--navy); color: #fff;
+      padding: 0.65rem 1.25rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem;
+      box-shadow: 0 4px 18px rgba(7,29,73,0.25);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; }
+    .topbar-nav { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .topbar-nav a {
+      color: #dbeafe; text-decoration: none; font-size: 8.5pt; font-weight: 700;
+      padding: 0.35rem 0.65rem; border-radius: 6px; background: rgba(255,255,255,0.09);
+    }
+    .topbar-nav a:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    .topbar button {
+      background: var(--yellow); color: var(--navy); border: 0; border-radius: 7px;
+      padding: 0.45rem 0.95rem; font-weight: 800; cursor: pointer; font-size: 8.8pt;
+    }
+    .doc-wrap {
+      max-width: 920px; margin: 1.5rem auto 2.5rem; background: #fff;
+      border-radius: 12px; box-shadow: 0 18px 48px rgba(7,29,73,0.12); overflow: hidden;
+    }
+    .cover {
+      min-height: 292mm; padding: 22mm 18mm 18mm;
+      background: linear-gradient(155deg, #071d49 0%, #881337 58%, #0f172a 100%);
+      color: #fff; display: flex; flex-direction: column; justify-content: space-between;
+      page-break-after: always; break-after: page;
+    }
+    .cover-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .cover-logo { background: #fff; padding: 10px 16px; border-radius: 10px; }
+    .cover-logo img { height: 40px; display: block; }
+    .cover-pill { border: 1px solid rgba(255,255,255,0.35); padding: 6px 14px; border-radius: 999px; font-size: 8.5pt; font-weight: 700; }
+    .cover-kicker { color: var(--yellow); font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; font-size: 9.2pt; margin: 18px 0 8px; }
+    .cover h1 { font-size: 29pt; line-height: 1.12; margin: 0 0 12px; font-weight: 800; }
+    .cover-sub { font-size: 11.4pt; color: #ffe4e6; max-width: 650px; line-height: 1.5; margin: 0 0 14px; }
+    .cover-box {
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+    }
+    .cover-box h2 { margin: 0 0 6px; color: var(--yellow); font-size: 10.5pt; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cover-box p, .cover-box li { color: #e2e8f0; font-size: 9.3pt; margin: 0; }
+    .cover-box ul { margin: 6px 0 0; padding-left: 1.2rem; }
+    .cover-box li { margin-bottom: 4px; }
+    .cover-foot {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      border-top: 1px solid rgba(255,255,255,0.22); padding-top: 12px;
+    }
+    .cover-foot span { display: block; font-size: 7.3pt; text-transform: uppercase; color: #fecdd3; }
+    .cover-foot strong { font-size: 9.2pt; }
+
+    .body { padding: 15mm 16mm 18mm; }
+    .section-title {
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      color: #fff; border-radius: 10px; padding: 11px 15px; margin: 0 0 14px;
+    }
+    .section-title small { display: block; color: var(--yellow); font-size: 7.6pt; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
+    .section-title h2 { margin: 2px 0 0; font-size: 14.5pt; color: #fff; }
+
+    .speech-box {
+      background: var(--amber-bg); border: 1px solid #fde68a; border-left: 4px solid var(--amber);
+      border-radius: 8px; padding: 11px 14px; margin: 0 0 14px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .speech-box .label { display: block; font-size: 7.8pt; font-weight: 800; text-transform: uppercase; color: var(--amber); margin-bottom: 4px; }
+    .speech-box p { margin: 0; font-style: italic; color: #451a03; font-size: 9.5pt; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+    .mini-card {
+      border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--soft);
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .mini-card h3 { margin: 0 0 6px; font-size: 9.8pt; color: var(--navy); }
+    .mini-card ul { margin: 0; padding-left: 1.15rem; font-size: 8.9pt; }
+    .mini-card li { margin-bottom: 4px; }
+
+    .file-card {
+      border: 1px solid var(--line); border-radius: 9px; margin: 0 0 12px; overflow: hidden; background: #fff;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .file-head {
+      background: var(--soft); border-bottom: 1px solid var(--line); padding: 8px 12px;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .file-head strong { color: var(--navy); font-size: 9.8pt; }
+    .file-path {
+      font-family: Consolas, monospace; font-size: 8.2pt; background: #fff; border: 1px solid #cbd5e1;
+      color: var(--accent); padding: 2px 7px; border-radius: 5px; font-weight: 700;
+    }
+    .file-body { padding: 9px 13px; font-size: 9.2pt; }
+    .file-body ul { margin: 4px 0 0; padding-left: 1.2rem; }
+    .file-body li { margin-bottom: 5px; }
+
+    .qa-card {
+      border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin: 0 0 10px; background: #fff;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .qa-head { display: flex; align-items: flex-start; gap: 9px; background: var(--navy); color: #fff; padding: 8px 11px; }
+    .qa-num { flex: 0 0 auto; background: var(--yellow); color: var(--navy); font-weight: 800; font-size: 7.9pt; padding: 2px 6px; border-radius: 4px; margin-top: 1px; }
+    .qa-head h4 { margin: 0; font-size: 9.6pt; line-height: 1.32; color: #fff; }
+    .qa-ans { padding: 8px 11px; background: var(--green-bg); border-left: 3.5px solid var(--green); font-size: 9.1pt; }
+    .qa-ans strong { color: var(--green); }
+
+    .checklist-box {
+      background: var(--info-bg); border: 1px solid #bfdbfe; border-radius: 9px; padding: 12px 14px; margin: 14px 0;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .checklist-box h3 { margin: 0 0 8px; font-size: 10pt; color: var(--accent); }
+    .checklist-box label { display: flex; align-items: flex-start; gap: 8px; font-size: 9.1pt; margin-bottom: 5px; cursor: pointer; }
+    .checklist-box input { margin-top: 3px; accent-color: var(--accent); }
+
+    .pass-box {
+      border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px;
+      padding: 10px 13px; background: var(--soft); margin-top: 12px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .pass-box strong { display: block; color: var(--navy); font-size: 9.2pt; margin-bottom: 3px; }
+    .pass-box p { margin: 0; font-style: italic; font-size: 9.1pt; color: var(--muted); }
+
+    code { font-family: Consolas, monospace; font-size: 0.86em; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 1px 4px; border-radius: 4px; color: var(--navy); }
+    .page-break { page-break-before: always; break-before: page; padding-top: 4px; }
+
+    @media (max-width: 700px) { .grid-2, .cover-foot { grid-template-columns: 1fr; } .body { padding: 14px; } }
+    @page { size: A4 portrait; margin: 13mm 12mm 15mm 12mm; }
+    @page :first { margin: 0; }
+    @media print {
+      body { background: #fff; font-size: 9pt; }
+      .topbar { display: none !important; }
+      .doc-wrap { max-width: none; margin: 0; box-shadow: none; border-radius: 0; }
+      .body { padding: 0; }
+      .cover { min-height: 297mm; width: 210mm; padding: 20mm 16mm 16mm; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <strong>Integrante 3 — Seguridad, Respaldos, Salud y QA</strong>
+    <nav class="topbar-nav">
+      <a href="#demo">Tu Demo</a>
+      <a href="#codigo">Tu Código</a>
+      <a href="#preguntas">Preguntas Trampa</a>
+      <a href="#checklist">Checklist</a>
+    </nav>
+  </div>
+  <button type="button" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+</div>
+
+<main class="doc-wrap">
+  <header class="cover">
+    <div class="cover-top">
+      <div class="cover-logo"><img src="imagenes-manual/logo-remax-zona.png" alt="RE/MAX Zona"></div>
+      <div class="cover-pill">Integrante 3 de 3 &bull; Cierra la exposición</div>
+    </div>
+
+    <div>
+      <p class="cover-kicker">Guía Individual de Estudio y Sustentación</p>
+      <h1>Seguridad, Roles/2FA, Respaldos, Disponibilidad y Pruebas</h1>
+      <p class="cover-sub">
+        Todo lo que debes estudiar, abrir en VS Code y defender frente al profesor como tu módulo propio en el proyecto <strong>RE/MAX Zona Inmobiliaria</strong>.
+      </p>
+
+      <div class="cover-box">
+        <h2>Tus 7 pestañas obligatorias abiertas en VS Code</h2>
+        <ul>
+          <li><code>app/Http/Middleware/VerificarRol.php</code> — Roles y expulsión inmediata si <code>activo=false</code></li>
+          <li><code>app/Livewire/Autenticacion/IniciarSesion.php</code> — <code>RateLimiter</code> 5/60s y flujo 2FA</li>
+          <li><code>app/Http/Middleware/CabecerasSeguridad.php</code> — 7 cabeceras HTTP (CSP, HSTS...)</li>
+          <li><code>bootstrap/app.php</code> y <code>app/Providers/AppServiceProvider.php</code> — Blindaje global</li>
+          <li><code>app/Services/ServicioRespaldo.php</code> — <code>MYSQL_PWD</code> + <code>SHA-256</code></li>
+          <li><code>app/Services/ServicioDisponibilidad.php</code> — Endpoint <code>GET /salud</code></li>
+          <li><code>tests/Feature/RequerimientosNoFuncionalesTest.php</code> — Suite PHPUnit (36 tests)</li>
+        </ul>
+      </div>
+
+      <div class="cover-box">
+        <h2>Regla de oro para responder (3 pasos)</h2>
+        <p><strong>1.</strong> Di qué problema resuelve &nbsp;→&nbsp; <strong>2.</strong> Nombra el mecanismo técnico (<code>RateLimiter</code>, <code>hash_equals()</code>, <code>MYSQL_PWD</code>) &nbsp;→&nbsp; <strong>3.</strong> Abre el archivo y señala la línea exacta.</p>
+      </div>
+    </div>
+
+    <div class="cover-foot">
+      <div><span>Nivel técnico</span><strong>Seguridad / DevOps / QA</strong></div>
+      <div><span>Tabla BD propia</span><strong>usuarios (0001 y 0012)</strong></div>
+      <div><span>Preguntas a dominar</span><strong>8 Preguntas Trampa</strong></div>
+    </div>
+  </header>
+
+  <div class="body">
+    <section id="demo">
+      <div class="section-title">
+        <small>Paso 1 &bull; Tu presentación en vivo</small>
+        <h2>Qué dices y qué pantallas muestras</h2>
+      </div>
+
+      <div class="speech-box">
+        <span class="label">Tu discurso si el profesor pregunta: "¿Qué hiciste tú en el proyecto?"</span>
+        <p>"Yo me encargué de toda la seguridad, operación y calidad del sistema: implementé el login con protección contra fuerza bruta (RateLimiter), el middleware de control de roles (ADMINISTRADOR y MARKETING) con suspensión inmediata de sesiones, la autenticación en dos pasos (2FA TOTP) con Laravel Fortify, las cabeceras HTTP de seguridad (CSP, HSTS, X-Frame-Options), el sistema de respaldos automáticos verificables con SHA-256, el endpoint de salud /salud y la suite de 36 pruebas automatizadas en PHPUnit."</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="mini-card">
+          <h3>Pantallas y comandos que muestras en vivo</h3>
+          <ul>
+            <li><strong><code>/admin/login</code>:</strong> inicio de sesión, bloqueo tras intentos fallidos y desafío 2FA.</li>
+            <li><strong><code>/admin/usuarios</code>:</strong> roles <code>ADMINISTRADOR</code> / <code>MARKETING</code> y prueba de error <code>403</code>.</li>
+            <li><strong>Cuenta (<code>/settings/*</code>):</strong> Perfil, Modo Oscuro y activación de <strong>2FA (QR + códigos)</strong>.</li>
+            <li><strong><code>/salud</code> en el navegador:</strong> JSON en vivo con <code>estado: operativo</code>.</li>
+            <li><strong>En terminal:</strong> correr <code>php artisan test</code> (36 pruebas, 157 aserciones en verde).</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>Tablas y archivos que son tuyos</h3>
+          <ul>
+            <li><strong>Migraciones:</strong> <code>0001</code> (usuarios) y <code>0012</code> (preferencias y 2FA).</li>
+            <li><strong>Livewire Auth/Cuenta:</strong> <code>IniciarSesion</code>, <code>ConfirmarPassword</code>, <code>Security</code>, <code>Profile</code>, <code>Appearance</code>, <code>GestionUsuarios</code>.</li>
+            <li><strong>Middlewares y Núcleo:</strong> <code>VerificarRol</code>, <code>CabecerasSeguridad</code>, <code>bootstrap/app.php</code>, <code>AppServiceProvider.php</code>.</li>
+            <li><strong>Operación y QA:</strong> <code>ServicioRespaldo</code>, <code>ServicioDisponibilidad</code>, <code>EstadoSistemaController</code>, <code>console.php</code>, <code>RequerimientosNoFuncionalesTest</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="codigo" class="page-break">
+      <div class="section-title">
+        <small>Paso 2 &bull; Dominio técnico</small>
+        <h2>Explicación profunda archivo por archivo</h2>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>1. Control de Roles y revocación inmediata de sesión</strong>
+          <span class="file-path">app/Http/Middleware/VerificarRol.php (L17–46)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li>Registrado con alias <code>'rol'</code> en <code>bootstrap/app.php</code> (L22–24) y aplicado en <code>routes/web.php</code> (L78–94).</li>
+            <li><strong>Suspensión en vivo (L26–34):</strong> Si <code>$usuario->activo</code> pasa a <code>false</code> mientras el usuario navega, en la siguiente petición ejecuta <code>Auth::logout()</code>, <code>session()->invalidate()</code> y <code>regenerateToken()</code>, expulsándolo al instante.</li>
+            <li><strong>Permisos (L37–43):</strong> <code>ADMINISTRADOR</code> pasa siempre; <code>MARKETING</code> recibe <code>abort(403)</code> en módulos exclusivos (<code>/admin/usuarios</code>, <code>/admin/oficinas</code>, etc.).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>2. Login, Fuerza Bruta (RateLimiter) y 2FA con Laravel Fortify</strong>
+          <span class="file-path">app/Livewire/Autenticacion/IniciarSesion.php (L30–164) &bull; Security.php</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Fuerza bruta (L41–56 y L95–100):</strong> <code>RateLimiter</code> de máximo <strong>5 intentos / 60 segundos</strong> por <code>correo|IP</code> en login y por <code>2fa|usuario_id|IP</code> en el segundo factor.</li>
+            <li><strong>Anti-enumeración (L52–55):</strong> Si el correo no existe o falla <code>Hash::check()</code>, devuelve el mismo mensaje genérico.</li>
+            <li><strong>2FA TOTP y códigos de recuperación (L66–139):</strong> Descifra <code>two_factor_secret</code> con <code>Fortify::currentEncrypter()->decrypt()</code> y verifica el código de 6 dígitos con <code>TwoFactorAuthenticationProvider</code>. Los códigos de recuperación se comparan con <code>hash_equals()</code> y se queman tras 1 uso con <code>replaceRecoveryCode()</code>.</li>
+            <li><strong>Anti Session Fixation (L157–164):</strong> Ejecuta <code>session()->regenerate()</code> al autenticar.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>3. Cabeceras HTTP, bootstrap/app.php y AppServiceProvider</strong>
+          <span class="file-path">CabecerasSeguridad.php &bull; bootstrap/app.php &bull; AppServiceProvider.php</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong><code>CabecerasSeguridad.php</code> (L14–44):</strong> Middleware global con 7 cabeceras: <code>X-Frame-Options: SAMEORIGIN</code>, <code>X-Content-Type-Options: nosniff</code>, <code>Referrer-Policy</code>, <code>Permissions-Policy</code>, <code>X-Permitted-Cross-Domain-Policies</code>, <code>Content-Security-Policy</code> y HSTS en HTTPS/producción.</li>
+            <li><strong><code>AppServiceProvider.php</code> (L17–56):</strong> <code>Fortify::ignoreRoutes()</code>, <code>CarbonImmutable</code>, <code>DB::prohibitDestructiveCommands()</code> en producción, <code>URL::forceScheme('https')</code> y contraseñas fuertes (12+ chars + <code>uncompromised()</code>).</li>
+            <li><strong><code>bootstrap/app.php</code> (L26–34):</strong> Registra automáticamente cualquier <code>QueryException</code>/<code>PDOException</code> en el canal diario <code>disponibilidad</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>4. Respaldos en storage privado con MYSQL_PWD y SHA-256</strong>
+          <span class="file-path">app/Services/ServicioRespaldo.php (L19–262)</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong>Sin sobrescritura (L21–33):</strong> Crea carpetas únicas en <code>storage/app/private/respaldos/{entorno}/{fecha}</code> (inaccesible por web).</li>
+            <li><strong><code>mysqldump</code> seguro (L180–199):</strong> Usa <code>--single-transaction --routines --triggers</code> y pasa la contraseña por variable de entorno efímera <code>MYSQL_PWD</code> para no exponerla en <code>ps aux</code>.</li>
+            <li><strong>Integridad <code>SHA-256</code> (L58–80 y L100–144):</strong> Empaqueta <code>multimedia.zip</code>, crea <code>manifiesto.json</code> con los hashes y <code>verificarIntegridad()</code> los compara con <code>hash_equals()</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-head">
+          <strong>5. Monitoreo (/salud) y Suite de Pruebas PHPUnit</strong>
+          <span class="file-path">ServicioDisponibilidad.php &bull; RequerimientosNoFuncionalesTest.php</span>
+        </div>
+        <div class="file-body">
+          <ul>
+            <li><strong><code>GET /salud</code> (L16–60):</strong> Verifica modo mantenimiento, <code>SELECT 1</code> en MySQL y permisos de escritura en <code>storage/logs</code> y <code>storage/app/public</code>. Devuelve <code>200</code> o <code>503</code> con <code>Cache-Control: no-store</code> sin exponer credenciales.</li>
+            <li><strong>PHPUnit:</strong> <code>php artisan test</code> ejecuta <strong>36 pruebas y 157 aserciones</strong> validando WCAG, SEO, <code>/salud</code>, respaldos <code>SHA-256</code>, cabeceras, error <code>403</code> por rol y conversión WebP.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="preguntas" class="page-break">
+      <div class="section-title">
+        <small>Paso 3 &bull; Defensa ante el profesor</small>
+        <h2>8 Preguntas Trampa para el Integrante 3</h2>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P1</span><h4>Si el Admin desactiva a un usuario de <code>MARKETING</code> con sesión abierta, ¿puede seguir entrando?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> No. En su siguiente petición <code>VerificarRol.php</code> (L26–34) detecta <code>! $usuario->activo</code>, ejecuta <code>Auth::logout()</code>, invalida la sesión, regenera el token CSRF y lo expulsa al login.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P2</span><h4>¿Cómo protegen el login y el 2FA contra ataques de fuerza bruta?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Con <code>RateLimiter</code> de máximo 5 intentos cada 60 segundos tanto en login (<code>correo|IP</code>) como en 2FA (<code>2fa|usuario_id|IP</code>) en <code>IniciarSesion.php</code> (L41–47 y L95–100).</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P3</span><h4>¿Por qué usan <code>hash_equals()</code> en códigos de recuperación y verificación SHA-256?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Porque realiza comparación en tiempo constante y previene ataques de temporización (<em>timing attacks</em>).</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P4</span><h4>¿Por qué pasan la clave de MySQL por <code>MYSQL_PWD</code> y no con <code>-pCLAVE</code> en <code>mysqldump</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Pasar <code>-p</code> en argumentos expone la contraseña en <code>ps aux</code> y logs. Con <code>->env(['MYSQL_PWD' => ...])</code> (<code>ServicioRespaldo.php</code>, L194–198) solo existe en el entorno efímero del subproceso.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P5</span><h4>¿Qué impide subir un script PHP disfrazado de imagen o descargar los respaldos por URL?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Validación <code>image|mimes:jpg,jpeg,png,webp</code> en servidor, nombres seguros con <code>store()</code>, bloqueo de ejecución PHP en <code>storage/app/public/.htaccess</code>, y respaldos en <code>storage/app/private/respaldos/</code> (fuera de <code>public/</code>).</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P6</span><h4>¿Para qué sirve <code>Fortify::ignoreRoutes()</code> en <code>AppServiceProvider.php</code>?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Desactiva las rutas públicas por defecto de Fortify (como <code>/register</code>) para que el acceso sea estrictamente cerrado vía <code>/admin/login</code>.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P7</span><h4>¿Por qué <code>GET /salud</code> usa un Controller tradicional y no Livewire?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> Porque es un endpoint JSON sin estado pensado para monitores externos que solo leen HTTP <code>200</code>/<code>503</code> con <code>Cache-Control: no-store</code>.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-head"><span class="qa-num">P8</span><h4>¿Qué evita ejecutar <code>migrate:fresh</code> por accidente en producción?</h4></div>
+        <div class="qa-ans"><strong>Respuesta:</strong> <code>DB::prohibitDestructiveCommands(app()->isProduction())</code> en <code>AppServiceProvider.php</code> (L43–45).</div>
+      </div>
+
+      <div id="checklist" class="checklist-box">
+        <h3>Checklist final antes de exponer (Integrante 3)</h3>
+        <label><input type="checkbox"> Sé mostrar <code>VerificarRol.php</code> y explicar la expulsión inmediata si <code>activo = false</code>.</label>
+        <label><input type="checkbox"> Sé explicar <code>RateLimiter</code>, <code>session()->regenerate()</code> y el flujo 2FA en <code>IniciarSesion.php</code>.</label>
+        <label><input type="checkbox"> Sé nombrar al menos 4 cabeceras de <code>CabecerasSeguridad.php</code> y qué ataque mitiga cada una.</label>
+        <label><input type="checkbox"> Sé explicar <code>MYSQL_PWD</code> y <code>manifiesto.json</code> (<code>SHA-256</code>) en <code>ServicioRespaldo.php</code>.</label>
+        <label><input type="checkbox"> Sé ejecutar <code>php artisan test</code> en terminal y abrir <code>/salud</code> en vivo en el navegador.</label>
+      </div>
+
+      <div class="pass-box">
+        <strong>Frase de cierre de la exposición (Integrante 3):</strong>
+        <p>"Como ven en terminal, las 36 pruebas automatizadas con 157 aserciones confirman que tanto el sitio público, la integridad del ranking y toda la capa de seguridad operan correctamente. Quedamos atentos a sus preguntas."</p>
+      </div>
+    </section>
+  </div>
+</main>
+</body>
+</html>
