@@ -202,9 +202,10 @@
                 </label>
 
                 <div class="editor-form-actions">
-                    <button type="submit" class="btn-primary" wire:loading.attr="disabled">
-                        <span wire:loading.remove>Guardar cambios</span>
-                        <span wire:loading>Guardando...</span>
+                    <button type="submit" class="btn-primary" wire:loading.attr="disabled" wire:target="guardarPropiedad,imagenArchivo">
+                        <span wire:loading.remove wire:target="guardarPropiedad,imagenArchivo">Guardar cambios</span>
+                        <span wire:loading wire:target="guardarPropiedad">Guardando...</span>
+                        <span wire:loading wire:target="imagenArchivo">Subiendo imagen...</span>
                     </button>
                     <button type="button" class="btn-secondary" wire:click="limpiarFormulario">
                         Cancelar

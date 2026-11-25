@@ -36,6 +36,8 @@ class GestionPropiedades extends Component
 
     public function nuevaPropiedad(): void
     {
+        $this->mensajeExito = null;
+        $this->mensajeError = null;
         $this->limpiarFormulario();
         $this->mostrarFormulario = true;
     }
@@ -149,6 +151,10 @@ class GestionPropiedades extends Component
 
         if ($imagenAnteriorParaBorrar && Storage::disk('public')->exists($imagenAnteriorParaBorrar)) {
             Storage::disk('public')->delete($imagenAnteriorParaBorrar);
+            $webpAnterior = preg_replace('/\.[^.]+$/', '.webp', $imagenAnteriorParaBorrar);
+            if (is_string($webpAnterior) && Storage::disk('public')->exists($webpAnterior)) {
+                Storage::disk('public')->delete($webpAnterior);
+            }
         }
 
         $this->limpiarFormulario();
@@ -172,6 +178,10 @@ class GestionPropiedades extends Component
 
         if ($imagen && Storage::disk('public')->exists($imagen)) {
             Storage::disk('public')->delete($imagen);
+            $webp = preg_replace('/\.[^.]+$/', '.webp', $imagen);
+            if (is_string($webp) && Storage::disk('public')->exists($webp)) {
+                Storage::disk('public')->delete($webp);
+            }
         }
 
         if ($this->propiedadId === $id) {

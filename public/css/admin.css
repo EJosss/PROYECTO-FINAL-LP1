@@ -1089,7 +1089,10 @@ body.dark-mode .editing-id-badge {
     flex: 1;
 }
 
-.mobile-back-btn,
+.mobile-back-btn {
+    display: none;
+}
+
 .master-detail-backdrop {
     display: block;
     position: fixed;
