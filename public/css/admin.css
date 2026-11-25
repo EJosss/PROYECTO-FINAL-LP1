@@ -1023,12 +1023,26 @@ body.dark-mode .agent-photo-dropzone.is-dragover {
 }
 
 .management-layout--master-detail {
-    grid-template-columns: minmax(0, 1fr) 390px;
+    grid-template-columns: 1fr;
+}
+
+.master-detail-hint {
+    margin: .75rem 0 0;
+    font-size: .84rem;
+    color: var(--muted);
+    text-align: right;
 }
 
 .editor-panel--master-detail {
-    max-height: calc(100vh - 2.5rem);
-    max-height: calc(100dvh - 2.5rem);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: min(440px, 92vw);
+    max-height: 100dvh;
+    z-index: 60;
+    border-radius: 12px 0 0 12px;
     overflow-y: auto;
     scrollbar-width: thin;
 }
@@ -1077,7 +1091,12 @@ body.dark-mode .editing-id-badge {
 
 .mobile-back-btn,
 .master-detail-backdrop {
-    display: none;
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgb(7 27 59 / 45%);
+    backdrop-filter: blur(2px);
 }
 
 .form-header {

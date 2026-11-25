@@ -211,12 +211,14 @@
                     </button>
                 </div>
             </form>
-        @else
-            <div class="editor-panel editor-panel--master-detail" style="color: var(--muted); text-align: center;">
-                <p>Selecciona una propiedad para editarla o haz clic en <strong>«＋ Agregar propiedad»</strong>.</p>
-            </div>
         @endif
     </div>
+
+    @if(! $mostrarFormulario)
+        <p class="master-detail-hint">
+            Selecciona una propiedad para editarla o haz clic en <strong>«＋ Agregar propiedad»</strong>.
+        </p>
+    @endif
 
     @if($mostrarFormulario)
         <div class="master-detail-backdrop" wire:click="limpiarFormulario" aria-hidden="true"></div>
