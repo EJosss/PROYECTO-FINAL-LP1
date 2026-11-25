@@ -9,7 +9,7 @@
     <div class="page-heading">
         <div>
             <p class="eyebrow">Vendedores Estrella RE/MAX Zona</p>
-            <h1><span aria-hidden="true">★</span> Gestión de Rankings</h1>
+            <h1><span aria-hidden="true"></span> Gestión de Rankings</h1>
             @if($pestanaActiva === 'mensual')
                 <p>
                     Período de desempeño evaluado: <strong>{{ $etiquetaDesempeno }}</strong> |

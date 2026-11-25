@@ -26,7 +26,7 @@
                     <p class="eyebrow {{ $tipoRanking === 'anual' ? 'eyebrow--gold' : 'eyebrow--blue' }}">Nuestro equipo</p>
                     <h2 id="tops-title">
                         @if($tipoRanking === 'anual')
-                            🏆 Mejores Asesores del Año {{ $rankingAnualPublicado?->anio ?? now('America/Lima')->year }}
+                             Mejores Asesores Del Ultimo Año {{ $rankingAnualPublicado?->anio ?? now('America/Lima')->year }}
                         @else
                             AGENTES DESTACADOS DEL MES
                         @endif
@@ -49,7 +49,7 @@
                             aria-selected="{{ $tipoRanking === 'mensual' ? 'true' : 'false' }}"
                             wire:click="cambiarTipoRanking('mensual')"
                         >
-                            ★ Destacados del Mes
+                             Destacados del Mes
                         </button>
                         <button
                             type="button"
@@ -58,7 +58,7 @@
                             aria-selected="{{ $tipoRanking === 'anual' ? 'true' : 'false' }}"
                             wire:click="cambiarTipoRanking('anual')"
                         >
-                            🏆 Top Anual {{ $rankingAnualPublicado?->anio ?? now('America/Lima')->year }}
+                             Top Anual {{ $rankingAnualPublicado?->anio ?? now('America/Lima')->year }}
                         </button>
                     </div>
                 </div>
