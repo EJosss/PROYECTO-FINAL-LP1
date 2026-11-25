@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="management-layout">
+    <div class="management-layout management-layout--master-detail">
         <div class="data-area">
             <div class="list-toolbar">
                 <strong>Sedes oficiales de RE/MAX Zona</strong>
@@ -32,7 +32,7 @@
             <div class="content-list">
                 @foreach($oficinas as $sede)
                     <article
-                        class="item office-item {{ $oficinaId === $sede->id ? 'is-selected-row' : '' }}"
+                        class="item office-item {{ $mostrarFormulario && $oficinaId === $sede->id ? 'is-selected-row' : '' }}"
                         wire:key="oficina-admin-{{ $sede->id }}"
                     >
                         @if($sede->url_imagen)
@@ -91,11 +91,14 @@
             </div>
         </div>
 
-        @if($oficinaId)
-            <form class="content-form editor-panel" wire:submit="guardarOficina">
+        @if($mostrarFormulario && $oficinaId)
+            <form class="content-form editor-panel editor-panel--master-detail is-open" wire:submit="guardarOficina">
                 <div class="form-header">
-                    <h2>Editar sede: {{ $nombre ?: $codigo }}</h2>
-                    <span class="office-badge">{{ $codigo }}</span>
+                    <div class="form-header-title">
+                        <h2>Editar sede: {{ $nombre ?: $codigo }}</h2>
+                        <span class="office-badge">{{ $codigo }}</span>
+                    </div>
+                    <button class="icon-button" type="button" wire:click="cerrarEditor" aria-label="Cerrar editor">×</button>
                 </div>
 
                 <div class="readonly-meta-grid">
@@ -121,7 +124,7 @@
                     @error('direccion') <span class="field-error">{{ $message }}</span> @enderror
                 </label>
 
-                <div class="price-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="price-grid" style="grid-template-columns: 1fr;">
                     <label>
                         Teléfono (opcional)
                         <div class="phone-input-group">
@@ -181,11 +184,26 @@
                     @error('imagenArchivo') <span class="field-error">{{ $message }}</span> @enderror
                 </label>
 
-                <button type="submit" wire:loading.attr="disabled">
-                    <span wire:loading.remove>Guardar cambios de la oficina</span>
-                    <span wire:loading>Guardando...</span>
-                </button>
+                <div class="editor-form-actions">
+                    <button type="submit" class="btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove>Guardar cambios de la oficina</span>
+                        <span wire:loading>Guardando...</span>
+                    </button>
+                    <button type="button" class="btn-secondary" wire:click="cerrarEditor">
+                        Cancelar
+                    </button>
+                </div>
             </form>
         @endif
     </div>
+
+    @if(! $mostrarFormulario)
+        <p class="master-detail-hint">
+            Haz clic en el botón <strong>✎</strong> de cualquiera de las 4 sedes para editar su información.
+        </p>
+    @endif
+
+    @if($mostrarFormulario)
+        <div class="master-detail-backdrop" wire:click="cerrarEditor" aria-hidden="true"></div>
+    @endif
 </section>

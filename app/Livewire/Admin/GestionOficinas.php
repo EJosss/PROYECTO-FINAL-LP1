@@ -34,6 +34,7 @@ class GestionOficinas extends Component
 
     public ?string $mensajeExito = null;
     public ?string $mensajeError = null;
+    public bool $mostrarFormulario = false;
 
     public function mount(): void
     {
@@ -60,6 +61,13 @@ class GestionOficinas extends Component
         $this->mensajeError = null;
 
         $this->cargarDatosOficina($oficina);
+        $this->mostrarFormulario = true;
+    }
+
+    public function cerrarEditor(): void
+    {
+        $this->resetValidation();
+        $this->mostrarFormulario = false;
     }
 
     public function guardarOficina(): void

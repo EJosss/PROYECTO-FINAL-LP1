@@ -15,7 +15,7 @@
         <button type="button" wire:click="nuevoAgente">＋ Registrar agente</button>
     </div>
 
-    <div class="management-layout">
+    <div class="management-layout management-layout--master-detail">
         <div class="data-area">
             <div class="list-toolbar">
                 <input
@@ -90,7 +90,7 @@
         </div>
 
         @if($mostrarFormulario)
-            <form class="content-form editor-panel" wire:submit="guardarAgente">
+            <form class="content-form editor-panel editor-panel--master-detail is-open" wire:submit="guardarAgente">
                 <div class="form-header">
                     <h2>{{ $agenteId ? 'Editar agente' : 'Registrar agente' }}</h2>
                     <button class="icon-button" type="button" wire:click="limpiarFormulario" aria-label="Cerrar formulario">×</button>
@@ -120,7 +120,7 @@
                     @error('biografia') <span class="field-error">{{ $message }}</span> @enderror
                 </label>
 
-                <div class="price-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="price-grid" style="grid-template-columns: 1fr;">
                     <label>
                         Celular
                         <div class="phone-input-group">
@@ -258,15 +258,26 @@
                     <span>Activo (visible en la página pública Empresa)</span>
                 </label>
 
-                <button type="submit" wire:loading.attr="disabled">
-                    <span wire:loading.remove>{{ $agenteId ? 'Guardar cambios' : 'Registrar agente' }}</span>
-                    <span wire:loading>Guardando...</span>
-                </button>
+                <div class="editor-form-actions">
+                    <button type="submit" class="btn-primary" wire:loading.attr="disabled">
+                        <span wire:loading.remove>{{ $agenteId ? 'Guardar cambios' : 'Registrar agente' }}</span>
+                        <span wire:loading>Guardando...</span>
+                    </button>
+                    <button type="button" class="btn-secondary" wire:click="limpiarFormulario">
+                        Cancelar
+                    </button>
+                </div>
             </form>
-        @else
-            <div class="editor-panel" style="color: var(--muted); text-align: center;">
-                <p>Selecciona un agente para editarlo o haz clic en <strong>«＋ Registrar agente»</strong>.</p>
-            </div>
         @endif
     </div>
+
+    @if(! $mostrarFormulario)
+        <p class="master-detail-hint">
+            Selecciona un agente para editarlo o haz clic en <strong>«＋ Registrar agente»</strong>.
+        </p>
+    @endif
+
+    @if($mostrarFormulario)
+        <div class="master-detail-backdrop" wire:click="limpiarFormulario" aria-hidden="true"></div>
+    @endif
 </section>

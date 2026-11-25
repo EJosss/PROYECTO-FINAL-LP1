@@ -22,6 +22,7 @@ class GestionUsuarios extends Component
 
     public ?string $mensajeExito = null;
     public ?string $mensajeError = null;
+    public bool $mostrarFormulario = false;
 
     public function mount(): void
     {
@@ -33,6 +34,7 @@ class GestionUsuarios extends Component
     public function nuevoUsuario(): void
     {
         $this->limpiarFormulario();
+        $this->mostrarFormulario = true;
     }
 
     public function editarUsuario(int $id): void
@@ -49,6 +51,7 @@ class GestionUsuarios extends Component
         $this->rol = $usuario->rol;
         $this->activo = (bool) $usuario->activo;
         $this->password = '';
+        $this->mostrarFormulario = true;
     }
 
     public function guardarUsuario(): void
@@ -122,6 +125,7 @@ class GestionUsuarios extends Component
         $this->password = '';
         $this->rol = Usuario::ROL_MARKETING;
         $this->activo = true;
+        $this->mostrarFormulario = false;
     }
 
     public function render()
