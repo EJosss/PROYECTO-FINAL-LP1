@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía Maestra Integrante 2 — CRUDs, BD y Rankings | RE/MAX Zona</title>
+  <style>
+    :root {
+      --blue: #003da5;
+      --green: #0c8a4b;
+      --green-dark: #065f46;
+      --green-bg: #ecfdf3;
+      --navy: #071d49;
+      --yellow: #ffd000;
+      --ink: #182238;
+      --muted: #525e75;
+      --line: #dce5f0;
+      --soft: #f4f7fb;
+      --amber: #b45309;
+      --amber-bg: #fffbeb;
+      --info-bg: #eff6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; color: var(--ink); background: #e8eef7;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+      font-size: 9.2pt; line-height: 1.48;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .doc-wrap { max-width: 920px; margin: 1rem auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 18px 48px rgba(7,29,73,.12); }
+
+    /* Portada */
+    .cover {
+      min-height: 296mm; padding: 20mm 16mm 16mm;
+      background: linear-gradient(155deg, #071d49 0%, #065f46 58%, #0f172a 100%);
+      color: #fff; display: flex; flex-direction: column; justify-content: space-between;
+      page-break-after: always; break-after: page;
+    }
+    .cover-top { display: flex; justify-content: space-between; align-items: center; }
+    .cover-logo { background: #fff; padding: 10px 16px; border-radius: 10px; }
+    .cover-logo img { height: 40px; display: block; }
+    .cover-pill { border: 1px solid rgba(255,255,255,.35); padding: 6px 14px; border-radius: 999px; font-size: 8.3pt; font-weight: 700; }
+    .cover-kicker { color: var(--yellow); font-weight: 800; text-transform: uppercase; letter-spacing: .14em; font-size: 9pt; margin: 14px 0 6px; }
+    .cover h1 { font-size: 27pt; line-height: 1.12; margin: 0 0 10px; font-weight: 800; }
+    .cover-sub { font-size: 11pt; color: #d1fae5; max-width: 650px; margin: 0 0 14px; }
+
+    .cover-box {
+      background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.22);
+      border-radius: 10px; padding: 12px 15px; margin-bottom: 10px;
+    }
+    .cover-box h2 { margin: 0 0 5px; color: var(--yellow); font-size: 9.8pt; text-transform: uppercase; letter-spacing: .04em; }
+    .cover-box p, .cover-box li { color: #e2e8f0; font-size: 8.9pt; margin: 0; }
+    .cover-box ul { margin: 5px 0 0; padding-left: 1.15rem; }
+    .cover-box li { margin-bottom: 3px; }
+    .cover-foot {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      border-top: 1px solid rgba(255,255,255,.22); padding-top: 10px;
+    }
+    .cover-foot span { display: block; font-size: 7.2pt; text-transform: uppercase; color: #a7f3d0; }
+    .cover-foot strong { font-size: 9pt; }
+
+    /* Cuerpo */
+    .body { padding: 13mm 14mm 15mm; }
+    .page-break { page-break-before: always; break-before: page; }
+    .banner {
+      border-radius: 10px; padding: 10px 14px; color: #fff; margin: 0 0 11px;
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+    }
+    .banner--navy { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+    .banner small { display: block; color: var(--yellow); font-size: 7.5pt; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+    .banner h2 { margin: 2px 0 0; font-size: 14pt; color: #fff; }
+
+    .callout {
+      border-radius: 8px; padding: 8px 12px; margin: 0 0 10px; font-size: 8.7pt;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .callout--amber { background: var(--amber-bg); border: 1px solid #fde68a; border-left: 4px solid var(--amber); color: #451a03; }
+    .callout--blue { background: var(--info-bg); border: 1px solid #bfdbfe; border-left: 4px solid var(--blue); color: #1e3a8a; }
+    .callout--green { background: var(--green-bg); border: 1px solid #bbf7d0; border-left: 4px solid var(--green); color: #064e3b; }
+    .callout strong { display: block; margin-bottom: 2px; }
+
+    .card {
+      border: 1px solid var(--line); border-radius: 8px; margin: 0 0 10px; overflow: hidden; background: #fff;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .card-head {
+      background: var(--soft); border-bottom: 1px solid var(--line); padding: 6.5px 11px;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .card-head strong { color: var(--navy); font-size: 9.3pt; }
+    .path { font-family: Consolas, monospace; font-size: 7.8pt; background: #fff; border: 1px solid #cbd5e1; color: var(--green-dark); padding: 1px 6px; border-radius: 4px; font-weight: 700; }
+    .card-body { padding: 8px 11px; font-size: 8.7pt; }
+    .card-body ul { margin: 3px 0 0; padding-left: 1.15rem; }
+    .card-body li { margin-bottom: 3.5px; }
+
+    table { width: 100%; border-collapse: collapse; margin: 6px 0 11px; font-size: 8.3pt; break-inside: avoid; page-break-inside: avoid; }
+    th { background: var(--navy); color: #fff; text-align: left; padding: 6px 7.5px; font-size: 7.9pt; }
+    td { padding: 5.5px 7.5px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tbody tr:nth-child(even) td { background: #f8fafd; }
+
+    pre.code {
+      background: #0f172a; color: #e2e8f0; padding: 8px 11px; border-radius: 7px;
+      font-family: Consolas, monospace; font-size: 7.9pt; line-height: 1.42; margin: 5px 0 8px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    code { font-family: Consolas, monospace; font-size: .85em; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 1px 4px; border-radius: 3px; color: var(--navy); }
+
+    .qa {
+      border: 1px solid var(--line); border-radius: 7px; overflow: hidden; margin: 0 0 7.5px;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .qa-q { background: var(--navy); color: #fff; padding: 5.5px 10px; font-size: 8.7pt; font-weight: 700; }
+    .qa-q span { background: var(--yellow); color: var(--navy); padding: 1px 5px; border-radius: 4px; font-size: 7.5pt; margin-right: 6px; }
+    .qa-a { background: var(--green-bg); border-left: 3.5px solid var(--green); padding: 6px 10px; font-size: 8.5pt; }
+
+    @page { size: A4 portrait; margin: 11mm 11mm 13mm 11mm; }
+    @page :first { margin: 0; }
+    @media print {
+      body { background: #fff; font-size: 8.7pt; }
+      .doc-wrap { max-width: none; margin: 0; box-shadow: none; border-radius: 0; }
+      .body { padding: 0; }
+      .cover { min-height: 297mm; width: 210mm; padding: 18mm 15mm 15mm; }
+    }
+  </style>
+</head>
+<body>
+<main class="doc-wrap">
+
+  <!-- PORTADA -->
+  <header class="cover">
+    <div class="cover-top">
+      <div class="cover-logo"><img src="imagenes-manual/logo-remax-zona.png" alt="RE/MAX Zona"></div>
+      <div class="cover-pill">Integrante 2 de 3 &bull; Guía Maestra Completa</div>
+    </div>
+
+    <div>
+      <p class="cover-kicker">Manual Individual de Código y GPS de Métodos</p>
+      <h1>CRUDs, Base de Datos y Motor de Rankings (Mensual y Anual)</h1>
+      <p class="cover-sub">
+        Todo lo que debes saber, dónde está cada botón y cada método PHP, cómo funcionan tus tablas y triggers en MySQL, y cómo responder las 10 preguntas clave del profesor.
+      </p>
+
+      <div class="cover-box">
+        <h2>Tu discurso de 30 segundos: "¿Qué hiciste tú en el proyecto?"</h2>
+        <p><em>"Yo desarrollé el núcleo de negocio del panel administrativo: los CRUDs completos de Propiedades y Agentes con validaciones condicionales y limpieza de imágenes WebP, la integridad de datos en MySQL (CHECK y 5 Triggers), el motor del Ranking Mensual con bloqueo pesimista (lockForUpdate), cierre automático tras el día 3 y snapshots inmutables, y el nuevo módulo de Ranking Anual integrado con pestañas tanto en el panel como en la portada pública."</em></p>
+      </div>
+
+      <div class="cover-box">
+        <h2>Tus 7 pestañas abiertas en VS Code antes de exponer</h2>
+        <ul>
+          <li><code>app/Livewire/Admin/GestionPropiedades.php</code> + <code>gestion-propiedades.blade.php</code></li>
+          <li><code>app/Livewire/Admin/GestionAgentes.php</code> + <code>gestion-agentes.blade.php</code></li>
+          <li><code>app/Livewire/Admin/GestionRankingActual.php</code> (pestañas Mensual + Anual)</li>
+          <li><code>app/Models/RankingMensual.php</code> y <code>app/Models/PosicionRanking.php</code></li>
+          <li><code>app/Services/ServicioRankingMensual.php</code> y <code>ServicioRankingAnual.php</code></li>
+          <li><code>app/Livewire/Admin/HistorialRankings.php</code></li>
+          <li>Migraciones <code>0002</code>, <code>0004</code>, <code>0005</code>, <code>0013</code> y <code>0014</code></li>
+        </ul>
+      </div>
+
+      <div class="cover-box">
+        <h2>Atajos salvavidas en VS Code</h2>
+        <p><strong><code>Ctrl + P</code></strong> → abre cualquier archivo escribiendo su nombre &nbsp;|&nbsp; <strong><code>Ctrl + Shift + F</code></strong> → busca cualquier texto o método en todo el proyecto en 1 segundo.</p>
+      </div>
+    </div>
+
+    <div class="cover-foot">
+      <div><span>Módulos propios</span><strong>Propiedades &bull; Agentes &bull; Rankings</strong></div>
+      <div><span>Migraciones propias</span><strong>9 Migraciones + 5 Triggers</strong></div>
+      <div><span>Tests propios</span><strong>Propiedades, Agentes, Mensual y Anual</strong></div>
+    </div>
+  </header>
+
+  <div class="body">
+
+    <!-- ==================== BLOQUE 1: PROPIEDADES ==================== -->
+    <section>
+      <div class="banner">
+        <small>Bloque 1 de 4 &bull; CRUD de Inmuebles</small>
+        <h2>GPS Completo: Gestión de Propiedades</h2>
+      </div>
+
+      <div class="callout callout--blue">
+        <strong>Pareja Livewire: Cerebro (.php) + Cara (.blade.php)</strong>
+        En <code>app/Livewire/Admin/GestionPropiedades.php</code> vive la lógica PHP (variables, validación, subida de foto y MySQL). En <code>resources/views/livewire/admin/gestion-propiedades.blade.php</code> vive el HTML/Blade conectado mediante <code>wire:model</code>, <code>wire:click</code> y <code>wire:submit</code>.
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Acción CRUD</th>
+            <th>Botón / Input en <code>.blade.php</code></th>
+            <th>Método en <code>GestionPropiedades.php</code></th>
+            <th>Qué hace paso a paso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Read (Listar y buscar)</strong></td>
+            <td><code>wire:model.live.debounce.250ms="busqueda"</code></td>
+            <td><code>render()</code></td>
+            <td>Filtra por <code>nombre</code> o <code>ubicacion</code> usando <code>LIKE</code> parametrizado y ordena con <code>orderByDesc('id')</code>. La columna <code>#</code> muestra el ID real (<code>$propiedad-&gt;id</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>Abrir nuevo</strong></td>
+            <td><code>wire:click="nuevaPropiedad"</code></td>
+            <td><code>nuevaPropiedad()</code></td>
+            <td>Limpia alertas y campos, y pone <code>$mostrarFormulario = true</code> para abrir el panel lateral deslizante.</td>
+          </tr>
+          <tr>
+            <td><strong>Cargar edición</strong></td>
+            <td><code>wire:click="editarPropiedad($id)"</code></td>
+            <td><code>editarPropiedad(int $id)</code></td>
+            <td>Ejecuta <code>Propiedad::findOrFail($id)</code>, llena las variables del formulario y abre el panel lateral.</td>
+          </tr>
+          <tr>
+            <td><strong>Create / Update</strong></td>
+            <td><code>wire:submit="guardarPropiedad"</code></td>
+            <td><code>guardarPropiedad()</code></td>
+            <td>Valida precio/moneda acoplados, guarda foto + <code>.webp</code>, hace <code>create()</code> o <code>update()</code> dentro de <code>try/catch</code> (borra foto nueva si falla BD) y borra foto vieja + <code>.webp</code> tras guardar.</td>
+          </tr>
+          <tr>
+            <td><strong>Destacar (★)</strong></td>
+            <td><code>wire:click="alternarDestacada($id)"</code></td>
+            <td><code>alternarDestacada(int $id)</code></td>
+            <td>Invierte el booleano <code>destacada =&gt; ! $propiedad-&gt;destacada</code> para mostrar/ocultar en la Portada <code>/</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Delete (Eliminar)</strong></td>
+            <td><code>wire:click="eliminarPropiedad($id)"</code> + <code>wire:confirm</code></td>
+            <td><code>eliminarPropiedad(int $id)</code></td>
+            <td>Pide confirmación JS, borra el registro en MySQL y elimina la imagen original y su <code>.webp</code> de <code>storage/app/public</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Cancelar / Cerrar</strong></td>
+            <td><code>wire:click="limpiarFormulario"</code></td>
+            <td><code>limpiarFormulario()</code></td>
+            <td>Resetea validaciones, limpia propiedades y cierra el panel lateral (<code>$mostrarFormulario = false</code>).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card">
+        <div class="card-head">
+          <strong>Detalles clave que le encantan al profesor en Propiedades</strong>
+          <span class="path">GestionPropiedades.php &bull; Propiedad.php</span>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li><strong>Precio y moneda acoplados:</strong> <code>'moneda' =&gt; $tienePrecio ? ['required', 'in:PEN,USD'] : ['nullable']</code> + restricción MySQL <code>CHECK (chk_propiedades_precio_moneda)</code> en la migración <code>0002</code>.</li>
+            <li><strong>Cambiar el orden (primero al último o viceversa):</strong> solo cambias <code>orderByDesc('id')</code> por <code>orderBy('id')</code> en <code>render()</code>; como la columna <code>#</code> usa <code>$propiedad-&gt;id</code>, los números reflejan el orden real inmediatamente.</li>
+            <li><strong>Botón seguro al subir foto:</strong> <code>wire:target="guardarPropiedad,imagenArchivo"</code> deshabilita el botón mientras sube la foto evitando envíos incompletos.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== BLOQUE 2: AGENTES ==================== -->
+    <section class="page-break">
+      <div class="banner">
+        <small>Bloque 2 de 4 &bull; Directorio Institucional</small>
+        <h2>GPS Completo: Gestión de Agentes</h2>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Acción CRUD</th>
+            <th>En <code>gestion-agentes.blade.php</code></th>
+            <th>Método en <code>GestionAgentes.php</code></th>
+            <th>Qué hace internamente</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Listar / buscar</strong></td>
+            <td><code>wire:model.live.debounce.250ms="busqueda"</code></td>
+            <td><code>render()</code></td>
+            <td>Busca por nombres, apellidos, celular o correo y muestra la tabla a ancho completo.</td>
+          </tr>
+          <tr>
+            <td><strong>Nuevo / Editar</strong></td>
+            <td><code>wire:click="nuevoAgente"</code> / <code>editarAgente($id)</code></td>
+            <td><code>nuevoAgente()</code> / <code>editarAgente(int $id)</code></td>
+            <td>Al editar usa <code>TelefonoPeru::quitarPrefijo()</code> para no duplicar <code>+51</code> en el formulario.</td>
+          </tr>
+          <tr>
+            <td><strong>Guardar</strong></td>
+            <td><code>wire:submit="guardarAgente"</code></td>
+            <td><code>guardarAgente()</code></td>
+            <td>Valida, formatea celular/WhatsApp con <code>TelefonoPeru</code>, guarda foto + WebP y protege contra archivos huérfanos.</td>
+          </tr>
+          <tr>
+            <td><strong>Activar / Inactivar</strong></td>
+            <td><code>wire:click="alternarEstado($id)"</code></td>
+            <td><code>alternarEstado(int $id)</code></td>
+            <td>Cambia el campo booleano <code>activo</code> para mostrar u ocultar al asesor en la página pública <code>/empresa</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Eliminar</strong></td>
+            <td><code>wire:click="eliminarAgente($id)"</code></td>
+            <td><code>eliminarAgente(int $id)</code></td>
+            <td>Elimina el registro de MySQL y borra su fotografía del disco <code>public</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Seguridad extra</strong></td>
+            <td>(Interno en PHP)</td>
+            <td><code>verificarAutorizacion()</code></td>
+            <td>Revalida que el usuario siga activo y sea <code>ADMINISTRADOR</code> o <code>MARKETING</code> (defensa adicional al middleware).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ==================== BLOQUE 3: RANKINGS ==================== -->
+      <div class="banner banner--navy" style="margin-top: 14px;">
+        <small>Bloque 3 de 4 &bull; El Corazón del Negocio</small>
+        <h2>GPS Completo: Rankings (Mensual + Anual) e Historial</h2>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Módulo / Acción</th>
+            <th>Archivo y Método</th>
+            <th>Qué hace y a qué Servicio llama</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Cambiar pestaña en Admin</strong></td>
+            <td><code>GestionRankingActual::cambiarPestana('mensual'|'anual')</code></td>
+            <td>Alterna dentro del menú único <strong>★ Rankings</strong> entre <em>Ranking Mensual</em> y <em>Ranking Anual</em>.</td>
+          </tr>
+          <tr>
+            <td><strong>Guardar puesto 1, 2 o 3 (Mensual)</strong></td>
+            <td><code>GestionRankingActual::guardarPuesto($puesto)</code></td>
+            <td>Valida plazo (días 1–3) y llama a <code>ServicioRankingMensual::guardarParticipantePuesto()</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Publicar Ranking Mensual</strong></td>
+            <td><code>GestionRankingActual::publicarRanking()</code></td>
+            <td>Llama a <code>ServicioRankingMensual::publicarRankingActual()</code> exigiendo exactamente los 3 puestos <code>[1, 2, 3]</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Guardar puesto 1, 2 o 3 (Anual)</strong></td>
+            <td><code>GestionRankingActual::guardarPuestoAnual($puesto)</code></td>
+            <td>Guarda el ganador anual para el <code>$anioAnual</code> elegido vía <code>ServicioRankingAnual::guardarParticipantePuesto()</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Publicar Ranking Anual</strong></td>
+            <td><code>GestionRankingActual::publicarRankingAnual()</code></td>
+            <td>Publica los 3 ganadores del año en la pestaña <strong>🏆 Top Anual</strong> de la Portada pública (<code>PaginaInicio.php</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>Ver Historial (Solo Admin)</strong></td>
+            <td><code>HistorialRankings::mount()</code> y <code>render()</code></td>
+            <td>Consulta en modo solo lectura los snapshots inmutables filtrados por <code>$anioFiltro</code> y <code>$mesFiltro</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card">
+        <div class="card-head">
+          <strong>Reglas críticas del Motor de Rankings (Mensual y Anual)</strong>
+          <span class="path">RankingMensual.php &bull; ServicioRankingMensual.php &bull; ServicioRankingAnual.php</span>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li><strong>Período mensual sin bugs de fechas (<code>periodoActual()</code>):</strong> usa <code>now('America/Lima')</code> y <code>startOfMonth()-&gt;subMonthNoOverflow()</code> para obtener el mes de desempeño anterior sin error en días 30/31.</li>
+            <li><strong>Ventana días 1 al 3 (<code>dentroDePlazoDeGestion()</code>):</strong> solo permite crear/editar los días 1, 2 y 3 del mes de publicación. Del día 4 en adelante queda bloqueado (<code>CERRADO</code> o <code>VENCIDO</code>).</li>
+            <li><strong>Excepción controlada de cierre (<code>esTransicionInternaDeCierre()</code>):</strong> permite cerrar el día 4 <strong>únicamente</strong> si <code>getDirty()</code> demuestra que solo cambiaron <code>estado</code>, <code>fecha_cierre</code> y <code>updated_at</code>.</li>
+            <li><strong>Concurrencia (<code>DB::transaction()</code> + <code>lockForUpdate()</code>):</strong> serializa escrituras simultáneas a nivel de fila en MySQL tanto en <code>ServicioRankingMensual</code> como en <code>ServicioRankingAnual</code>.</li>
+            <li><strong>Duplicados vs. Homónimos:</strong> <code>normalizarCelular()</code> + <code>hash_equals()</code> <strong>bloquean</strong> celulares repetidos en el podio; <code>normalizarNombreCompleto()</code> (<code>Str::ascii</code>) solo emite una <strong>advertencia no bloqueante</strong> por posibles homónimos.</li>
+            <li><strong>Por qué el Ranking Anual usa tablas propias (migración <code>0014</code>):</strong> para respetar intactos los <code>CHECK</code> de meses 1–12 y los 5 Triggers del Ranking Mensual sin riesgo de regresión.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== BLOQUE 4: BD, MIGRACIONES Y PREGUNTAS ==================== -->
+    <section class="page-break">
+      <div class="banner">
+        <small>Bloque 4 de 4 &bull; Base de Datos, Pruebas y Defensa</small>
+        <h2>Migraciones Propias, Triggers MySQL y 10 Preguntas Trampa</h2>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Migración</th>
+            <th>Tabla / Cambio</th>
+            <th>Regla de integridad implementada en MySQL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>0002</code>, <code>0007</code>, <code>0008</code></td><td><code>propiedades</code></td><td><code>CHECK (chk_propiedades_precio_moneda)</code> + columnas <code>destacada</code> y <code>oficina</code>.</td></tr>
+          <tr><td><code>0003</code></td><td><code>vendedores</code></td><td>Conservada por compatibilidad histórica (FK opcional <code>vendedor_id</code> nullable).</td></tr>
+          <tr><td><code>0004</code></td><td><code>rankings_mensuales</code></td><td><code>CHECK</code> de meses/sucesión + <strong>2 Triggers <code>BEFORE</code></strong> (<code>SIGNAL SQLSTATE '45000'</code>) bloqueando editar/borrar cerrados.</td></tr>
+          <tr><td><code>0005</code></td><td><code>posiciones_ranking</code></td><td><code>UNIQUE (ranking_mensual_id, puesto)</code> + <strong>3 Triggers <code>BEFORE</code></strong> protegiendo posiciones históricas.</td></tr>
+          <tr><td><code>0011</code></td><td><code>agentes</code></td><td>Directorio independiente de asesores para la página pública <code>/empresa</code>.</td></tr>
+          <tr><td><code>0013</code></td><td><code>posiciones_ranking</code></td><td>Desacopla de <code>vendedores</code>, añade <code>codigo_interno</code> (<code>PART-...</code>) y <code>UNIQUE (ranking_mensual_id, celular_normalizado)</code>.</td></tr>
+          <tr><td><code>0014</code></td><td><code>rankings_anuales</code> y <code>posiciones_ranking_anual</code></td><td>Tablas dedicadas del Ranking Anual con <code>UNIQUE (anio)</code>, <code>CHECK (puesto BETWEEN 1 AND 3)</code> y <code>UNIQUE</code> por celular.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="qa">
+        <div class="qa-q"><span>P1</span> ¿Dónde está el método que crea, edita y elimina una propiedad?</div>
+        <div class="qa-a">En <code>GestionPropiedades.php</code>: <code>guardarPropiedad()</code> (crea/actualiza), <code>editarPropiedad($id)</code> (carga datos) y <code>eliminarPropiedad($id)</code> (borra en BD + disco). Sus botones viven en <code>gestion-propiedades.blade.php</code> con <code>wire:submit</code> y <code>wire:click</code>.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P2</span> ¿Cómo garantizan que no exista una propiedad con precio sin moneda?</div>
+        <div class="qa-a">Doble capa: validación condicional en <code>GestionPropiedades.php</code> + restricción <code>CHECK (chk_propiedades_precio_moneda)</code> en la migración <code>0002</code>.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P3</span> ¿Qué pasa si dos usuarios guardan o publican el Ranking al mismo tiempo?</div>
+        <div class="qa-a"><code>ServicioRankingMensual</code> y <code>ServicioRankingAnual</code> ejecutan todo dentro de <code>DB::transaction()</code> con bloqueo pesimista <code>lockForUpdate()</code> sobre el ranking y sus posiciones.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P4</span> ¿Por qué hay 5 Triggers en MySQL si ya tenían validaciones en <code>booted()</code>?</div>
+        <div class="qa-a">Defensa en profundidad: <code>booted()</code> solo protege vía Eloquent; los 5 triggers <code>BEFORE</code> con <code>SIGNAL SQLSTATE '45000'</code> bloquean alteraciones directas por SQL o Query Builder.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P5</span> Si el ranking se bloquea el día 4, ¿cómo logra el sistema pasarlo a <code>CERRADO</code>?</div>
+        <div class="qa-a">Con <code>esTransicionInternaDeCierre()</code> en <code>RankingMensual.php</code>, que verifica con <code>getDirty()</code> que únicamente cambiaron <code>estado</code>, <code>fecha_cierre</code> y <code>updated_at</code>.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P6</span> ¿Para qué sirven los campos <code>*_snapshot</code> en <code>posiciones_ranking</code>?</div>
+        <div class="qa-a">Congelan nombre, celular y fotografía exactos de cada ganador en ese período para mantener inmutable el historial aunque cambien datos futuros.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P7</span> ¿Por qué un homónimo solo muestra aviso y un celular duplicado sí bloquea?</div>
+        <div class="qa-a">Porque dos asesores pueden llamarse igual (homónimos reales), pero no compartir el mismo celular personal en dos puestos del mismo podio.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P8</span> ¿Cómo evitan archivos huérfanos en <code>storage</code> si falla MySQL al guardar?</div>
+        <div class="qa-a">En un <code>try/catch (Throwable)</code>: si falla la BD se borra inmediatamente la foto nueva; si se reemplaza una existente, la anterior (y su <code>.webp</code>) se borra solo después del commit.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P9</span> ¿Por qué crearon tablas separadas para el Ranking Anual (migración <code>0014</code>)?</div>
+        <div class="qa-a">Para integrar el Ranking Anual limpiamente (con pestañas en Admin y Portada) sin alterar las restricciones <code>CHECK</code> de meses 1–12 ni los 5 Triggers del Ranking Mensual.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-q"><span>P10</span> ¿Cómo demuestras en 3 segundos que todos tus módulos funcionan sin errores?</div>
+        <div class="qa-a">Corriendo en terminal: <code>php artisan test --filter="GestionPropiedades|GestionAgentes|Ranking"</code> (valida Propiedades, Agentes, Ranking Mensual en días 2 y 4, y Ranking Anual + pestañas en Portada).</div>
+      </div>
+
+      <div class="callout callout--green" style="margin-top: 8px;">
+        <strong>Comando estrella para tu demo en consola</strong>
+        <code>php artisan test --filter="GestionPropiedades|GestionAgentes|Ranking"</code> &nbsp;—&nbsp; Ejecuta en segundos todas las pruebas automatizadas de tus 4 módulos en verde.
+      </div>
+    </section>
+
+  </div>
+</main>
+</body>
+</html>
