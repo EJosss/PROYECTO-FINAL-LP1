@@ -456,9 +456,37 @@ body.dark-mode .phone-prefix {
 }
 
 .list-head--properties, .item.property-item {
-    grid-template-columns: 64px minmax(130px, 1.4fr) minmax(105px, 1fr) 110px 88px 112px;
+    grid-template-columns: 42px 64px minmax(150px, 1.4fr) minmax(130px, 1fr) 115px 92px 116px;
     gap: .75rem;
     padding: 0 .9rem;
+}
+
+.col-index {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.row-index-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 .35rem;
+    border-radius: 7px;
+    background: #eef4fc;
+    border: 1px solid #d4e2f4;
+    color: var(--navy);
+    font-size: .78rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+body.dark-mode .row-index-badge {
+    background: #1e293b;
+    border-color: #334155;
+    color: #93c5fd;
 }
 
 .list-head--agents, .item.agent-item {

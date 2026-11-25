@@ -30,6 +30,7 @@
             </div>
 
             <div class="list-head list-head--properties">
+                <span class="col-index">#</span>
                 <span>Imagen</span>
                 <span>Nombre del proyecto</span>
                 <span>Ubicación / Oficina</span>
@@ -41,6 +42,9 @@
             <div class="content-list">
                 @forelse($propiedades as $propiedad)
                     <article class="item property-item {{ $propiedad->destacada ? 'is-featured-row' : '' }} {{ $mostrarFormulario && $propiedadId === $propiedad->id ? 'is-editing-row' : '' }}" wire:key="propiedad-{{ $propiedad->id }}">
+                        <div class="col-index">
+                            <span class="row-index-badge">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        </div>
                         <img src="{{ $propiedad->url_imagen }}" alt="{{ $propiedad->nombre }}">
                         <div>
                             <h3>
