@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boceto UI — Ranking Mensual y Anual | RE/MAX Zona</title>
+  <style>
+    :root {
+      --blue: #003da5;
+      --blue-mid: #1768d5;
+      --navy: #071d49;
+      --yellow: #ffd000;
+      --gold: #eab308;
+      --red: #dc1c2e;
+      --ink: #182238;
+      --muted: #525e75;
+      --line: #dce5f0;
+      --soft: #f4f7fb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background: #e9eff8;
+      line-height: 1.5;
+    }
+
+    /* Barra superior del prototipo */
+    .proto-bar {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--navy); color: #fff;
+      padding: .75rem 1.5rem;
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;
+      box-shadow: 0 4px 18px rgba(7,29,73,.25);
+    }
+    .proto-bar strong { font-size: .95rem; }
+    .proto-bar span.badge {
+      background: var(--yellow); color: var(--navy);
+      font-size: .72rem; font-weight: 800; padding: .2rem .55rem; border-radius: 999px; margin-left: .5rem; text-transform: uppercase;
+    }
+    .proto-nav { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .proto-nav a {
+      color: #dbeafe; text-decoration: none; font-size: .82rem; font-weight: 700;
+      padding: .4rem .75rem; border-radius: 7px; background: rgba(255,255,255,.1);
+    }
+    .proto-nav a:hover { background: rgba(255,255,255,.22); color: #fff; }
+
+    .wrap { max-width: 1120px; margin: 1.75rem auto 3rem; padding: 0 1rem; display: grid; gap: 2rem; }
+
+    /* Contenedor de cada opción */
+    .mockup-frame {
+      background: #fff; border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden; box-shadow: 0 16px 40px rgba(7,29,73,.1);
+    }
+    .mockup-label {
+      background: #f8fafd; border-bottom: 1px solid var(--line);
+      padding: .85rem 1.35rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem;
+    }
+    .mockup-label h2 { margin: 0; font-size: 1.05rem; color: var(--navy); }
+    .mockup-label .pill {
+      font-size: .75rem; font-weight: 800; padding: .25rem .65rem; border-radius: 999px;
+      background: #dbeafe; color: var(--blue);
+    }
+    .mockup-label .pill--gold { background: #fef3c7; color: #92400e; }
+
+    /* ============================================================
+       OPCION 1: PORTADA CON PESTAÑAS INTERACTIVAS (MENSUAL / ANUAL)
+       ============================================================ */
+    .pub-section { padding: 2.5rem 2rem; text-align: center; transition: background .25s ease; }
+    .pub-section.is-annual {
+      background: linear-gradient(155deg, #071d49 0%, #0d2f70 60%, #0f172a 100%);
+      color: #fff;
+    }
+    .eyebrow {
+      margin: 0 0 .3rem; font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .12em;
+      color: var(--blue);
+    }
+    .is-annual .eyebrow { color: var(--yellow); }
+    .pub-section h3 { margin: 0; font-size: 1.9rem; color: var(--navy); }
+    .is-annual h3 { color: #fff; }
+    .pub-sub { margin: .35rem 0 1.4rem; color: var(--muted); font-size: .95rem; }
+    .is-annual .pub-sub { color: #cbd5e1; }
+
+    /* Switch segmentado */
+    .ranking-tabs {
+      display: inline-flex; gap: .35rem; padding: .35rem;
+      border-radius: 999px; background: #e8eef7; margin-bottom: 2rem;
+      border: 1px solid #d1dceb;
+    }
+    .is-annual .ranking-tabs { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.22); }
+    .ranking-tab {
+      border: 0; cursor: pointer; border-radius: 999px;
+      padding: .55rem 1.25rem; font-weight: 800; font-size: .88rem;
+      background: transparent; color: var(--muted); transition: all .2s ease;
+    }
+    .is-annual .ranking-tab { color: #dbeafe; }
+    .ranking-tab.is-active {
+      background: var(--blue); color: #fff; box-shadow: 0 4px 12px rgba(0,61,165,.28);
+    }
+    .is-annual .ranking-tab.is-active {
+      background: var(--yellow); color: var(--navy); box-shadow: 0 4px 14px rgba(255,208,0,.35);
+    }
+
+    /* Podio de 3 tarjetas */
+    .podium {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.35rem;
+      max-width: 900px; margin: 0 auto; align-items: end;
+    }
+    .winner-card {
+      background: #fff; color: var(--ink); border: 1px solid var(--line);
+      border-radius: 14px; padding: 1.5rem 1.2rem; text-align: center;
+      box-shadow: 0 10px 26px rgba(15,23,42,.08); position: relative;
+    }
+    .winner-card.is-first {
+      border: 2px solid var(--blue); transform: translateY(-10px);
+      box-shadow: 0 18px 36px rgba(0,61,165,.16);
+    }
+    .is-annual .winner-card {
+      background: rgba(255,255,255,.07); color: #fff; border-color: rgba(255,255,255,.18);
+      backdrop-filter: blur(6px);
+    }
+    .is-annual .winner-card.is-first {
+      border: 2px solid var(--yellow);
+      background: rgba(255,208,0,.11);
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+    .medal {
+      display: inline-block; font-size: .74rem; font-weight: 800; text-transform: uppercase;
+      padding: .25rem .7rem; border-radius: 999px; margin-bottom: .85rem;
+      background: #e0ecff; color: var(--blue);
+    }
+    .winner-card.is-first .medal { background: var(--yellow); color: var(--navy); }
+    .avatar-circle {
+      width: 96px; height: 96px; border-radius: 50%; margin: 0 auto .85rem;
+      display: grid; place-items: center; font-size: 1.7rem; font-weight: 800; color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+      border: 3px solid #dbeafe;
+    }
+    .is-annual .winner-card.is-first .avatar-circle {
+      background: linear-gradient(135deg, #ca8a04, #facc15); color: var(--navy); border-color: #fef08a;
+    }
+    .winner-card h4 { margin: 0 0 .2rem; font-size: 1.05rem; }
+    .winner-card .role { margin: 0 0 .9rem; font-size: .82rem; color: var(--muted); }
+    .is-annual .winner-card .role { color: #cbd5e1; }
+    .btn-wa {
+      display: inline-block; text-decoration: none; font-size: .82rem; font-weight: 700;
+      padding: .48rem 1rem; border-radius: 8px; background: #0c8a4b; color: #fff;
+    }
+
+    /* ============================================================
+       OPCION 2: EMPRESA (/empresa) - SALON DE LA FAMA ANUAL
+       ============================================================ */
+    .hall-banner {
+      background: linear-gradient(135deg, #071d49 0%, #102b55 100%);
+      color: #fff; padding: 2rem; border-bottom: 4px solid var(--yellow);
+    }
+    .hall-top {
+      display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;
+      margin-bottom: 1.4rem;
+    }
+    .hall-top h3 { margin: .2rem 0 0; font-size: 1.55rem; color: #fff; }
+    .hall-year {
+      background: rgba(255,208,0,.18); border: 1px solid var(--yellow); color: var(--yellow);
+      padding: .35rem .9rem; border-radius: 999px; font-weight: 800; font-size: .85rem;
+    }
+    .hall-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .hall-card {
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16);
+      border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: .9rem;
+    }
+    .hall-card.gold { border-color: var(--yellow); background: rgba(255,208,0,.12); }
+    .hall-rank {
+      width: 44px; height: 44px; border-radius: 10px; flex: 0 0 auto;
+      display: grid; place-items: center; font-weight: 800; font-size: 1rem;
+      background: rgba(255,255,255,.15); color: #fff;
+    }
+    .hall-card.gold .hall-rank { background: var(--yellow); color: var(--navy); }
+    .hall-card strong { display: block; font-size: .96rem; }
+    .hall-card span { font-size: .8rem; color: #cbd5e1; }
+
+    .agents-preview { padding: 1.5rem 2rem; background: #fff; }
+    .agents-preview h4 { margin: 0 0 .85rem; color: var(--navy); font-size: 1.05rem; }
+    .agents-mini { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
+    .agent-chip {
+      border: 1px solid var(--line); border-radius: 10px; padding: .85rem; text-align: center; background: var(--soft);
+      font-size: .84rem; color: var(--muted);
+    }
+    .agent-chip strong { display: block; color: var(--ink); margin-bottom: .15rem; }
+
+    /* ============================================================
+       OPCION 3: PANEL ADMIN (/admin/rankings) CON PESTAÑAS
+       ============================================================ */
+    .admin-mock { display: grid; grid-template-columns: 220px 1fr; min-height: 310px; }
+    .admin-side { background: #071b3b; color: #cbd5e1; padding: 1.25rem .9rem; display: flex; flex-direction: column; gap: .35rem; }
+    .admin-side .brand { color: #fff; font-weight: 800; font-size: .92rem; padding: 0 .6rem .85rem; border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: .4rem; }
+    .side-item { padding: .55rem .75rem; border-radius: 8px; font-size: .86rem; font-weight: 600; }
+    .side-item.active { background: var(--blue-mid); color: #fff; }
+    .admin-main { padding: 1.5rem; background: #f4f7fb; }
+    .admin-tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin: .85rem 0 1.2rem; }
+    .admin-tab {
+      border: 0; background: transparent; cursor: pointer;
+      padding: .6rem 1rem; font-weight: 800; font-size: .88rem; color: var(--muted);
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+    }
+    .admin-tab.is-active { color: var(--blue); border-bottom-color: var(--blue); }
+    .admin-box {
+      background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.2rem;
+      font-size: .88rem; color: var(--ink);
+    }
+    .admin-box strong { color: var(--navy); }
+
+    @media (max-width: 820px) {
+      .podium, .hall-grid, .agents-mini, .admin-mock { grid-template-columns: 1fr; }
+      .winner-card.is-first { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <div>
+    <strong>Boceto UI: Ranking Mensual + Ranking Anual</strong>
+    <span class="badge">Interactivo</span>
+  </div>
+  <nav class="proto-nav">
+    <a href="#vista-portada">1. Portada (/)</a>
+    <a href="#vista-empresa">2. Empresa (/empresa)</a>
+    <a href="#vista-admin">3. Panel Admin</a>
+  </nav>
+</div>
+
+<main class="wrap">
+
+  <!-- VISTA 1: PORTADA CON PESTAÑAS INTERACTIVAS -->
+  <section id="vista-portada" class="mockup-frame">
+    <div class="mockup-label">
+      <h2>Propuesta 1 (Recomendada): Portada Pública <code>/</code> con Pestañas sobre el Podio</h2>
+      <span class="pill">Haz clic en las pestañas para probar</span>
+    </div>
+
+    <div id="portada-box" class="pub-section">
+      <p class="eyebrow">Nuestro equipo</p>
+      <h3 id="portada-titulo">Nuestros destacados del mes</h3>
+      <p id="portada-sub" class="pub-sub">Vendedores estrella — Desempeño de Octubre 2026</p>
+
+      <div class="ranking-tabs" role="tablist">
+        <button type="button" class="ranking-tab is-active" id="tab-mensual" onclick="cambiarPodio('mensual')">
+          ★ Destacados del Mes
+        </button>
+        <button type="button" class="ranking-tab" id="tab-anual" onclick="cambiarPodio('anual')">
+          🏆 Top Anual 2026
+        </button>
+      </div>
+
+      <div class="podium">
+        <article class="winner-card">
+          <span class="medal">2.º Puesto</span>
+          <div class="avatar-circle" id="av-2">CP</div>
+          <h4 id="nom-2">Carlos Paredes</h4>
+          <p class="role" id="rol-2">Asesor Inmobiliario — Arequipa</p>
+          <a href="#" class="btn-wa" onclick="return false;">Contactar WhatsApp</a>
+        </article>
+
+        <article class="winner-card is-first">
+          <span class="medal" id="med-1">👑 1.er Puesto</span>
+          <div class="avatar-circle" id="av-1">JS</div>
+          <h4 id="nom-1">Jessica Sardon</h4>
+          <p class="role" id="rol-1">Asesora Inmobiliaria — Puno</p>
+          <a href="#" class="btn-wa" onclick="return false;">Contactar WhatsApp</a>
+        </article>
+
+        <article class="winner-card">
+          <span class="medal">3.er Puesto</span>
+          <div class="avatar-circle" id="av-3">MR</div>
+          <h4 id="nom-3">María Rojas</h4>
+          <p class="role" id="rol-3">Asesora Inmobiliaria — Lima</p>
+          <a href="#" class="btn-wa" onclick="return false;">Contactar WhatsApp</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISTA 2: PAGINA EMPRESA - SALON DE LA FAMA -->
+  <section id="vista-empresa" class="mockup-frame">
+    <div class="mockup-label">
+      <h2>Propuesta 2 (Institucional): Página <code>/empresa</code> — Cuadro de Honor Anual</h2>
+      <span class="pill pill--gold">Arriba del directorio de agentes</span>
+    </div>
+
+    <div class="hall-banner">
+      <div class="hall-top">
+        <div>
+          <p class="eyebrow" style="color:var(--yellow);">Salón de la Fama RE/MAX Zona</p>
+          <h3>🏆 Cuadro de Honor — Ranking Anual</h3>
+        </div>
+        <span class="hall-year">Temporada 2026</span>
+      </div>
+
+      <div class="hall-grid">
+        <div class="hall-card gold">
+          <div class="hall-rank">#1</div>
+          <div>
+            <strong>Jessica Sardon</strong>
+            <span>1.er Puesto Anual &bull; Sede Puno</span>
+          </div>
+        </div>
+        <div class="hall-card">
+          <div class="hall-rank">#2</div>
+          <div>
+            <strong>Luis Mamani</strong>
+            <span>2.º Puesto Anual &bull; Sede Arequipa</span>
+          </div>
+        </div>
+        <div class="hall-card">
+          <div class="hall-rank">#3</div>
+          <div>
+            <strong>Andrea Quispe</strong>
+            <span>3.er Puesto Anual &bull; Sede Lima</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agents-preview">
+      <h4>Nuestro equipo de asesores (directorio actual de /empresa)</h4>
+      <div class="agents-mini">
+        <div class="agent-chip"><strong>Asesor 1</strong>Puno</div>
+        <div class="agent-chip"><strong>Asesor 2</strong>Arequipa</div>
+        <div class="agent-chip"><strong>Asesor 3</strong>Lima</div>
+        <div class="agent-chip"><strong>Asesor 4</strong>Moquegua</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISTA 3: PANEL ADMIN UNIFICADO -->
+  <section id="vista-admin" class="mockup-frame">
+    <div class="mockup-label">
+      <h2>Panel Administrativo: 1 solo menú «★ Rankings» con pestañas internas</h2>
+      <span class="pill">Haz clic en las pestañas del admin</span>
+    </div>
+
+    <div class="admin-mock">
+      <aside class="admin-side">
+        <div class="brand">RE/MAX ZONA Admin</div>
+        <div class="side-item">▦ Propiedades</div>
+        <div class="side-item">👥 Agentes</div>
+        <div class="side-item active">★ Rankings</div>
+        <div class="side-item">🖼 Portada principal</div>
+        <div class="side-item">🏢 Oficinas</div>
+        <div class="side-item">⌚ Historial de Rankings</div>
+      </aside>
+
+      <div class="admin-main">
+        <h3 style="margin:0; color:var(--navy);">★ Gestión de Rankings</h3>
+        <div class="admin-tabs">
+          <button type="button" class="admin-tab is-active" id="atab-m" onclick="cambiarAdminTab('mensual')">📅 Ranking Mensual</button>
+          <button type="button" class="admin-tab" id="atab-a" onclick="cambiarAdminTab('anual')">🏆 Ranking Anual</button>
+        </div>
+
+        <div class="admin-box" id="admin-tab-body">
+          <strong>Ranking Mensual (Días 1 al 3 de cada mes):</strong><br>
+          Mantiene exactamente tus 3 tarjetas actuales (1.er, 2.º y 3.er puesto) con fotos, bloqueo de duplicados y cierre automático tras el día 3.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function cambiarPodio(tipo) {
+    const box = document.getElementById('portada-box');
+    const esAnual = tipo === 'anual';
+
+    box.classList.toggle('is-annual', esAnual);
+    document.getElementById('tab-mensual').classList.toggle('is-active', !esAnual);
+    document.getElementById('tab-anual').classList.toggle('is-active', esAnual);
+
+    document.getElementById('portada-titulo').textContent = esAnual
+      ? '🏆 Mejores Asesores del Año 2026'
+      : 'Nuestros destacados del mes';
+    document.getElementById('portada-sub').textContent = esAnual
+      ? 'Cuadro de Honor Anual — Reconocimiento al desempeño acumulado 2026'
+      : 'Vendedores estrella — Desempeño de Octubre 2026';
+
+    document.getElementById('med-1').textContent = esAnual ? '🏆 Campeón Anual' : '👑 1.er Puesto';
+    document.getElementById('nom-2').textContent = esAnual ? 'Luis Mamani' : 'Carlos Paredes';
+    document.getElementById('av-2').textContent  = esAnual ? 'LM' : 'CP';
+    document.getElementById('nom-3').textContent = esAnual ? 'Andrea Quispe' : 'María Rojas';
+    document.getElementById('av-3').textContent  = esAnual ? 'AQ' : 'MR';
+  }
+
+  function cambiarAdminTab(tipo) {
+    const esAnual = tipo === 'anual';
+    document.getElementById('atab-m').classList.toggle('is-active', !esAnual);
+    document.getElementById('atab-a').classList.toggle('is-active', esAnual);
+
+    document.getElementById('admin-tab-body').innerHTML = esAnual
+      ? '<strong>🏆 Ranking Anual (Temporada 2026):</strong><br>Mismo formulario de 3 puestos fijos (1.er, 2.º y 3.er puesto) pero evaluando el año completo, reutilizando <code>posiciones_ranking</code>, snapshots y la columna <code>tipo = ANUAL</code>.'
+      : '<strong>📅 Ranking Mensual (Días 1 al 3 de cada mes):</strong><br>Mantiene exactamente tus 3 tarjetas actuales (1.er, 2.º y 3.er puesto) con fotos, bloqueo de duplicados y cierre automático tras el día 3.';
+  }
+</script>
+</body>
+</html>

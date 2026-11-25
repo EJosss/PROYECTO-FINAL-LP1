@@ -8,15 +8,43 @@
 
     <div class="page-heading">
         <div>
-            <p class="eyebrow">Vendedores Estrella del Mes</p>
-            <h1><span aria-hidden="true">★</span> Gestión del Ranking Mensual</h1>
-            <p>
-                Período de desempeño evaluado: <strong>{{ $etiquetaDesempeno }}</strong> |
-                Mes de publicación pública: <strong>{{ $etiquetaPublicacion }}</strong>
-            </p>
+            <p class="eyebrow">Vendedores Estrella RE/MAX Zona</p>
+            <h1><span aria-hidden="true">★</span> Gestión de Rankings</h1>
+            @if($pestanaActiva === 'mensual')
+                <p>
+                    Período de desempeño evaluado: <strong>{{ $etiquetaDesempeno }}</strong> |
+                    Mes de publicación pública: <strong>{{ $etiquetaPublicacion }}</strong>
+                </p>
+            @else
+                <p>
+                    Reconocimiento anual de los <strong>3 mejores asesores del año {{ $anioAnual }}</strong> en la portada pública.
+                </p>
+            @endif
         </div>
     </div>
 
+    <div class="admin-ranking-tabs" role="tablist" aria-label="Tipo de ranking">
+        <button
+            type="button"
+            role="tab"
+            class="admin-ranking-tab {{ $pestanaActiva === 'mensual' ? 'is-active' : '' }}"
+            aria-selected="{{ $pestanaActiva === 'mensual' ? 'true' : 'false' }}"
+            wire:click="cambiarPestana('mensual')"
+        >
+            📅 Ranking Mensual
+        </button>
+        <button
+            type="button"
+            role="tab"
+            class="admin-ranking-tab {{ $pestanaActiva === 'anual' ? 'is-active' : '' }}"
+            aria-selected="{{ $pestanaActiva === 'anual' ? 'true' : 'false' }}"
+            wire:click="cambiarPestana('anual')"
+        >
+            🏆 Ranking Anual
+        </button>
+    </div>
+
+    @if($pestanaActiva === 'mensual')
     @if($dentroDePlazo)
         <div class="ranking-banner">
             <strong>Plazo habilitado (Días 1 al 3 de {{ $etiquetaPublicacion }}):</strong>
@@ -221,6 +249,136 @@
                 El ranking correspondiente al desempeño de <strong>{{ $etiquetaDesempeno }}</strong> no fue publicado durante los días 1 al 3 de {{ $etiquetaPublicacion }}.
                 Por regla de negocio, no se permite su publicación fuera de plazo. El próximo período se habilitará el día 1 del siguiente mes.
             </p>
+        </div>
+    @endif
+    @else
+        {{-- ================= PESTAÑA: RANKING ANUAL ================= --}}
+        <div class="ranking-banner" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <div>
+                <strong>🏆 Ranking Anual — Temporada {{ $anioAnual }}:</strong>
+                Registra a los <strong>3 mejores asesores del año</strong> y publícalos en la pestaña <em>Top Anual</em> de la portada pública.
+                <br>
+                Progreso: <strong>{{ $totalRegistradosAnual }} / 3 puestos completados</strong>
+                @if($rankingAnualActual)
+                    | Estado: <strong>{{ $rankingAnualActual->estado }}</strong>
+                @endif
+            </div>
+            <label style="display: flex; align-items: center; gap: .5rem; font-weight: 700; margin: 0;">
+                <span>Año:</span>
+                <select wire:model.live="anioAnual" style="padding: .4rem .75rem; border-radius: 8px; border: 1px solid var(--line); font-weight: 700;">
+                    @foreach($aniosDisponibles as $anioOpt)
+                        <option value="{{ $anioOpt }}">{{ $anioOpt }}</option>
+                    @endforeach
+                </select>
+            </label>
+        </div>
+
+        @php
+            $etiquetasAnuales = [
+                1 => 'Primer puesto anual (1.er Puesto)',
+                2 => 'Segundo puesto anual (2.º Puesto)',
+                3 => 'Tercer puesto anual (3.er Puesto)',
+            ];
+        @endphp
+
+        <div class="podium-grid">
+            @foreach($etiquetasAnuales as $numeroPuesto => $tituloPuesto)
+                @php
+                    $datosPuesto = $puestosAnual[$numeroPuesto] ?? [];
+                    $campoFoto = 'fotoAnual' . $numeroPuesto;
+                    $archivoTemporal = $this->{$campoFoto};
+                    $estaRegistrado = (bool) ($datosPuesto['registrado'] ?? false);
+                @endphp
+
+                <div class="podium-card" wire:key="puesto-anual-{{ $anioAnual }}-{{ $numeroPuesto }}">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: .75rem;">
+                        <strong style="font-size: .95rem;">{{ $tituloPuesto }}</strong>
+                        <span class="status {{ $estaRegistrado ? '' : 'warn' }}">
+                            {{ $estaRegistrado ? 'Registrado' : 'Pendiente' }}
+                        </span>
+                    </div>
+
+                    @if(! empty($advertenciasHomonimoAnual[$numeroPuesto]))
+                        <p class="message" role="status" style="text-align: left; font-size: .84rem; margin-bottom: .85rem;">
+                            {{ $advertenciasHomonimoAnual[$numeroPuesto] }}
+                        </p>
+                    @endif
+
+                    <form wire:submit="guardarPuestoAnual({{ $numeroPuesto }})" class="content-form" style="margin-top: 0; text-align: left;">
+                        <label>
+                            Nombres *
+                            <input type="text" wire:model="puestosAnual.{{ $numeroPuesto }}.nombres" maxlength="100" placeholder="Ingresa los nombres" required>
+                            @error("puestosAnual.{$numeroPuesto}.nombres") <span class="field-error" role="alert">{{ $message }}</span> @enderror
+                        </label>
+
+                        <label>
+                            Apellidos *
+                            <input type="text" wire:model="puestosAnual.{{ $numeroPuesto }}.apellidos" maxlength="100" placeholder="Ingresa los apellidos" required>
+                            @error("puestosAnual.{$numeroPuesto}.apellidos") <span class="field-error" role="alert">{{ $message }}</span> @enderror
+                        </label>
+
+                        <label>
+                            Número de celular *
+                            <div class="phone-input-group">
+                                <span class="phone-prefix" aria-hidden="true">+51</span>
+                                <input type="tel" wire:model="puestosAnual.{{ $numeroPuesto }}.celular" maxlength="20" placeholder="Ej. 999 999 999" required>
+                            </div>
+                            @error("puestosAnual.{$numeroPuesto}.celular") <span class="field-error" role="alert">{{ $message }}</span> @enderror
+                        </label>
+
+                        <div class="office-image-preview-box">
+                            <span class="readonly-meta-label">Fotografía del ganador anual *</span>
+                            @if($archivoTemporal && method_exists($archivoTemporal, 'temporaryUrl'))
+                                <img class="office-preview-img" src="{{ $archivoTemporal->temporaryUrl() }}" alt="Vista previa puesto anual {{ $numeroPuesto }}">
+                                <div class="preview-caption-row">
+                                    <small class="preview-caption">Nueva foto seleccionada (sin guardar)</small>
+                                    <button type="button" class="preview-clear-btn" wire:click="limpiarFotoAnual({{ $numeroPuesto }})">Quitar</button>
+                                </div>
+                            @elseif(! empty($datosPuesto['url_foto_actual']))
+                                <img class="office-preview-img" src="{{ $datosPuesto['url_foto_actual'] }}" alt="Foto actual puesto anual {{ $numeroPuesto }}">
+                                <small class="preview-caption">Fotografía registrada</small>
+                            @else
+                                <div class="office-preview-placeholder">
+                                    <strong>Puesto #{{ $numeroPuesto }} Anual</strong>
+                                    <span>Sube una fotografía JPG, PNG o WebP</span>
+                                </div>
+                            @endif
+
+                            <input type="file" wire:model="{{ $campoFoto }}" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" {{ $estaRegistrado ? '' : 'required' }}>
+                            @error($campoFoto) <span class="field-error" role="alert">{{ $message }}</span> @enderror
+                        </div>
+
+                        <button type="submit" class="btn-primary" wire:loading.attr="disabled" wire:target="guardarPuestoAnual({{ $numeroPuesto }}), {{ $campoFoto }}">
+                            <span wire:loading.remove wire:target="guardarPuestoAnual({{ $numeroPuesto }})">
+                                {{ $estaRegistrado ? 'Actualizar puesto anual' : 'Guardar puesto anual' }}
+                            </span>
+                            <span wire:loading wire:target="guardarPuestoAnual({{ $numeroPuesto }})">Guardando...</span>
+                        </button>
+                    </form>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="card-box" style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <div>
+                <strong>Publicación del Ranking Anual {{ $anioAnual }}</strong>
+                <p style="margin: .25rem 0 0; color: var(--muted); font-size: .9rem;">
+                    @if($totalRegistradosAnual === 3)
+                        Los 3 puestos anuales están listos. Ya puedes publicarlos en la portada pública.
+                    @else
+                        Completa los 3 puestos obligatorios antes de publicar ({{ $totalRegistradosAnual }}/3 completados).
+                    @endif
+                </p>
+            </div>
+            <button
+                type="button"
+                class="btn-primary"
+                wire:click="publicarRankingAnual"
+                wire:loading.attr="disabled"
+                @if($totalRegistradosAnual < 3) disabled aria-disabled="true" style="opacity: .6; cursor: not-allowed;" @endif
+            >
+                {{ $rankingAnualActual && $rankingAnualActual->estado === 'PUBLICADO' ? 'Actualizar Ranking Anual Publicado' : 'Publicar Ranking Anual en Portada' }}
+            </button>
         </div>
     @endif
 </section>

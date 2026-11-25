@@ -37,7 +37,7 @@
                     </a>
 
                     <a href="{{ route('admin.ranking.actual') }}" class="{{ request()->routeIs('admin.ranking.actual') ? 'is-active' : '' }}" @if(request()->routeIs('admin.ranking.actual')) aria-current="page" @endif>
-                        <span aria-hidden="true">★</span> Ranking Mensual
+                        <span aria-hidden="true">★</span> Rankings
                     </a>
 
                     @if(auth()->user()->esAdministrador())

@@ -46,7 +46,7 @@ class RankingMensualIndependienteTest extends TestCase
         $this->actingAs($marketing)
             ->get(route('admin.ranking.actual'))
             ->assertOk()
-            ->assertSee('Gestión del Ranking Mensual');
+            ->assertSee('Gestión de Rankings');
     }
 
     public function test_registro_manual_tres_puestos_validaciones_duplicados_y_publicacion(): void

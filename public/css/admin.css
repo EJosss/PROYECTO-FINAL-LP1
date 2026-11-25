@@ -1284,3 +1284,49 @@ body.dark-mode .editing-id-badge {
         padding: 1rem;
     }
 }
+
+
+/* Pestañas internas del módulo Rankings (Mensual / Anual) */
+.admin-ranking-tabs {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--line);
+    margin: 0 0 1.35rem;
+}
+
+.admin-ranking-tab {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: .65rem 1.15rem;
+    font-size: .92rem;
+    font-weight: 800;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 8px 8px 0 0;
+    transition: color .15s ease, background .15s ease;
+}
+
+.admin-ranking-tab:hover {
+    color: var(--navy);
+    background: #eef4fc;
+}
+
+.admin-ranking-tab.is-active {
+    color: var(--blue-dark);
+    border-bottom-color: var(--blue);
+    background: #eff6ff;
+}
+
+body.dark-mode .admin-ranking-tab:hover {
+    color: #f8fafc;
+    background: #1e293b;
+}
+
+body.dark-mode .admin-ranking-tab.is-active {
+    color: #93c5fd;
+    border-bottom-color: #60a5fa;
+    background: #172554;
+}

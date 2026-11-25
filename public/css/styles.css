@@ -1018,3 +1018,89 @@ h2 {
         transition: none;
     }
 }
+
+
+/* Pestañas Ranking Mensual / Anual en Portada Pública */
+.ranking-public-tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .4rem;
+    padding: .35rem;
+    margin-top: 1.15rem;
+    border-radius: 999px;
+    background: #e8eef7;
+    border: 1px solid #d1dceb;
+}
+
+.ranking-public-tab {
+    border: 0;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: .55rem 1.25rem;
+    font-weight: 800;
+    font-size: .88rem;
+    background: transparent;
+    color: var(--muted);
+    transition: all .2s ease;
+}
+
+.ranking-public-tab.is-active {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 4px 12px rgb(0 61 165 / 26%);
+}
+
+.section--annual-ranking {
+    background: linear-gradient(155deg, #071d49 0%, #0d2f70 60%, #0f172a 100%);
+    color: #fff;
+}
+
+.section--annual-ranking h2,
+.section--annual-ranking .section-subtitle {
+    color: #fff;
+}
+
+.section--annual-ranking .eyebrow--gold {
+    color: var(--yellow);
+}
+
+.section--annual-ranking .ranking-public-tabs {
+    background: rgb(255 255 255 / 12%);
+    border-color: rgb(255 255 255 / 22%);
+}
+
+.section--annual-ranking .ranking-public-tab {
+    color: #dbeafe;
+}
+
+.section--annual-ranking .ranking-public-tab.is-active {
+    background: var(--yellow);
+    color: var(--navy);
+    box-shadow: 0 4px 14px rgb(255 208 0 / 35%);
+}
+
+.agent-card--annual {
+    background: rgb(255 255 255 / 8%);
+    border: 1px solid rgb(255 255 255 / 20%);
+    color: #fff;
+}
+
+.agent-card--annual.is-annual-champion {
+    border: 2px solid var(--yellow);
+    box-shadow: 0 18px 36px rgb(0 0 0 / 30%);
+}
+
+.agent-card--annual h3 {
+    color: #fff;
+}
+
+.agent-card--annual a {
+    color: #fde047;
+}
+
+.ranking-updating-box--annual {
+    background: rgb(255 255 255 / 10%);
+    border-color: rgb(255 255 255 / 24%);
+    color: #e2e8f0;
+}

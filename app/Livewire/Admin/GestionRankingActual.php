@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\RankingAnual;
 use App\Models\RankingMensual;
+use App\Services\ServicioRankingAnual;
 use App\Services\ServicioRankingMensual;
 use App\Support\TelefonoPeru;
 use DomainException;
@@ -19,10 +21,12 @@ use Throwable;
  * bloqueos pesimistas (lockForUpdate), duplicados y publicación atómica a ServicioRankingMensual.
  */
 #[Layout('components.layouts.admin')]
-#[Title('Ranking Mensual | RE/MAX Zona')]
+#[Title('Rankings | RE/MAX Zona')]
 class GestionRankingActual extends Component
 {
     use WithFileUploads;
+
+    public string $pestanaActiva = 'mensual';
 
     /**
      * @var array<int, array{nombres: string, apellidos: string, celular: string, codigo_interno: ?string, url_foto_actual: ?string, registrado: bool}>
@@ -38,20 +42,171 @@ class GestionRankingActual extends Component
     /** @var array<int, ?string> */
     public array $advertenciasHomonimo = [1 => null, 2 => null, 3 => null];
 
+    // Estado del Ranking Anual
+    public int $anioAnual = 2026;
+
+    /**
+     * @var array<int, array{nombres: string, apellidos: string, celular: string, codigo_interno: ?string, url_foto_actual: ?string, registrado: bool}>
+     */
+    public array $puestosAnual = [];
+
+    public $fotoAnual1 = null;
+
+    public $fotoAnual2 = null;
+
+    public $fotoAnual3 = null;
+
+    /** @var array<int, ?string> */
+    public array $advertenciasHomonimoAnual = [1 => null, 2 => null, 3 => null];
+
     public ?string $mensajeExito = null;
 
     public ?string $mensajeError = null;
 
-    // Verifica permisos, sincroniza rankings vencidos (día 4+) y carga los 3 puestos del período vigente
+    // Verifica permisos, sincroniza rankings vencidos (día 4+) y carga los 3 puestos del período vigente y anual
     public function mount(ServicioRankingMensual $servicio): void
     {
         $usuario = Auth::user();
         if (! $usuario || ! $usuario->activo || (! $usuario->esAdministrador() && ! $usuario->esMarketing())) {
-            abort(403, 'No tienes permisos para acceder al módulo de Ranking Mensual.');
+            abort(403, 'No tienes permisos para acceder al módulo de Rankings.');
         }
 
         $servicio->sincronizarEstadosVencidos();
+        $this->anioAnual = (int) now('America/Lima')->year;
         $this->cargarDatosDelPeriodoActual();
+        $this->cargarDatosAnuales();
+    }
+
+    // Alterna entre las pestañas internas 'mensual' y 'anual' limpiando alertas previas
+    public function cambiarPestana(string $pestana): void
+    {
+        if (! in_array($pestana, ['mensual', 'anual'], true)) {
+            return;
+        }
+
+        $this->pestanaActiva = $pestana;
+        $this->mensajeExito = null;
+        $this->mensajeError = null;
+        $this->resetValidation();
+    }
+
+    // Recarga los 3 puestos anuales al cambiar el año seleccionado
+    public function updatedAnioAnual(): void
+    {
+        $this->mensajeExito = null;
+        $this->mensajeError = null;
+        $this->advertenciasHomonimoAnual = [1 => null, 2 => null, 3 => null];
+        $this->fotoAnual1 = null;
+        $this->fotoAnual2 = null;
+        $this->fotoAnual3 = null;
+        $this->cargarDatosAnuales();
+    }
+
+    // Consulta el ranking anual del año elegido y precarga sus 3 puestos fijos
+    private function cargarDatosAnuales(): void
+    {
+        $rankingAnual = RankingAnual::with('posiciones')
+            ->where('anio', $this->anioAnual)
+            ->first();
+
+        $posiciones = $rankingAnual ? $rankingAnual->posiciones->keyBy('puesto') : collect();
+
+        foreach ([1, 2, 3] as $numeroPuesto) {
+            $pos = $posiciones->get($numeroPuesto);
+            $this->puestosAnual[$numeroPuesto] = [
+                'nombres' => $pos?->nombres_snapshot ?? '',
+                'apellidos' => $pos?->apellidos_snapshot ?? '',
+                'celular' => TelefonoPeru::quitarPrefijo($pos?->celular_snapshot),
+                'codigo_interno' => $pos?->codigo_interno,
+                'url_foto_actual' => $pos?->url_foto_snapshot,
+                'registrado' => $pos !== null,
+            ];
+        }
+    }
+
+    // Quita la fotografía temporal seleccionada para uno de los 3 puestos anuales
+    public function limpiarFotoAnual(int $puesto): void
+    {
+        if (! in_array($puesto, [1, 2, 3], true)) {
+            return;
+        }
+
+        $campoFoto = "fotoAnual{$puesto}";
+        $this->{$campoFoto} = null;
+        $this->resetErrorBag($campoFoto);
+    }
+
+    // Valida y guarda un puesto del Ranking Anual delegando la transacción a ServicioRankingAnual
+    public function guardarPuestoAnual(int $puesto, ServicioRankingAnual $servicio): void
+    {
+        if (! in_array($puesto, [1, 2, 3], true)) {
+            return;
+        }
+
+        $this->mensajeExito = null;
+        $this->mensajeError = null;
+        $this->advertenciasHomonimoAnual[$puesto] = null;
+
+        $campoFoto = "fotoAnual{$puesto}";
+        $yaRegistrado = (bool) ($this->puestosAnual[$puesto]['registrado'] ?? false);
+
+        $this->validate([
+            "puestosAnual.{$puesto}.nombres" => ['required', 'string', 'min:2', 'max:100'],
+            "puestosAnual.{$puesto}.apellidos" => ['required', 'string', 'min:2', 'max:100'],
+            "puestosAnual.{$puesto}.celular" => ['required', 'string', 'min:6', 'max:20'],
+            $campoFoto => $yaRegistrado
+                ? ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096']
+                : ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+        ], [
+            "puestosAnual.{$puesto}.nombres.required" => 'Ingresa los nombres del ganador anual.',
+            "puestosAnual.{$puesto}.apellidos.required" => 'Ingresa los apellidos del ganador anual.',
+            "puestosAnual.{$puesto}.celular.required" => 'Ingresa el número de celular del ganador anual.',
+            "{$campoFoto}.required" => 'Debes seleccionar una fotografía para este puesto anual.',
+            "{$campoFoto}.image" => 'El archivo seleccionado debe ser una imagen válida.',
+            "{$campoFoto}.max" => 'La fotografía no debe superar los 4 MB.',
+        ]);
+
+        try {
+            $resultado = $servicio->guardarParticipantePuesto(
+                $this->anioAnual,
+                $puesto,
+                [
+                    'nombres' => (string) ($this->puestosAnual[$puesto]['nombres'] ?? ''),
+                    'apellidos' => (string) ($this->puestosAnual[$puesto]['apellidos'] ?? ''),
+                    'celular' => TelefonoPeru::formatearConPrefijo((string) ($this->puestosAnual[$puesto]['celular'] ?? '')),
+                ],
+                (int) Auth::id(),
+                $this->{$campoFoto}
+            );
+
+            $this->{$campoFoto} = null;
+            $this->advertenciasHomonimoAnual[$puesto] = $resultado['advertencia_homonimo'];
+            $this->cargarDatosAnuales();
+
+            $this->mensajeExito = "Puesto #{$puesto} del Ranking Anual {$this->anioAnual} guardado correctamente.";
+        } catch (DomainException $e) {
+            $this->addError("puestosAnual.{$puesto}.celular", $e->getMessage());
+            $this->mensajeError = $e->getMessage();
+        } catch (Throwable $e) {
+            $this->mensajeError = 'Ocurrió un error al guardar el participante anual: ' . $e->getMessage();
+        }
+    }
+
+    // Publica el Ranking Anual del año seleccionado en la portada pública (exige 3 puestos completos)
+    public function publicarRankingAnual(ServicioRankingAnual $servicio): void
+    {
+        $this->mensajeExito = null;
+        $this->mensajeError = null;
+
+        try {
+            $servicio->publicarRankingAnual($this->anioAnual, (int) Auth::id());
+            $this->cargarDatosAnuales();
+            $this->mensajeExito = "Ranking Anual {$this->anioAnual} publicado correctamente en la portada pública.";
+        } catch (DomainException $e) {
+            $this->mensajeError = $e->getMessage();
+        } catch (Throwable $e) {
+            $this->mensajeError = 'Ocurrió un error al publicar el ranking anual: ' . $e->getMessage();
+        }
     }
 
     // Consulta el ranking del mes de desempeño actual y precarga los 3 puestos fijos (1, 2 y 3) en pantalla
@@ -194,11 +349,21 @@ class GestionRankingActual extends Component
 
         $totalRegistrados = collect($this->puestos)->where('registrado', true)->count();
 
+        $rankingAnualActual = RankingAnual::with('posiciones')
+            ->where('anio', $this->anioAnual)
+            ->first();
+        $totalRegistradosAnual = collect($this->puestosAnual)->where('registrado', true)->count();
+        $anioActualSistema = (int) now('America/Lima')->year;
+        $aniosDisponibles = range($anioActualSistema + 1, max(2024, $anioActualSistema - 3));
+
         return view('livewire.admin.gestion-ranking-actual', [
             'periodo' => $periodo,
             'dentroDePlazo' => $dentroDePlazo,
             'rankingActual' => $rankingActual,
             'totalRegistrados' => $totalRegistrados,
+            'rankingAnualActual' => $rankingAnualActual,
+            'totalRegistradosAnual' => $totalRegistradosAnual,
+            'aniosDisponibles' => $aniosDisponibles,
             'etiquetaDesempeno' => "{$nombreMesDesempeno} {$periodo['anio_desempeno']}",
             'etiquetaPublicacion' => "{$nombreMesPublicacion} {$periodo['anio_publicacion']}",
             'ahoraLima' => now('America/Lima'),

@@ -5,6 +5,7 @@ namespace App\Livewire\Publico;
 use App\Models\ConfiguracionContacto;
 use App\Models\ConfiguracionPortada;
 use App\Models\Propiedad;
+use App\Models\RankingAnual;
 use App\Models\RankingMensual;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -15,6 +16,16 @@ use Livewire\Component;
 #[Title('RE/MAX Zona | Inmobiliaria')]
 class PaginaInicio extends Component
 {
+    public string $tipoRanking = 'mensual';
+
+    // Alterna en vivo entre el podio mensual y el podio anual sin recargar la página
+    public function cambiarTipoRanking(string $tipo): void
+    {
+        if (in_array($tipo, ['mensual', 'anual'], true)) {
+            $this->tipoRanking = $tipo;
+        }
+    }
+
     public function render()
     {
         $ahoraLima = now('America/Lima');
@@ -30,6 +41,13 @@ class PaginaInicio extends Component
             ->whereNotNull('fecha_publicacion')
             ->first();
 
+        // Obtiene el último Ranking Anual publicado con sus 3 puestos
+        $rankingAnualPublicado = RankingAnual::with('posiciones')
+            ->where('estado', RankingAnual::ESTADO_PUBLICADO)
+            ->whereNotNull('fecha_publicacion')
+            ->orderByDesc('anio')
+            ->first();
+
         // Carga solo las propiedades activas marcadas como 'destacada' desde el panel admin
         $propiedadesDestacadas = Propiedad::where('activo', true)
             ->where('destacada', true)
@@ -43,6 +61,7 @@ class PaginaInicio extends Component
         // layoutData() inyecta metadatos SEO (meta description y og:image) al layout publico.blade.php
         return view('livewire.publico.pagina-inicio', [
             'rankingPublicado' => $rankingPublicado,
+            'rankingAnualPublicado' => $rankingAnualPublicado,
             'propiedadesDestacadas' => $propiedadesDestacadas,
             'contacto' => $contacto,
             'portada' => $portada,

@@ -20,53 +20,123 @@
             </div>
         </section>
 
-        <section class="section" aria-labelledby="tops-title">
+        <section class="section {{ $tipoRanking === 'anual' ? 'section--annual-ranking' : '' }}" aria-labelledby="tops-title">
             <div class="container">
                 <div class="section-heading">
-                    <p class="eyebrow eyebrow--blue">Nuestro equipo</p>
-                    <h2 id="tops-title">Nuestros destacados</h2>
-                    @if($rankingPublicado)
+                    <p class="eyebrow {{ $tipoRanking === 'anual' ? 'eyebrow--gold' : 'eyebrow--blue' }}">Nuestro equipo</p>
+                    <h2 id="tops-title">
+                        @if($tipoRanking === 'anual')
+                            🏆 Mejores Asesores del Año {{ $rankingAnualPublicado?->anio ?? now('America/Lima')->year }}
+                        @else
+                            AGENTES DESTACADOS DEL MES
+                        @endif
+                    </h2>
+                    @if($tipoRanking === 'mensual' && $rankingPublicado)
                         <p class="section-subtitle">
                             Vendedores estrella — Desempeño de {{ $rankingPublicado->etiqueta_desempeno }}
                         </p>
+                    @elseif($tipoRanking === 'anual' && $rankingAnualPublicado)
+                        <p class="section-subtitle">
+                            Cuadro de Honor Anual — Reconocimiento al desempeño acumulado {{ $rankingAnualPublicado->anio }}
+                        </p>
                     @endif
+
+                    <div class="ranking-public-tabs" role="tablist" aria-label="Tipo de ranking destacado">
+                        <button
+                            type="button"
+                            role="tab"
+                            class="ranking-public-tab {{ $tipoRanking === 'mensual' ? 'is-active' : '' }}"
+                            aria-selected="{{ $tipoRanking === 'mensual' ? 'true' : 'false' }}"
+                            wire:click="cambiarTipoRanking('mensual')"
+                        >
+                            ★ Destacados del Mes
+                        </button>
+                        <button
+                            type="button"
+                            role="tab"
+                            class="ranking-public-tab {{ $tipoRanking === 'anual' ? 'is-active' : '' }}"
+                            aria-selected="{{ $tipoRanking === 'anual' ? 'true' : 'false' }}"
+                            wire:click="cambiarTipoRanking('anual')"
+                        >
+                            🏆 Top Anual {{ $rankingAnualPublicado?->anio ?? now('America/Lima')->year }}
+                        </button>
+                    </div>
                 </div>
 
-                @if($rankingPublicado && $rankingPublicado->posiciones->count() === 3)
-                    <div class="card-grid card-grid--agents" id="featured-agents">
-                        @foreach($rankingPublicado->posiciones as $posicion)
-                            <article class="card agent-card">
-                                <span class="agent-badge agent-badge--{{ $posicion->puesto }}">
-                                    @if($posicion->puesto === 1)
-                                        1.er Puesto
-                                    @elseif($posicion->puesto === 2)
-                                        2.º Puesto
-                                    @else
-                                        3.er Puesto
-                                    @endif
-                                </span>
-                                <x-imagen-optimizada
-                                    :ruta="$posicion->foto_snapshot ?? ''"
-                                    :src="$posicion->url_foto_snapshot"
-                                    alt="{{ $posicion->nombre_completo_snapshot }}, asesor inmobiliario"
-                                    width="400"
-                                    height="480"
-                                />
-                                <h3>{{ $posicion->nombre_completo_snapshot }}</h3>
-                                <a
-                                    href="https://api.whatsapp.com/send/?phone={{ $posicion->celular_whatsapp_snapshot }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    WhatsApp: {{ $posicion->celular_snapshot }}
-                                </a>
-                            </article>
-                        @endforeach
-                    </div>
+                @if($tipoRanking === 'mensual')
+                    @if($rankingPublicado && $rankingPublicado->posiciones->count() === 3)
+                        <div class="card-grid card-grid--agents" id="featured-agents">
+                            @foreach($rankingPublicado->posiciones as $posicion)
+                                <article class="card agent-card">
+                                    <span class="agent-badge agent-badge--{{ $posicion->puesto }}">
+                                        @if($posicion->puesto === 1)
+                                            1.er Puesto
+                                        @elseif($posicion->puesto === 2)
+                                            2.º Puesto
+                                        @else
+                                            3.er Puesto
+                                        @endif
+                                    </span>
+                                    <x-imagen-optimizada
+                                        :ruta="$posicion->foto_snapshot ?? ''"
+                                        :src="$posicion->url_foto_snapshot"
+                                        alt="{{ $posicion->nombre_completo_snapshot }}, asesor inmobiliario"
+                                        width="400"
+                                        height="480"
+                                    />
+                                    <h3>{{ $posicion->nombre_completo_snapshot }}</h3>
+                                    <a
+                                        href="https://api.whatsapp.com/send/?phone={{ $posicion->celular_whatsapp_snapshot }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        WhatsApp: {{ $posicion->celular_snapshot }}
+                                    </a>
+                                </article>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="ranking-updating-box" role="status">
+                            Ranking mensual en actualización. Pronto conocerás a nuestros vendedores destacados del mes
+                        </div>
+                    @endif
                 @else
-                    <div class="ranking-updating-box" role="status">
-                        Ranking mensual en actualización. Pronto conocerás a nuestros vendedores destacados del mes
-                    </div>
+                    @if($rankingAnualPublicado && $rankingAnualPublicado->posiciones->count() === 3)
+                        <div class="card-grid card-grid--agents" id="featured-agents-annual">
+                            @foreach($rankingAnualPublicado->posiciones as $posicion)
+                                <article class="card agent-card agent-card--annual {{ $posicion->puesto === 1 ? 'is-annual-champion' : '' }}">
+                                    <span class="agent-badge agent-badge--{{ $posicion->puesto }}">
+                                        @if($posicion->puesto === 1)
+                                            🏆 1.er Puesto Anual
+                                        @elseif($posicion->puesto === 2)
+                                            2.º Puesto Anual
+                                        @else
+                                            3.er Puesto Anual
+                                        @endif
+                                    </span>
+                                    <x-imagen-optimizada
+                                        :ruta="$posicion->foto_snapshot ?? ''"
+                                        :src="$posicion->url_foto_snapshot"
+                                        alt="{{ $posicion->nombre_completo_snapshot }}, asesor destacado anual"
+                                        width="400"
+                                        height="480"
+                                    />
+                                    <h3>{{ $posicion->nombre_completo_snapshot }}</h3>
+                                    <a
+                                        href="https://api.whatsapp.com/send/?phone={{ $posicion->celular_whatsapp_snapshot }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        WhatsApp: {{ $posicion->celular_snapshot }}
+                                    </a>
+                                </article>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="ranking-updating-box ranking-updating-box--annual" role="status">
+                            Ranking anual en preparación. Pronto conocerás a los mejores asesores del año.
+                        </div>
+                    @endif
                 @endif
             </div>
         </section>
